@@ -1,15 +1,15 @@
 --- 
-title: "A Minimal Bookdown Book"
-author: "Sean Kross"
-date: "2016-12-09"
+title: "Integration of Photo Interpreted and LIDAR Attributes Into a Polygonal Forest Inventory Framework"
+author: "Ethan Berman"
+date: "2021-07-30"
 site: bookdown::bookdown_site
 documentclass: book
 bibliography: [book.bib]
 biblio-style: apalike
 link-citations: yes
-github-repo: seankross/bookdown-start
-url: 'http\://seankross.com/bookdown-start/'
-description: "Everything you need (and nothing more) to start a bookdown book."
+github-repo: bermane/ontario-inventory
+url: 'http\://bermane.github.io/ontario-inventory/'
+description: "A place to find background information and follow updates related to the project."
 ---
 
 # Preface {-}

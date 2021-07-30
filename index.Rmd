@@ -12,15 +12,15 @@ url: 'http\://bermane.github.io/ontario-inventory/'
 description: "A place to find background information and follow updates related to the project."
 ---
 
-# Overview {-#overview}
+# Overview {-}
 
 Welcome! This website serves as a platform to introduce the *Integration of Photo Interpreted and LiDAR Attributes into a Polygonal Forest Inventory Framework* project and provide updates as progress is made. The project is led by Dr. Nicholas Coops and made possible through a [Forestry Futures Trust Ontario](http://www.forestryfutures.ca/) grant.
 
-# Project Summary {-#summary}
+## Project Summary {-}
 
 The acquisition of Single Photon Lidar (SPL) over the forested area of Ontario is redefining how forest attributes are predicted and monitored throughout the Province. A key question remains however, of how to aggregate these area-based (raster) estimates of forest attributes into traditional strategic or tactical-level inventory polygons. This project is designed to address this need. Outcomes of the project will be open source segmentation and attribute prediction tools to develop a polygon based eFRI inclusive of both SPL and interpreted forest stand attributes as well as knowledge transfer activities and demonstration at a number of forest management units.
 
-# Project Partners {-#partners}
+## Project Partners {-}
 
 This project is principally a partnership between the University of British Columbia, RYAM Forest Management, the Ontario Department of Natural Resources and Forestry and Foresty Futures Trust Ontario.
 

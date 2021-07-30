@@ -5,7 +5,7 @@ bookdown::gitbook:
     toc:
       collapse: subsection
       before: |
-        <li><a href="./">Integration of Photo Interpreted and LIDAR Attributes Into a Polygonal Forest Inventory Framework</a></li>
+        <li><a href="./">Integration of Photo Interpreted and LiDAR Attributes Into a Polygonal Forest Inventory Framework</a></li>
       after: |
         <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 bookdown::pdf_book:

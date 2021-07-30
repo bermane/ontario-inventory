@@ -1,0 +1,7 @@
+book_filename: "ontario-inventory"
+chapter_name: "Part "
+repo: https://github.com/bermane/ontario-inventory
+output_dir: docs
+rmd_files: ["index.Rmd", "01-Introduction.Rmd", "02-Project-Workflow.Rmd"]
+clean: [packages.bib, bookdown.bbl]
+new_session: yes

@@ -4,7 +4,7 @@ This project would not be possible without dedicated collaborators.
 
 ## University of British Columbia {-#ubc}
 
-### Prof. Nicholas Coops, *Project Lead* {-#ncc}
+### Prof. Nicholas Coops, *project lead* {-#ncc}
 
 [Professor Nicholas Coops](https://forestry.ubc.ca/faculty-profile/nicholas-coops/) holds a Canada Research Chair in Remote Sensing (Tier 1) at UBC. He has published >460 total referenced peer-reviewed journal publications and is internationally recognised as a scientific leader in the field of remote sensing. He was the principal investigator of the AWARE project, a 5-year research project focused on developing LIDAR applications in Canada for forestry applications. He is a co-author on the Canadian Forest Service LIDAR best practice guide series, the most downloaded CFS information handbook ever, focused on LIDAR data processing. In 2020 he was the co-receipt of the Marcus Wallenberg prize for scientific achievements contributing to significantly broadening knowledge and technical development within the field of Forestry.
 
@@ -14,7 +14,7 @@ Coops has lead a previous, successful Forestry Futures Trust Ontario grant inves
 
 Coops as the PI will manage the budget, an overall assignment of students and researchers to the project. A research scientist (RS) will be based and supervised by Coops at UBC. At the completion of the project the RS at UBC will ensure the software is able to be released openly and publicly to allow other forest management areas in Ontario covered by SPL data to be applied and for use by Provincial staff.
 
-### Ethan Berman, *Research Scientist* {-#eb}
+### Ethan Berman, *research scientist* {-#eb}
 
 [Ethan Berman](linkedin.com/in/ethan-berman) is a research scientist in the Integrated Remote Sensing Studio (IRSS) at UBC. He has a background in mathematics and remote sensing, and has worked extensively with large spatial datasets, developing novel approaches and building models to answer questions relating to forests, snow, vegetation, and climate change. Ethan received his MSc in 2019 under the supervision of Prof. Coops and before starting work on this project was a consultant for the United States Geological Survey, constructing, curating, and managing spatial data for a team of ecologists. 
 

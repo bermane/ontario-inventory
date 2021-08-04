@@ -1,10 +1,10 @@
 # Project Details {-#project-details}
 
-## Objective (-#objective)
+## Objective {-#objective}
 
 The objective of this project is to develop open source tools to integrate current EFI SPL-based forest inventory attributes with pre-existing Ontario-wide Forest Resources Inventory data (FRI) to map key forest attributes of interest (volume, height, basal area, density, species composition and group, age and micro-site productivity) in a polygonal format, over entire forest management areas in Ontario. 
 
-## Themes (-#themes)
+## Themes {-#themes}
 
 *Enhance the production of the Enhanced Forest Resource Inventory (eFRI)
 
@@ -37,7 +37,7 @@ A second focus site will be forest management areas within the Great Lakes fores
 
 If time and resources are available we would apply the approach in the second year at a third site to ensure the approaches has been applied to all three regions. This would provide the Ministry with worked examples to aid tech/knowledge transfer at the regional level and testing operational scalability across Ontario.
 
-## Methodology (-#methodology)
+## Methodology {-#methodology}
 
 First, image segmentation (or object based image analysis) will be performed on key EFI-derived raster attributes of stand (Lorey’s) height and canopy cover to derive structurally-homogeneous micro-stand objects. We will use newly developed open source segmentation tools, specifically developed for forestry LIDAR data to produce wall-to-wall polygon representations of EFI raster layers. 
 
@@ -49,9 +49,9 @@ In the final step, we will impute the additional forest inventory attributes for
 
 We will assess accuracy in a number of ways. For delineation of the micro-stands themselves, we will use GIS spatial overlap algorithms to assess degree of spatial coherence between manually-delineated polygons vs the automatically delineated stands micro-stands from the SPL. For imputation, we will assess agreement using independent validation samples of a hold back of FRI polygons and compare the imputation results with the manually interpreted species, age and site index assessments. 
 
-## Schedule (-#schedule)
+## Schedule {-#schedule}
 
-### Project Dates (-#project-dates)
+### Project Dates {-#project-dates}
 
 September 2021 – March 2022: Compile all available SPL data and plot data. Build necessary EFI at each management area. Apply segmentation approaches on rater predictions
 MILESTONE: Compiled SPL and EFI datasets over study areas.
@@ -61,7 +61,7 @@ MILESTONE: Full algorithm testing, Accuracy assessment.
 March 2023 – August 2023: Workshops, code demos, open source code packaging / delivery to all partners. Final validation, Final inventory polygon coverages provided to partners. 
 MILESTONE: Open source code, workshops, peer reviewed papers.
 
-### Deliverables (-#deliverables)
+### Deliverables {-#deliverables}
 
 Key deliverables for this project are:
 
@@ -70,7 +70,7 @@ Key deliverables for this project are:
 3. 15 March 2023: Imputation draft paper developed. Imputation code developed ready for testing.
 4. 15 August 2023: Open source code release. Workshop for industry and government participants. Peer reviewed papers on approach.
 
-## Knowledge & Technology Transfer (-#knowledge-transfer)
+## Knowledge & Technology Transfer {-#knowledge-transfer}
 
 This project is designed to support research, development and technology transfer in the use of transformation technologies such as innovative remote sensing and environmental datasets such as SPL for forest management across Canada’s forest sector. Specifically this project is designed to support the Provincial government of Ontario to improve the accuracy of the forest inventory through the innovative use of SPL data, as well as exploiting the available information on species and structure in the current FRI. By undertaking these activities we contribute to the ongoing transformation of the forest sector through the development and adoption of innovative science-based solutions in particular by linking to the new Ontario governments Forest Sector Strategy. 
 

@@ -16,21 +16,25 @@ Coops as the PI will manage the budget, an overall assignment of students and re
 
 ### Ethan Berman, *research scientist* {-#eb}
 
-[Ethan Berman](linkedin.com/in/ethan-berman) is a research scientist in the Integrated Remote Sensing Studio (IRSS) at UBC. He has a background in mathematics and remote sensing, and has worked extensively with large spatial datasets, developing novel approaches and building models to answer questions relating to forests, snow, vegetation, and climate change. Ethan received his MSc in 2019 under the supervision of Prof. Coops and before starting work on this project was a consultant for the United States Geological Survey, constructing, curating, and managing spatial data for a team of ecologists. 
+[Ethan Berman](linkedin.com/in/ethan-berman) is a research scientist in the Integrated Remote Sensing Studio (IRSS) at UBC. He has a background in mathematics and remote sensing, and has worked extensively with large spatial datasets, developing novel approaches and building models to answer questions relating to forests, snow, vegetation, and climate change. Ethan received his MSc in 2019 under the supervision of Prof. Coops and before starting work on this project was a consultant for the United States Geological Survey, constructing, curating, and managing spatial datasets for a team of ecologists. 
 
 #### Responsibilities {-#responsibilities-eb}
 
 Berman will be responsible for data management, algorithm development and testing, and delivery of open source software tools to the project partners. He will be supervised by Prof. Coops at UBC.
 
-## RYAM Forest Management {-#ryam}
+## Rayonier Advanced Materials (RYAM) Forest Management {-#ryam}
+
+### Chris McDonell, *partner* {-#cm}
+
+[Chris McDonell](linkedin.com/in/chris-mcdonell-45759113) is the manager of aboriginal and environmental relations at RYAM. He is accountable for relations between RYAM and First Nation and Metis communities in Ontario and Quebec. He is also the coordinator of forest certification standard implementation (FSC) and liaison with various public, private and community organizations.
 
 ### Grant McCartney, *partner* {-#gm}
 
-[Mr. Grant McCartney](https://ca.linkedin.com/in/grantmccartneygis) is a spatial analyst and forest information systems coordinator with Rayonier Advanced Materials (RYAM) Forest Management. He performs spatial analysis in support of forest management planning (FMP) and forestry operations on the Gordon Cosens, Romeo Malette and Martel – Magpie Forests in Northeastern Ontario, Canada. He leads the acquisition of remotely sensed data including Digital Aerial Photogrammetry (DAP) and LiDAR for RYAM. Grant is a member of the Forest Information Data Advisory Group (FIDAG) and Provincial Forest Inventory Advisory Committee (PFIAC) working to improve the quality of spatial forest information in the province. Grant has been an industrial partner in numerous research efforts including: the Assessment of Wood Attributes for REmote sensing (AWARE) project, CWFC – FIP , past FFT - KKTD projects and the recently approved Silv@21.
+[Grant McCartney](https://ca.linkedin.com/in/grantmccartneygis) was a spatial analyst and forest information systems coordinator with RYAM Forest Management. He recently transitioned to a role at Forsite Consultants. He performed spatial analysis in support of forest management planning (FMP) and forestry operations on the Gordon Cosens, Romeo Malette and Martel – Magpie Forests in Northeastern Ontario, Canada and led the acquisition of remotely sensed data including Digital Aerial Photogrammetry (DAP) and LiDAR for RYAM. Grant is a member of the Forest Information Data Advisory Group (FIDAG) and Provincial Forest Inventory Advisory Committee (PFIAC) working to improve the quality of spatial forest information in the province. He has been an industrial partner in numerous research efforts including: the Assessment of Wood Attributes for REmote sensing (AWARE) project, CWFC – FIP , past FFT - KKTD projects and the recently approved Silv@21.
 
-#### Responsibilities {-#responsibilities-gm}
+#### Responsibilities {-#responsibilities-ryam}
 
-We will work with RYAM Forest Management at a number of their forest management areas where FRI data and EFi data exist. McCartney or designate will provide plot data, SPL and any other relevant datasets over the areas to ensure accurate model development. McCartney or designate will also attend project meetings, assess model accuracy with RYAM staff and test developed software as required. 
+We will work with RYAM Forest Management at a number of their forest management areas where FRI data and EFi data exist. RYAM partners will provide plot data, SPL and any other relevant datasets over the areas to ensure accurate model development. They will also attend project meetings, assess model accuracy with RYAM staff and test developed software as required. 
 
 ## Ontario Ministry of Natural Resources and Forestry {-#ministry}
 

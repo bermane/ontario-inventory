@@ -6,13 +6,13 @@ The objective of this project is to develop open source tools to integrate curre
 
 ## Themes {-#themes}
 
-*Enhance the production of the Enhanced Forest Resource Inventory (eFRI)
+* Enhance the production of the Enhanced Forest Resource Inventory (eFRI)
 
-*Integrate and refine photo interpreted attributes and LiDAR
+* Integrate and refine photo interpreted attributes and LiDAR
 
-*Develop object-based image assesment techniques to use with LiDAR for species identification
+* Develop object-based image assesment techniques to use with LiDAR for species identification
 
-*Deliver open source code and methods
+* Deliver open source code and methods
 
 ## Description {-#description}
 
@@ -53,13 +53,13 @@ We will assess accuracy in a number of ways. For delineation of the micro-stands
 
 ### Project Dates {-#project-dates}
 
-September 2021 – March 2022: Compile all available SPL data and plot data. Build necessary EFI at each management area. Apply segmentation approaches on rater predictions
-MILESTONE: Compiled SPL and EFI datasets over study areas.
-March 2022 – August 2022: Refinement of polygon size and shape based on Provincial input. Development of models for imputation of non-structure variables like species. MILESTONE: Segmentation / object based Algorithm refined, Species / composition databases developed.
-August 2022 – March 2023: Full model development of non-structure attributes. Imputation approach applied over all sites. Field program undertaken at key sites to ensure accuracy of predictions, visits to unusual stand conditions to verify predictions. 
-MILESTONE: Full algorithm testing, Accuracy assessment.
-March 2023 – August 2023: Workshops, code demos, open source code packaging / delivery to all partners. Final validation, Final inventory polygon coverages provided to partners. 
-MILESTONE: Open source code, workshops, peer reviewed papers.
+* September 2021 – March 2022: Compile all available SPL data and plot data. Build necessary EFI at each management area. Apply segmentation approaches on rater predictions
+  + MILESTONE: Compiled SPL and EFI datasets over study areas.
+* March 2022 – August 2022: Refinement of polygon size and shape based on Provincial input. Development of models for imputation of non-structure variables like species.   + MILESTONE: Segmentation / object based Algorithm refined, Species / composition databases developed.
+* August 2022 – March 2023: Full model development of non-structure attributes. Imputation approach applied over all sites. Field program undertaken at key sites to ensure accuracy of predictions, visits to unusual stand conditions to verify predictions. 
+  + MILESTONE: Full algorithm testing, Accuracy assessment.
+* March 2023 – August 2023: Workshops, code demos, open source code packaging / delivery to all partners. Final validation, Final inventory polygon coverages provided to partners. 
+  + MILESTONE: Open source code, workshops, peer reviewed papers.
 
 ### Deliverables {-#deliverables}
 
@@ -78,13 +78,13 @@ As the application of SPL and other 3-dimensional data to forest inventories bec
 
 We will work with Ontario MNR FRI staff, and RYAM Forest Management managers on a number of key methods of outcome dissemination. These will include:
 
-*Peer-reviewed scientific publications.
+* Peer-reviewed scientific publications.
 
-*A series of online workshop on the use of methods for generating the micro-stands and the additional attribution approaches. These will be regional, as needed, to ensure the developed approaches are consistent with regionally specific datasets and needs. Workshops will also be designed to focus on industry forest practitioners, as needed.
+* A series of online workshop on the use of methods for generating the micro-stands and the additional attribution approaches. These will be regional, as needed, to ensure the developed approaches are consistent with regionally specific datasets and needs. Workshops will also be designed to focus on industry forest practitioners, as needed.
 
-*A technical memo describing the methods developed for key technical staff as it is these staff that are applying these tools themselves as well as for consulting firms which can also be hired by smaller SFLs to implement solutions.   
+* A technical memo describing the methods developed for key technical staff as it is these staff that are applying these tools themselves as well as for consulting firms which can also be hired by smaller SFLs to implement solutions.   
 
-*Open access to R and other developed programming scripts to undertake the modeling and comparisons. 
+* Open access to R and other developed programming scripts to undertake the modeling and comparisons. 
 
 More broadly key outputs of this project will be an increased awareness and capacity building of operational forest managers on the use of these technologies for next generation forest inventory which will lead to an increased ability to dissolve current boundaries between operational (tactical) and strategic (forest level) inventories. 
 

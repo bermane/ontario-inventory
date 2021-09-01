@@ -45,7 +45,7 @@ Second, the boundaries of these micro-stand objects will be used to extract info
 
 In the third step we will develop an imputation-based approach to derive the remaining attributes not readily predicted from LIDAR including age, species group / species composition or forest unit, and site index. We will utilise the existing Ontario FRI polygons within the forest management area. For each FRI polygon we will extract positional (latitude / longitude), terrain, and climatic information from auxiliary 30 m environmental data. We will also access considerable work completed and underway mapping forest age from historical Landsat data and spatial databases of fire, harvesting, and road disturbances compiled as part of the Boreal Disturbance Database. If available, this type of information will also be compiled and attributed into each delineated polygon. We will then develop an imputation reference dataset which links the four desired attributes to both the structural attributes within the FRI (volume, density, basal area and height), as well as the location, terrain and climate data. This will produce a reference library of every combination of structural and compositional conditions. 
 
-In the final step, we will impute the additional forest inventory attributes for each SPL derived micro-stand stand including age, species group / composition, and site index combination for that given stand based on its nearest neighbours in attribute space. We will also work with other researchers funded by KTDD investigating the use of SPL data for additional attribute such as soils prediction to ensure consistency in the use of environmental attributes. 
+In the final step, we will impute the additional forest inventory attributes for each SPL derived micro-stand stand including age, species group / composition, and site index combination for that given stand based on its nearest neighbours in attribute space. We will also work with other researchers funded by KTTD investigating the use of SPL data for additional attribute such as soils prediction to ensure consistency in the use of environmental attributes. 
 
 We will assess accuracy in a number of ways. For delineation of the micro-stands themselves, we will use GIS spatial overlap algorithms to assess degree of spatial coherence between manually-delineated polygons vs the automatically delineated stands micro-stands from the SPL. For imputation, we will assess agreement using independent validation samples of a hold back of FRI polygons and compare the imputation results with the manually interpreted species, age and site index assessments. 
 
@@ -53,22 +53,23 @@ We will assess accuracy in a number of ways. For delineation of the micro-stands
 
 ### Project Dates {-#project-dates}
 
-* September 2021 – March 2022: Compile all available SPL data and plot data. Build necessary EFI at each management area. Apply segmentation approaches on rater predictions
+* June – December 2021: Compile all available SPL data and plot data. Build necessary EFI at each management area. Apply segmentation approaches on raster predictions.
   + MILESTONE: Compiled SPL and EFI datasets over study areas.
-* March 2022 – August 2022: Refinement of polygon size and shape based on Provincial input. Development of models for imputation of non-structure variables like species.   + MILESTONE: Segmentation / object based Algorithm refined, Species / composition databases developed.
-* August 2022 – March 2023: Full model development of non-structure attributes. Imputation approach applied over all sites. Field program undertaken at key sites to ensure accuracy of predictions, visits to unusual stand conditions to verify predictions. 
+* January – May 2022: Refinement of polygon size and shape based on Provincial input. Development of models for imputation of non-structure variables like species.   
+  + MILESTONE: Segmentation / object based Algorithm refined, Species / composition databases developed.
+* June – December 2022: Full model development of non-structure attributes. Imputation approach applied over all sites. Field program undertaken at key sites to ensure accuracy of predictions, visits to unusual stand conditions to verify predictions. 
   + MILESTONE: Full algorithm testing, Accuracy assessment.
-* March 2023 – August 2023: Workshops, code demos, open source code packaging / delivery to all partners. Final validation, Final inventory polygon coverages provided to partners. 
+* January – May 2023: Workshops, code demos, open source code packaging / delivery to all partners. Final validation, Final inventory polygon coverages provided to partners. 
   + MILESTONE: Open source code, workshops, peer reviewed papers.
 
 ### Deliverables {-#deliverables}
 
 Key deliverables for this project are:
 
-1. 15 March 2022: Digital Layers Compiled SPL and EFI datasets over study areas. Provided to ministry and industry staff.
-2. 15 August 2022: Object based segmentation approach with validation. Code available for broader scale testing and applications.
-3. 15 March 2023: Imputation draft paper developed. Imputation code developed ready for testing.
-4. 15 August 2023: Open source code release. Workshop for industry and government participants. Peer reviewed papers on approach.
+1. 15 December 2021: Digital Layers Compiled SPL and EFI datasets over study areas. Provided to ministry and industry staff.
+2. 15 May 2022: Object based segmentation approach with validation. Code available for broader scale testing and applications.
+3. 15 December 2022: Imputation draft paper developed. Imputation code developed ready for testing.
+4. 15 May 2023: Open source code release. Workshop for industry and government participants. Peer reviewed papers on approach.
 
 ## Knowledge & Technology Transfer {-#knowledge-transfer}
 

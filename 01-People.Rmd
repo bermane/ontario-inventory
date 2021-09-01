@@ -36,19 +36,19 @@ Berman will be responsible for data management, algorithm development and testin
 
 We will work with RYAM Forest Management at a number of their forest management areas where FRI data and EFi data exist. RYAM partners will provide plot data, SPL and any other relevant datasets over the areas to ensure accurate model development. They will also attend project meetings, assess model accuracy with RYAM staff and test developed software as required. 
 
-## Ontario Ministry of Natural Resources and Forestry {-#ministry}
+## Ontario Ministry of Northern Development, Mines, Natural Resources and Forestry {-#ministry}
 
 ### Ian Sinclair, *partner* {-#is}
 
-[Ian Sinclair](linkedin.com/in/ian-sinclair-984929a4) is a terrestrial landscape analyst with the Ontario Ministry of Natural Resources and Forestry, where he is responsible for the development of remotely sensed inventory and landscape level monitoring and reporting programs. His focus includes the development of LiDAR attributes and remotely sensed applications to support a continuous forest inventory program. Ian also coordinates the acquisition program of the Ministry’s SPL program and supports the operational aspects of the Vegetation Sampling Network Protocol for development of LiDAR based forest inventories.
+[Ian Sinclair](linkedin.com/in/ian-sinclair-984929a4) is a terrestrial landscape analyst with the Ontario Ministry of Northern Development, Mines, Natural Resources and Forestry, where he is responsible for the development of remotely sensed inventory and landscape level monitoring and reporting programs. His focus includes the development of LiDAR attributes and remotely sensed applications to support a continuous forest inventory program. Ian also coordinates the acquisition program of the Ministry’s SPL program and supports the operational aspects of the Vegetation Sampling Network Protocol for development of LiDAR based forest inventories.
 
 ### Derek Landry, *partner* {-#dl}
 
-[Derek Landry](linkedin.com/in/derek-landry-4a860b212) is the management coordinator of Ontario’s Forest Resources Inventory (FRI) Unit in the Ministry of Natural Resources and Forestry, where he is leading the modernization of provincial forest inventory and land cover mapping programs. Derek has been working in the Ontario Public Service for 25 years. Prior to joining the FRI unit, Derek managed the development and implementation of recommendations to modernize provincial scale fisheries, wildlife, and vegetation monitoring programs, through the Integrated Monitoring Framework initiative.
+[Derek Landry](linkedin.com/in/derek-landry-4a860b212) is the management coordinator of Ontario’s Forest Resources Inventory (FRI) Unit in the Ministry of Northern Development, Mines, Natural Resources and Forestry, where he is leading the modernization of provincial forest inventory and land cover mapping programs. Derek has been working in the Ontario Public Service for 25 years. Prior to joining the FRI unit, Derek managed the development and implementation of recommendations to modernize provincial scale fisheries, wildlife, and vegetation monitoring programs, through the Integrated Monitoring Framework initiative.
 
 ### Geordie Robere-McGugan, *partner* {-#grm}
 
-[Geordie Robere-McGugan](linkedin.com/in/geordie-robere-mcgugan-b5b6aa3) is the Inventory Development Specialist with the Ontario Ministry of Natural Resources and Forestry and the lead on the modernization of the Forest Resources Inventory ensuring the inventory products meet the Provincial Policy Framework. 
+[Geordie Robere-McGugan](linkedin.com/in/geordie-robere-mcgugan-b5b6aa3) is the Inventory Development Specialist with the Ontario Ministry of Northern Development, Mines, Natural Resources and Forestry and the lead on the modernization of the Forest Resources Inventory ensuring the inventory products meet the Provincial Policy Framework. 
 
 #### Responsibilities {-#responsibilities-ministry}
 

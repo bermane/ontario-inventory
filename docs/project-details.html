@@ -24,7 +24,7 @@
 <meta name="author" content="Ethan Berman" />
 
 
-<meta name="date" content="2021-08-05" />
+<meta name="date" content="2021-09-01" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -86,7 +86,7 @@
 <li><a href="people.html#cm">Chris McDonell, <em>partner</em></a></li>
 <li><a href="people.html#gm">Grant McCartney, <em>partner</em></a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="people.html"><a href="people.html#ministry"><i class="fa fa-check"></i>Ontario Ministry of Natural Resources and Forestry</a><ul>
+<li class="chapter" data-level="" data-path="people.html"><a href="people.html#ministry"><i class="fa fa-check"></i>Ontario Ministry of Northern Development, Mines, Natural Resources and Forestry</a><ul>
 <li><a href="people.html#is">Ian Sinclair, <em>partner</em></a></li>
 <li><a href="people.html#dl">Derek Landry, <em>partner</em></a></li>
 <li><a href="people.html#grm">Geordie Robere-McGugan, <em>partner</em></a></li>
@@ -159,7 +159,7 @@
 <p>First, image segmentation (or object based image analysis) will be performed on key EFI-derived raster attributes of stand (Lorey’s) height and canopy cover to derive structurally-homogeneous micro-stand objects. We will use newly developed open source segmentation tools, specifically developed for forestry LIDAR data to produce wall-to-wall polygon representations of EFI raster layers.</p>
 <p>Second, the boundaries of these micro-stand objects will be used to extract information from other EFI layers (volume, basal area, crown closure) transforming them from rasters into attributed micro-stand polygons. Microstands will then be cleaned and merged based on size constraints and differences within and between segments (such as between vs within variations in volume and basal area). We will utilise extensive information already produced by the Ontario MNR on Ontario Forest Resources Inventory Photo Interpretation Specifications which state key area, perimeter and quality control standards for polygon delineation to meet Ontario forestry needs. These standards will be used to ensure that the derived polygons from the raster EFI’s will closely resemble the current FRI polygons in terms of area, shape and perimeter distributions.</p>
 <p>In the third step we will develop an imputation-based approach to derive the remaining attributes not readily predicted from LIDAR including age, species group / species composition or forest unit, and site index. We will utilise the existing Ontario FRI polygons within the forest management area. For each FRI polygon we will extract positional (latitude / longitude), terrain, and climatic information from auxiliary 30 m environmental data. We will also access considerable work completed and underway mapping forest age from historical Landsat data and spatial databases of fire, harvesting, and road disturbances compiled as part of the Boreal Disturbance Database. If available, this type of information will also be compiled and attributed into each delineated polygon. We will then develop an imputation reference dataset which links the four desired attributes to both the structural attributes within the FRI (volume, density, basal area and height), as well as the location, terrain and climate data. This will produce a reference library of every combination of structural and compositional conditions.</p>
-<p>In the final step, we will impute the additional forest inventory attributes for each SPL derived micro-stand stand including age, species group / composition, and site index combination for that given stand based on its nearest neighbours in attribute space. We will also work with other researchers funded by KTDD investigating the use of SPL data for additional attribute such as soils prediction to ensure consistency in the use of environmental attributes.</p>
+<p>In the final step, we will impute the additional forest inventory attributes for each SPL derived micro-stand stand including age, species group / composition, and site index combination for that given stand based on its nearest neighbours in attribute space. We will also work with other researchers funded by KTTD investigating the use of SPL data for additional attribute such as soils prediction to ensure consistency in the use of environmental attributes.</p>
 <p>We will assess accuracy in a number of ways. For delineation of the micro-stands themselves, we will use GIS spatial overlap algorithms to assess degree of spatial coherence between manually-delineated polygons vs the automatically delineated stands micro-stands from the SPL. For imputation, we will assess agreement using independent validation samples of a hold back of FRI polygons and compare the imputation results with the manually interpreted species, age and site index assessments.</p>
 </div>
 <div id="schedule" class="section level2 unnumbered">
@@ -167,16 +167,19 @@
 <div id="project-dates" class="section level3 unnumbered">
 <h3>Project Dates</h3>
 <ul>
-<li>September 2021 – March 2022: Compile all available SPL data and plot data. Build necessary EFI at each management area. Apply segmentation approaches on rater predictions
+<li>June – December 2021: Compile all available SPL data and plot data. Build necessary EFI at each management area. Apply segmentation approaches on raster predictions.
 <ul>
 <li>MILESTONE: Compiled SPL and EFI datasets over study areas.</li>
 </ul></li>
-<li>March 2022 – August 2022: Refinement of polygon size and shape based on Provincial input. Development of models for imputation of non-structure variables like species. + MILESTONE: Segmentation / object based Algorithm refined, Species / composition databases developed.</li>
-<li>August 2022 – March 2023: Full model development of non-structure attributes. Imputation approach applied over all sites. Field program undertaken at key sites to ensure accuracy of predictions, visits to unusual stand conditions to verify predictions.
+<li>January – May 2022: Refinement of polygon size and shape based on Provincial input. Development of models for imputation of non-structure variables like species.
+<ul>
+<li>MILESTONE: Segmentation / object based Algorithm refined, Species / composition databases developed.</li>
+</ul></li>
+<li>June – December 2022: Full model development of non-structure attributes. Imputation approach applied over all sites. Field program undertaken at key sites to ensure accuracy of predictions, visits to unusual stand conditions to verify predictions.
 <ul>
 <li>MILESTONE: Full algorithm testing, Accuracy assessment.</li>
 </ul></li>
-<li>March 2023 – August 2023: Workshops, code demos, open source code packaging / delivery to all partners. Final validation, Final inventory polygon coverages provided to partners.
+<li>January – May 2023: Workshops, code demos, open source code packaging / delivery to all partners. Final validation, Final inventory polygon coverages provided to partners.
 <ul>
 <li>MILESTONE: Open source code, workshops, peer reviewed papers.</li>
 </ul></li>
@@ -186,10 +189,10 @@
 <h3>Deliverables</h3>
 <p>Key deliverables for this project are:</p>
 <ol style="list-style-type: decimal">
-<li>15 March 2022: Digital Layers Compiled SPL and EFI datasets over study areas. Provided to ministry and industry staff.</li>
-<li>15 August 2022: Object based segmentation approach with validation. Code available for broader scale testing and applications.</li>
-<li>15 March 2023: Imputation draft paper developed. Imputation code developed ready for testing.</li>
-<li>15 August 2023: Open source code release. Workshop for industry and government participants. Peer reviewed papers on approach.</li>
+<li>15 December 2021: Digital Layers Compiled SPL and EFI datasets over study areas. Provided to ministry and industry staff.</li>
+<li>15 May 2022: Object based segmentation approach with validation. Code available for broader scale testing and applications.</li>
+<li>15 December 2022: Imputation draft paper developed. Imputation code developed ready for testing.</li>
+<li>15 May 2023: Open source code release. Workshop for industry and government participants. Peer reviewed papers on approach.</li>
 </ol>
 </div>
 </div>

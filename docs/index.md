@@ -22,7 +22,7 @@ The acquisition of Single Photon Lidar (SPL) over the forested area of Ontario i
 
 ## Project Partners {-#partners}
 
-This project is principally a partnership between the University of British Columbia, RYAM Forest Management, the Ontario Ministry of Northern Development, Mines, Natural Resources and Forestryy and Foresty Futures Trust Ontario.
+This project is principally a partnership between the University of British Columbia, RYAM Forest Management, the Ontario Ministry of Northern Development, Mines, Natural Resources and Forestry, and Forestry Futures Trust Ontario.
 
 RYAM Forest Management and the University of British Columbia have a history of successful collaboration including the use of LIDAR and aerial photogrammetry for spruce budworm assessment and regeneration mapping. This project will also build upon the very strong links UBC has with the Canadian Wood Fiber Centre (CWFC), which has thus far culminated in more than 20 peer-reviewed publications on CWFC-funded work, including the award winning best practices guide. 
 

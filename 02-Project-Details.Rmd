@@ -31,7 +31,7 @@ The goal of this project is to develop and apply an open source methodological f
 
 We propose three forest management units as focus sites for this research.
 
-The Romeo Malette Forest, which is an actively managed forest by RYAM Forest Management and is a typical example of a boreal forest management unit in this region. Forest harvesting practices result in an array of stand development stages which are associated with a range of vegetation structures. 
+The Romeo Malette Forest, which is an actively managed forest by GreenFirst Forest Products and is a typical example of a boreal forest management unit in this region. Forest harvesting practices result in an array of stand development stages which are associated with a range of vegetation structures. 
 
 A second focus site will be forest management areas within the Great Lakes forest FMU, including French Severn forest or Algonquin Provincial Park. These forest areas have distinct and complementary ecologies, resulting in a range of species and structures not evident in the northern boreal. Likewise additional datasets to utilise in the model development will be different, resulting in different approaches than the methodology developed for boreal systems. 
 

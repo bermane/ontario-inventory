@@ -22,19 +22,19 @@ Coops as the PI will manage the budget, an overall assignment of students and re
 
 Berman will be responsible for data management, algorithm development and testing, and delivery of open source software tools to the project partners. He will be supervised by Prof. Coops at UBC.
 
-## Rayonier Advanced Materials (RYAM) Forest Management {-#ryam}
+## GreenFirst Forest Products {-#greenfirst}
 
 ### Chris McDonell, *partner* {-#cm}
 
-[Chris McDonell](linkedin.com/in/chris-mcdonell-45759113) is the manager of aboriginal and environmental relations at RYAM. He is accountable for relations between RYAM and First Nation and Metis communities in Ontario and Quebec. He is also the coordinator of forest certification standard implementation (FSC) and liaison with various public, private and community organizations.
+[Chris McDonell](linkedin.com/in/chris-mcdonell-45759113) is the Chief Forester for Ontario at GreenFirst Forest Products. He is accountable for relations between GreenFirst and First Nation and Metis communities in Ontario and Quebec. He is also the coordinator of forest certification standard implementation (FSC) and liaison with various public, private and community organizations.
 
 ### Grant McCartney, *partner* {-#gm}
 
-[Grant McCartney](https://ca.linkedin.com/in/grantmccartneygis) was a spatial analyst and forest information systems coordinator with RYAM Forest Management. He recently transitioned to a role at Forsite Consultants. He performed spatial analysis in support of forest management planning (FMP) and forestry operations on the Gordon Cosens, Romeo Malette and Martel – Magpie Forests in Northeastern Ontario, Canada and led the acquisition of remotely sensed data including Digital Aerial Photogrammetry (DAP) and LiDAR for RYAM. He has been an industrial partner in numerous research efforts including: the Assessment of Wood Attributes for REmote sensing (AWARE) project, CWFC – FIP , past FFT - KKTD projects and the recently approved Silv@21.
+[Grant McCartney](https://ca.linkedin.com/in/grantmccartneygis) was a spatial analyst and forest information systems coordinator with RYAM Forest Management (now GreenFirst Forest Products). He recently transitioned to a role at Forsite Consultants. He performed spatial analysis in support of forest management planning (FMP) and forestry operations on the Gordon Cosens, Romeo Malette and Martel – Magpie Forests in Northeastern Ontario, Canada and led the acquisition of remotely sensed data including Digital Aerial Photogrammetry (DAP) and LiDAR for RYAM. He has been an industrial partner in numerous research efforts including: the Assessment of Wood Attributes for REmote sensing (AWARE) project, CWFC – FIP , past FFT - KKTD projects and the recently approved Silv@21.
 
-#### Responsibilities {-#responsibilities-ryam}
+#### Responsibilities {-#responsibilities-greenfirst}
 
-We will work with RYAM Forest Management at a number of their forest management areas where FRI data and EFi data exist. RYAM partners will provide plot data, SPL and any other relevant datasets over the areas to ensure accurate model development. They will also attend project meetings, assess model accuracy with RYAM staff and test developed software as required. 
+We will work with GreenFirst Forest Products at a number of their forest management areas where FRI data and EFi data exist. GreenFirst partners will provide plot data, SPL and any other relevant datasets over the areas to ensure accurate model development. They will also attend project meetings, assess model accuracy with GreenFirst staff and test developed software as required. 
 
 ## Ontario Ministry of Northern Development, Mines, Natural Resources and Forestry {-#ministry}
 

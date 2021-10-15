@@ -77,7 +77,7 @@ This project is designed to support research, development and technology transfe
 
 As the application of SPL and other 3-dimensional data to forest inventories becomes more common, the need for joint projects with industry is required to communicate these successes and caveats of these technologies and their appropriate application across Canada. The ultimate outcomes of this project will be a workforce that is more informed on the use of remote sensing technologies for next generation forest inventory applications.
 
-We will work with Ontario MNR FRI staff, and RYAM Forest Management managers on a number of key methods of outcome dissemination. These will include:
+We will work with Ontario MNR FRI staff, and GreenFirst Forest Products managers on a number of key methods of outcome dissemination. These will include:
 
 * Peer-reviewed scientific publications.
 

@@ -19,17 +19,43 @@ spl[[1]] <- focal(spl[[1]], w=5, fun="mean")
 spl[[2]] <- focal(spl[[2]], w=5, fun="mean")
 spl[[3]] <- focal(spl[[3]], w=5, fun="mean")
 
+# load roads, watercourses and waterbodies
+roads <- vect('D:/ontario_inventory/romeo/RMF_EFI_layers/Roads/RMF_roads.shp') %>%
+  project(., spl)
+waterc <- vect('D:/ontario_inventory/romeo/RMF_EFI_layers/Lakes and rivers/RMF_watercourses.shp') %>%
+  project(., spl)
+waterb <- vect('D:/ontario_inventory/romeo/RMF_EFI_layers/Lakes and rivers/RMF_waterbodies.shp') %>%
+  project(., spl)
+
+# mask spl pixels to NA
+spl_m <- spl %>% 
+  mask(., roads, inverse = T) %>% 
+  mask(., waterc, inverse = T) %>% 
+  mask(., waterb, inverse = T)
+
 # if any band is missing values set all to NA
 spl[is.na(spl[[1]])] <- NA
 spl[is.na(spl[[2]])] <- NA
 spl[is.na(spl[[3]])] <- NA
 
+# apply to masked values
+spl_m[is.na(spl_m[[1]])] <- NA
+spl_m[is.na(spl_m[[2]])] <- NA
+spl_m[is.na(spl_m[[3]])] <- NA
+
 # scale values
 spl_scale <- scale(spl, center=F)
+
+# apply to masked values
+spl_m_scale <- scale(spl_m, center=F)
 
 # set no data values to 100
 spl_scale[is.na(spl_scale)] <- 100
 spl_scale[is.nan(spl_scale)] <- 100
+
+# apply to masked values
+spl_m_scale[is.na(spl_m_scale)] <- 100
+spl_m_scale[is.nan(spl_m_scale)] <- 100
 
 # create function to rescale values from 0 to 100 using 1 and 99 percentile
 scale_100 <- function(x){
@@ -53,10 +79,21 @@ spl_scale_100[[1]] <- scale_100(spl_scale_100[[1]])
 spl_scale_100[[2]] <- scale_100(spl_scale_100[[2]])
 spl_scale_100[[3]] <- scale_100(spl_scale_100[[3]])
 
+# apply to masked values
+spl_m_scale_100 <- spl_m
+spl_m_scale_100[[1]] <- scale_100(spl_m_scale_100[[1]])
+spl_m_scale_100[[2]] <- scale_100(spl_m_scale_100[[2]])
+spl_m_scale_100[[3]] <- scale_100(spl_m_scale_100[[3]])
+
 # write raster to tif
 writeRaster(spl_scale, filename='D:/ontario_inventory/test/spl_scale.tif', overwrite=T)
 writeRaster(spl_scale_100, filename='D:/ontario_inventory/test/spl_scale_100.tif', overwrite=T)
 writeRaster(spl, filename='D:/ontario_inventory/test/spl.tif', overwrite=T)
+
+# write masked values to tif
+writeRaster(spl_m_scale, filename='D:/ontario_inventory/test/spl_m_scale.tif', overwrite=T)
+writeRaster(spl_m_scale_100, filename='D:/ontario_inventory/test/spl_m_scale_100.tif', overwrite=T)
+writeRaster(spl_m, filename='D:/ontario_inventory/test/spl_m.tif', overwrite=T)
 
 # create function to extract polygon stats from qgis meanshift test runs
 extract_ms_stats <- function(file, name){
@@ -70,16 +107,23 @@ extract_ms_stats <- function(file, name){
                    min_pix = min(p$nbPixels),
                    mean_pix = mean(p$nbPixels) %>% round(1),
                    med_pix = median(p$nbPixels) %>% round(1),
-                   max_pix = max(p$nbPixels))
+                   max_pix = max(p$nbPixels),
+                   num_poly = NROW(p))
   
-  # plot histogram
-  png(str_c('D:/ontario_inventory/test/plots/', name, '.png'))
-  hist(p$nbPixels, 
-       xlim=quantile(pd$nbPixels, probs = c(0.01, 0.99)), 
-       breaks = 1000,
-       main = name,
-       xlab = 'Number of Pixels')
-  dev.off()
+  # plot density
+  ggplot(data.frame(nbPixels = p$nbPixels), aes(x = nbPixels)) +
+    geom_density() +
+    xlim(c(0,1500)) +
+    ylim(c(0, 0.015)) +
+    geom_vline(aes(xintercept = median(nbPixels, na.rm = T)), 
+               linetype = "dashed", size = 0.6) +
+    theme_bw() +
+    xlab('Number of Pixels') +
+    ylab('Density') +
+    ggtitle(name)
+  
+  # save plot
+  ggsave(str_c('D:/ontario_inventory/test/plots/', name, '.png'))
   
   #return df
   return(df)
@@ -91,8 +135,25 @@ ms_df <- extract_ms_stats('D:/ontario_inventory/test/scale_100/scale_100_ms_10_7
 ms_df <- rbind(ms_df,
                extract_ms_stats('D:/ontario_inventory/test/scale_100/scale_100_ms_10_5_100.shp',
                                 'scale_100_ms_10_5_100'))
+ms_df <- rbind(ms_df,
+               extract_ms_stats('D:/ontario_inventory/test/scale_100/scale_100_ms_10_10_100.shp',
+                                'scale_100_ms_10_10_100'))
+ms_df <- rbind(ms_df,
+               extract_ms_stats('D:/ontario_inventory/test/scale_100/scale_100_ms_10_10_50.shp',
+                                'scale_100_ms_10_10_50'))
+ms_df <- rbind(ms_df,
+               extract_ms_stats('D:/ontario_inventory/test/scale_100/scale_100_ms_10_15_50.shp',
+                                'scale_100_ms_10_15_50'))
+ms_df <- rbind(ms_df,
+               extract_ms_stats('D:/ontario_inventory/test/scale_100/scale_m_100_ms_10_15_50.shp',
+                                'scale_m_100_ms_10_15_50'))
+ms_df <- rbind(ms_df,
+               extract_ms_stats('D:/ontario_inventory/test/scale_100/scale_m_100_ms_10_10_100.shp',
+                                'scale_m_100_ms_10_10_100'))
 
-# INCLUDE TOTAL NUMBER OF POLYGONS???
+#ms_df <- rbind(ms_df,
+#               extract_ms_stats('D:/ontario_inventory/test/scale_100/scale_100_ms_10_10_50.shp',
+#                                'scale_100_ms_10_15_50'))
 
 # load interpreter derived polygons to extract statistics
 poly <- vect('D:/ontario_inventory/romeo/RMF_EFI_layers/Polygons Inventory/RMF_PolygonForest.shp') %>%
@@ -104,7 +165,8 @@ int_df <- data.frame(name = 'interp_full',
            min_pix = (min(poly$AREA)/400) %>% round(1),
            mean_pix = (mean(poly$AREA)/400) %>% round(1),
            med_pix = (median(poly$AREA)/400) %>% round(1),
-           max_pix = (max(poly$AREA)/400) %>% round(1))
+           max_pix = (max(poly$AREA)/400) %>% round(1),
+           num_poly = NROW(poly))
 
 # subset forested polygons only
 poly_for <- poly[poly$POLYTYPE=='FOR',]
@@ -115,7 +177,8 @@ int_df <- rbind(int_df,
                            min_pix = (min(poly_for$AREA)/400) %>% round(1),
                            mean_pix = (mean(poly_for$AREA)/400) %>% round(1),
                            med_pix = (median(poly_for$AREA)/400) %>% round(1),
-                           max_pix = (max(poly_for$AREA)/400) %>% round(1)))
+                           max_pix = (max(poly_for$AREA)/400) %>% round(1),
+                           num_poly = NROW(poly_for)))
 
 # subset all non water polygons
 poly_land <- poly[poly$POLYTYPE!='WAT',]
@@ -126,32 +189,62 @@ int_df <- rbind(int_df,
                            min_pix = (min(poly_land$AREA)/400) %>% round(1),
                            mean_pix = (mean(poly_land$AREA)/400) %>% round(1),
                            med_pix = (median(poly_land$AREA)/400) %>% round(1),
-                           max_pix = (max(poly_land$AREA)/400) %>% round(1)))
+                           max_pix = (max(poly_land$AREA)/400) %>% round(1),
+                           num_poly = NROW(poly_land)))
+
+# combine dfs from mean shift and interpreter
+out_df <- rbind(ms_df, int_df)
+
+# write df as csv
+write.csv(out_df, 
+          file = 'D:/ontario_inventory/test/plots/polygon_table.csv',
+          row.names = F)
 
 # output histograms from interpreter polygons
 # area hist all poly types
-hist(poly$AREA/400, 
-     xlim=(quantile(poly$AREA, probs = c(0.01, 0.99)))/400,
-     ylim = c(0,15000),
-     breaks=10000,
-     main = 'All Interpreter Polygons',
-     xlab = 'Number of Pixels')
+ggplot(poly, aes(x = AREA/400)) +
+  geom_density() +
+  xlim(c(0,1500)) +
+  ylim(c(0, 0.015)) +
+  geom_vline(aes(xintercept = median(AREA/400, na.rm = T)), 
+             linetype = "dashed", size = 0.6) +
+  theme_bw() +
+  xlab('Number of Pixels') +
+  ylab('Density') +
+  ggtitle('All Interpreter Polygons')
+
+# save plot
+ggsave('D:/ontario_inventory/test/plots/all_interp.png')
 
 # area hist only forest polys
-hist(poly_for$AREA/400, 
-     xlim=(quantile(poly_for$AREA, probs = c(0.01, 0.99)))/400,
-     ylim = c(0,15000),
-     breaks=10000,
-     main = 'Forested Interpreter Polygons',
-     xlab = 'Number of Pixels')
+ggplot(poly_for, aes(x = AREA/400)) +
+  geom_density() +
+  xlim(c(0,1500)) +
+  ylim(c(0, 0.015)) +
+  geom_vline(aes(xintercept = median(AREA/400, na.rm = T)), 
+             linetype = "dashed", size = 0.6) +
+  theme_bw() +
+  xlab('Number of Pixels') +
+  ylab('Density') +
+  ggtitle('Forested Interpreter Polygons')
+
+# save plot
+ggsave('D:/ontario_inventory/test/plots/forested_interp.png')
 
 # area hist non water polys
-hist(poly_land$AREA/400, 
-     xlim=(quantile(poly_land$AREA, probs = c(0.01, 0.99)))/400,
-     ylim = c(0,15000),
-     breaks=10000,
-     main = 'Non-Water Interpreter Polygons',
-     xlab = 'Number of Pixels')
+ggplot(poly_land, aes(x = AREA/400)) +
+  geom_density() +
+  xlim(c(0,1500)) +
+  ylim(c(0, 0.015)) +
+  geom_vline(aes(xintercept = median(AREA/400, na.rm = T)), 
+             linetype = "dashed", size = 0.6) +
+  theme_bw() +
+  xlab('Number of Pixels') +
+  ylab('Density') +
+  ggtitle('Non-Water Interpreter Polygons')
+
+# save plot
+ggsave('D:/ontario_inventory/test/plots/land_interp.png')
 
 # meanshift_otb <- function(otb.path = "", raster.in = "", out.path = "", name ="", filter.meanshift.spatialr = "5",
 #                            filter.meanshift.ranger = "0.1", filter.meanshift.thres = "0.1",
@@ -208,3 +301,109 @@ hist(poly_land$AREA/400,
 # 
 # # create as raster
 # ms_ras <- terra::setValues(spl[[1]], as.numeric(ms$value[1,]))
+
+################################################
+###COMBINE MISSING PIXELS INTO SINGLE POLYGON###
+################################################
+
+# first result
+
+# load polygon dataset
+p <- vect('D:/ontario_inventory/test/scale_100/scale_100_ms_10_10_100.shp')
+
+# subset by polygons that only have one pixel (NA) and polygons that have more
+p_na <- p[p$nbPixels==1,]
+p_real <- p[p$nbPixels>1,]
+
+# dissolve polygons that only have 1 pixels
+p2 <- aggregate(p_na, by='nbPixels')
+
+# add back into single file
+p3 <- rbind(p_real, p2)
+
+# write to file to check in QGIS
+writeVector(p3, 'D:/ontario_inventory/test/scale_100_ms_10_10_100_AGG.shp')
+  
+# load roads, watercourses and waterbodies
+roads <- vect('D:/ontario_inventory/romeo/RMF_EFI_layers/Roads/RMF_roads.shp')
+waterc <- vect('D:/ontario_inventory/romeo/RMF_EFI_layers/Lakes and rivers/RMF_watercourses.shp')
+waterb <- vect('D:/ontario_inventory/romeo/RMF_EFI_layers/Lakes and rivers/RMF_waterbodies.shp')
+
+# try using the "erase" to remove polygons or parts of polygons that are roads, waterc, or waterb
+p4 <- p3 %>% erase(., roads) %>% erase(., waterc) %>% erase(., waterb)
+
+# write to file to check in QGIS
+writeVector(p4, 'D:/ontario_inventory/test/scale_100_ms_10_10_100_AGG_ERASE.shp')
+
+# second result
+
+# load polygon dataset
+p <- vect('D:/ontario_inventory/test/scale_100/scale_100_ms_10_15_50.shp')
+
+# subset by polygons that only have one pixel (NA) and polygons that have more
+p_na <- p[p$nbPixels==1,]
+p_real <- p[p$nbPixels>1,]
+
+# dissolve polygons that only have 1 pixels
+p2 <- aggregate(p_na, by='nbPixels')
+
+# add back into single file
+p3 <- rbind(p_real, p2)
+
+# write to file to check in QGIS
+writeVector(p3, 'D:/ontario_inventory/test/scale_100_ms_10_15_50_AGG.shp', overwrite=T)
+
+# two datasets with roads, rivers, and water bodies masked
+
+# load polygon dataset
+p <- vect('D:/ontario_inventory/test/scale_100/scale_m_100_ms_10_15_50.shp')
+
+# subset by polygons that only have one pixel (NA) and polygons that have more
+p_na <- p[p$nbPixels==1,]
+p_real <- p[p$nbPixels>1,]
+
+# dissolve polygons that only have 1 pixels
+p2 <- aggregate(p_na, by='nbPixels')
+
+# add back into single file
+p3 <- rbind(p_real, p2)
+
+# write to file to check in QGIS
+writeVector(p3, 'D:/ontario_inventory/test/scale_m_100_ms_10_15_50_AGG.shp', overwrite = T)
+
+# load polygon dataset
+p <- vect('D:/ontario_inventory/test/scale_100/scale_m_100_ms_10_10_100.shp')
+
+# subset by polygons that only have one pixel (NA) and polygons that have more
+p_na <- p[p$nbPixels==1,]
+p_real <- p[p$nbPixels>1,]
+
+# dissolve polygons that only have 1 pixels
+p2 <- aggregate(p_na, by='nbPixels')
+
+# add back into single file
+p3 <- rbind(p_real, p2)
+
+# write to file to check in QGIS
+writeVector(p3, 'D:/ontario_inventory/test/scale_m_100_ms_10_10_100_AGG.shp', overwrite = T)
+
+########################################
+###TRY A SPECTRAL CLUSTERING APPROACH###
+########################################
+
+# clear environment
+# rm(list=ls())
+
+# load example polygons from MS
+p <- vect('D:/ontario_inventory/test/scale_100_ms_10_15_50_AGG.shp')
+
+# get centroids of polygons
+cent <- centroids(p)
+
+# convert to df
+cent_df <- as.data.frame(cent)
+
+# remove row with NA values
+cent_df <- subset(cent_df, nbPixels!=1)
+
+#

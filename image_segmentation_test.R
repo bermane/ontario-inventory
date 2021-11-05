@@ -27,35 +27,21 @@ waterc <- vect('D:/ontario_inventory/romeo/RMF_EFI_layers/Lakes and rivers/RMF_w
 waterb <- vect('D:/ontario_inventory/romeo/RMF_EFI_layers/Lakes and rivers/RMF_waterbodies.shp') %>%
   project(., spl)
 
-# mask spl pixels to NA
-spl_m <- spl %>% 
+# subset roads to only mask the main types used by interpreter
+# RDTYPE = H, P, B
+roads <- roads[roads$RDTYPE %in% c('H', 'P', 'B'),]
+
+# mask road and water body pixels to NA
+spl <- spl %>% 
   mask(., roads, inverse = T) %>% 
-  mask(., waterc, inverse = T) %>% 
   mask(., waterb, inverse = T)
+
+#mask(., waterc, inverse = T) %>% 
 
 # if any band is missing values set all to NA
 spl[is.na(spl[[1]])] <- NA
 spl[is.na(spl[[2]])] <- NA
 spl[is.na(spl[[3]])] <- NA
-
-# apply to masked values
-spl_m[is.na(spl_m[[1]])] <- NA
-spl_m[is.na(spl_m[[2]])] <- NA
-spl_m[is.na(spl_m[[3]])] <- NA
-
-# scale values
-spl_scale <- scale(spl, center=F)
-
-# apply to masked values
-spl_m_scale <- scale(spl_m, center=F)
-
-# set no data values to 100
-spl_scale[is.na(spl_scale)] <- 100
-spl_scale[is.nan(spl_scale)] <- 100
-
-# apply to masked values
-spl_m_scale[is.na(spl_m_scale)] <- 100
-spl_m_scale[is.nan(spl_m_scale)] <- 100
 
 # create function to rescale values from 0 to 100 using 1 and 99 percentile
 scale_100 <- function(x){
@@ -74,26 +60,12 @@ scale_100 <- function(x){
 }
 
 # rescale rasters from 0 to 100
-spl_scale_100 <- spl
-spl_scale_100[[1]] <- scale_100(spl_scale_100[[1]])
-spl_scale_100[[2]] <- scale_100(spl_scale_100[[2]])
-spl_scale_100[[3]] <- scale_100(spl_scale_100[[3]])
-
-# apply to masked values
-spl_m_scale_100 <- spl_m
-spl_m_scale_100[[1]] <- scale_100(spl_m_scale_100[[1]])
-spl_m_scale_100[[2]] <- scale_100(spl_m_scale_100[[2]])
-spl_m_scale_100[[3]] <- scale_100(spl_m_scale_100[[3]])
+spl[[1]] <- scale_100(spl[[1]])
+spl[[2]] <- scale_100(spl[[2]])
+spl[[3]] <- scale_100(spl[[3]])
 
 # write raster to tif
-writeRaster(spl_scale, filename='D:/ontario_inventory/test/spl_scale.tif', overwrite=T)
-writeRaster(spl_scale_100, filename='D:/ontario_inventory/test/spl_scale_100.tif', overwrite=T)
-writeRaster(spl, filename='D:/ontario_inventory/test/spl.tif', overwrite=T)
-
-# write masked values to tif
-writeRaster(spl_m_scale, filename='D:/ontario_inventory/test/spl_m_scale.tif', overwrite=T)
-writeRaster(spl_m_scale_100, filename='D:/ontario_inventory/test/spl_m_scale_100.tif', overwrite=T)
-writeRaster(spl_m, filename='D:/ontario_inventory/test/spl_m.tif', overwrite=T)
+writeRaster(spl, filename='D:/ontario_inventory/segmentation/spl_stack.tif', overwrite=T)
 
 # create function to extract polygon stats from qgis meanshift test runs
 extract_ms_stats <- function(file, name){

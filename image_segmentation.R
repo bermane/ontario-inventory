@@ -6,6 +6,10 @@ library(terra)
 library(meanShiftR)
 library(tidyverse)
 
+###################################################
+###CREATE MULTI BAND SPL RASTER FOR SEGMENTATION###
+###################################################
+
 # set names of SPL rasters to stack
 lor <- 'D:/ontario_inventory/romeo/RMF_EFI_layers/ABA layers SPL 2018/RMF_20m_T130cm_lor.tif'
 cc <- 'D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_2m_cov.tif'
@@ -67,6 +71,67 @@ spl[[3]] <- scale_100(spl[[3]])
 # write raster to tif
 writeRaster(spl, filename='D:/ontario_inventory/segmentation/spl_stack.tif', overwrite=T)
 
+# remove variables
+rm(cc, cv, lor, spl, roads, waterb, waterc)
+
+##############################
+###RUN MEAN SHIFT ALGORITHM###
+##############################
+
+# set working directory where temp files will be output
+setwd('D:/temp')
+
+# create function to run mean shift
+meanshift_otb <- function(otb_path = "", raster_in = "", out_path = "", name ="", spatialr = "10",
+                           ranger = "10", minsize = "100", tilesizex = "500", tilesizey = "500",
+                           outmode = "vector", cleanup = "true", ram = "256"){
+  # Set configuration
+  conf <- paste("-in", raster_in, "-spatialr", spatialr, "-ranger", ranger,
+                "-minsize", minsize, "-tilesizex", tilesizex, "-tilesizey", tilesizey,
+                "-mode", outmode, "-mode.vector.out", paste(out_path, "/", name, ".shp", sep=""),
+                "-cleanup", cleanup,"-ram", ram)
+  
+  # apply function in command line
+  system(paste(otb_path, "/otbcli_LargeScaleMeanShift", " ", conf, sep=""))
+  
+  # save configuration for further use
+  write.table(x = conf,file = paste(out_path,"/",name,"_conf.txt",sep=""),row.names = F, col.names = F)
+}
+
+# run mean shift
+meanshift_otb(otb_path = "C:/OTB/bin",
+              raster_in = 'D:/ontario_inventory/segmentation/spl_stack.tif',
+              out_path = "D:/ontario_inventory/segmentation",
+              name = "ms_10_10_100",
+              spatialr = "10",
+              ranger = "10",
+              minsize = "100",
+              ram = "1024")
+
+# usage, you can set any option listed above
+meanshift_otb(otb_path = "C:/OTB/bin",
+              raster_in = 'D:/ontario_inventory/segmentation/spl_stack.tif',
+              out_path = "D:/ontario_inventory/segmentation",
+              name = "ms_10_15_50",
+              spatialr = "10",
+              ranger = "15",
+              minsize = "50",
+              ram = "1024")
+
+# usage, you can set any option listed above
+meanshift_otb(otb_path = "C:/OTB/bin",
+              raster_in = 'D:/ontario_inventory/segmentation/spl_stack.tif',
+              out_path = "D:/ontario_inventory/segmentation",
+              name = "ms_10_10_50",
+              spatialr = "10",
+              ranger = "10",
+              minsize = "50",
+              ram = "1024")
+
+############################################
+###EXTRACT POLYGON SUMMARY STATS AND PLOTS##
+############################################
+
 # create function to extract polygon stats from qgis meanshift test runs
 extract_ms_stats <- function(file, name){
   
@@ -95,37 +160,22 @@ extract_ms_stats <- function(file, name){
     ggtitle(name)
   
   # save plot
-  ggsave(str_c('D:/ontario_inventory/test/plots/', name, '.png'))
+  ggsave(str_c('D:/ontario_inventory/segmentation/plots/', name, '.png'),
+         width = 2100, height = 2100, units = 'px')
   
   #return df
   return(df)
 }
 
 # compare meanshift test run specs
-ms_df <- extract_ms_stats('D:/ontario_inventory/test/scale_100/scale_100_ms_10_75_50.shp',
-                          'scale_100_ms_10_7-5_50')
+ms_df <- extract_ms_stats('D:/ontario_inventory/segmentation/ms_10_10_50.shp',
+                          'ms_10_10_50')
 ms_df <- rbind(ms_df,
-               extract_ms_stats('D:/ontario_inventory/test/scale_100/scale_100_ms_10_5_100.shp',
-                                'scale_100_ms_10_5_100'))
+               extract_ms_stats('D:/ontario_inventory/segmentation/ms_10_10_100.shp',
+                                'ms_10_10_100'))
 ms_df <- rbind(ms_df,
-               extract_ms_stats('D:/ontario_inventory/test/scale_100/scale_100_ms_10_10_100.shp',
-                                'scale_100_ms_10_10_100'))
-ms_df <- rbind(ms_df,
-               extract_ms_stats('D:/ontario_inventory/test/scale_100/scale_100_ms_10_10_50.shp',
-                                'scale_100_ms_10_10_50'))
-ms_df <- rbind(ms_df,
-               extract_ms_stats('D:/ontario_inventory/test/scale_100/scale_100_ms_10_15_50.shp',
-                                'scale_100_ms_10_15_50'))
-ms_df <- rbind(ms_df,
-               extract_ms_stats('D:/ontario_inventory/test/scale_100/scale_m_100_ms_10_15_50.shp',
-                                'scale_m_100_ms_10_15_50'))
-ms_df <- rbind(ms_df,
-               extract_ms_stats('D:/ontario_inventory/test/scale_100/scale_m_100_ms_10_10_100.shp',
-                                'scale_m_100_ms_10_10_100'))
-
-#ms_df <- rbind(ms_df,
-#               extract_ms_stats('D:/ontario_inventory/test/scale_100/scale_100_ms_10_10_50.shp',
-#                                'scale_100_ms_10_15_50'))
+               extract_ms_stats('D:/ontario_inventory/segmentation/ms_10_15_50.shp',
+                                'ms_10_15_50'))
 
 # load interpreter derived polygons to extract statistics
 poly <- vect('D:/ontario_inventory/romeo/RMF_EFI_layers/Polygons Inventory/RMF_PolygonForest.shp') %>%
@@ -169,7 +219,7 @@ out_df <- rbind(ms_df, int_df)
 
 # write df as csv
 write.csv(out_df, 
-          file = 'D:/ontario_inventory/test/plots/polygon_table.csv',
+          file = 'D:/ontario_inventory/segmentation/plots/polygon_table.csv',
           row.names = F)
 
 # output histograms from interpreter polygons
@@ -186,7 +236,8 @@ ggplot(poly, aes(x = AREA/400)) +
   ggtitle('All Interpreter Polygons')
 
 # save plot
-ggsave('D:/ontario_inventory/test/plots/all_interp.png')
+ggsave('D:/ontario_inventory/segmentation/plots/all_interp.png',
+       width = 2100, height = 2100, units = 'px')
 
 # area hist only forest polys
 ggplot(poly_for, aes(x = AREA/400)) +
@@ -201,7 +252,8 @@ ggplot(poly_for, aes(x = AREA/400)) +
   ggtitle('Forested Interpreter Polygons')
 
 # save plot
-ggsave('D:/ontario_inventory/test/plots/forested_interp.png')
+ggsave('D:/ontario_inventory/segmentation/plots/forested_interp.png',
+       width = 2100, height = 2100, units = 'px')
 
 # area hist non water polys
 ggplot(poly_land, aes(x = AREA/400)) +
@@ -216,72 +268,20 @@ ggplot(poly_land, aes(x = AREA/400)) +
   ggtitle('Non-Water Interpreter Polygons')
 
 # save plot
-ggsave('D:/ontario_inventory/test/plots/land_interp.png')
+ggsave('D:/ontario_inventory/segmentation/plots/land_interp.png',
+       width = 2100, height = 2100, units = 'px')
 
-# meanshift_otb <- function(otb.path = "", raster.in = "", out.path = "", name ="", filter.meanshift.spatialr = "5",
-#                            filter.meanshift.ranger = "0.1", filter.meanshift.thres = "0.1",
-#                            filter.meanshift.maxiter = "100", filter.meanshift.minsize = "100",
-#                            mode.vector.outmode = "ovw", mode.vector.inmask = "", mode.vector.neighbor = "false",
-#                            mode.vector.stitch = "true", mode.vector.minsize = 1, mode.vector.simplify = 0.1,
-#                            mode.vector.layername = "layer", mode.vector.fieldname = "DN", mode.vector.tilesize = 1024,
-#                            mode.vector.startlabel = 1){
-#   # Set configuration      
-#   conf <- paste("-in",raster.in,"-filter meanshift","-filter.meanshift.spatialr",filter.meanshift.spatialr,
-#                 "-filter.meanshift.ranger",filter.meanshift.ranger,"-filter.meanshift.thres",filter.meanshift.thres,
-#                 "-filter.meanshift.maxiter",filter.meanshift.maxiter,"-filter.meanshift.minsize",filter.meanshift.minsize,
-#                 "-mode vector","-mode.vector.out",paste(out.path,"/",name,".shp",sep=""),"-mode.vector.outmode",mode.vector.outmode,
-#                 ifelse(missingArg(mode.vector.inmask),"",paste("-mode.vector.inmask",mode.vector.inmask)),
-#                 "-mode.vector.neighbor", mode.vector.neighbor,
-#                 "-mode.vector.stitch",mode.vector.stitch,
-#                 "-mode.vector.minsize",mode.vector.minsize,
-#                 "-mode.vector.simplify",mode.vector.simplify,
-#                 "-mode.vector.layername",mode.vector.layername,
-#                 "-mode.vector.fieldname",mode.vector.fieldname,
-#                 "-mode.vector.tilesize",mode.vector.tilesize,
-#                 "-mode.vector.startlabel",mode.vector.startlabel)
-#   # apply function in command line
-#   system(paste(otb.path,"/otbcli_Segmentation"," ",conf,sep=""))
-#   # save configuration for further use
-#   write.table(x = conf,file = paste(out.path,"/",name,"_conf.txt",sep=""),row.names = F, col.names = F)
-# }
-# 
-# # usage, you can set any option listed above
-# meanshift_otb(otb.path="C:/OTB/bin", 
-#               raster.in='D:/ontario_inventory/test/spl.tif', 
-#               out.path="D:/ontario_inventory/test/", 
-#               name="ms_test")
-# 
-# # or, to read the output into R
-# out_path = '/out/path'
-# lyr_name = 'test'
-# 
-# # usage
-# meanshift.segm(otb.path = "OTB-5.8.0-Darwin64/bin", raster.in = "path to/rater_in.tif", out.path=out_path, name = lyr_name)
-# 
-# shp <- readOGR(dsn=out_path, layer = lyr_name, driver = 'ESRI Shapefile')
+#remove variables
+rm(poly, poly_for, poly_land)
 
+##################################################################
+###COMBINE MISSING PIXELS FROM SEGMENTATION INTO SINGLE POLYGON###
+##################################################################
 
-# # set missing values to 0 just to try
-# spl[is.na(spl)] <- 0
-# spl[is.nan(spl)] <- 0
-# 
-# # create matrix of values
-# spl_mat <- t(as.matrix(spl))
-# 
-# # try to apply mean shift
-# ms <- meanShift(t(as.matrix(spl)))
-# 
-# # create as raster
-# ms_ras <- terra::setValues(spl[[1]], as.numeric(ms$value[1,]))
-
-################################################
-###COMBINE MISSING PIXELS INTO SINGLE POLYGON###
-################################################
-
-# first result
-
+# Three model iterations
+# ms_10_10_50
 # load polygon dataset
-p <- vect('D:/ontario_inventory/test/scale_100/scale_100_ms_10_10_100.shp')
+p <- vect('D:/ontario_inventory/segmentation/ms_10_10_50.shp')
 
 # subset by polygons that only have one pixel (NA) and polygons that have more
 p_na <- p[p$nbPixels==1,]
@@ -294,23 +294,11 @@ p2 <- aggregate(p_na, by='nbPixels')
 p3 <- rbind(p_real, p2)
 
 # write to file to check in QGIS
-writeVector(p3, 'D:/ontario_inventory/test/scale_100_ms_10_10_100_AGG.shp')
+writeVector(p3, 'D:/ontario_inventory/segmentation/ms_10_10_50_agg_na.shp')
 
-# load roads, watercourses and waterbodies
-roads <- vect('D:/ontario_inventory/romeo/RMF_EFI_layers/Roads/RMF_roads.shp')
-waterc <- vect('D:/ontario_inventory/romeo/RMF_EFI_layers/Lakes and rivers/RMF_watercourses.shp')
-waterb <- vect('D:/ontario_inventory/romeo/RMF_EFI_layers/Lakes and rivers/RMF_waterbodies.shp')
-
-# try using the "erase" to remove polygons or parts of polygons that are roads, waterc, or waterb
-p4 <- p3 %>% erase(., roads) %>% erase(., waterc) %>% erase(., waterb)
-
-# write to file to check in QGIS
-writeVector(p4, 'D:/ontario_inventory/test/scale_100_ms_10_10_100_AGG_ERASE.shp')
-
-# second result
-
+# ms_10_10_100
 # load polygon dataset
-p <- vect('D:/ontario_inventory/test/scale_100/scale_100_ms_10_15_50.shp')
+p <- vect('D:/ontario_inventory/segmentation/ms_10_10_100.shp')
 
 # subset by polygons that only have one pixel (NA) and polygons that have more
 p_na <- p[p$nbPixels==1,]
@@ -323,12 +311,11 @@ p2 <- aggregate(p_na, by='nbPixels')
 p3 <- rbind(p_real, p2)
 
 # write to file to check in QGIS
-writeVector(p3, 'D:/ontario_inventory/test/scale_100_ms_10_15_50_AGG.shp', overwrite=T)
+writeVector(p3, 'D:/ontario_inventory/segmentation/ms_10_10_100_agg_na.shp')
 
-# two datasets with roads, rivers, and water bodies masked
-
+# ms_10_15_50
 # load polygon dataset
-p <- vect('D:/ontario_inventory/test/scale_100/scale_m_100_ms_10_15_50.shp')
+p <- vect('D:/ontario_inventory/segmentation/ms_10_15_50.shp')
 
 # subset by polygons that only have one pixel (NA) and polygons that have more
 p_na <- p[p$nbPixels==1,]
@@ -340,42 +327,27 @@ p2 <- aggregate(p_na, by='nbPixels')
 # add back into single file
 p3 <- rbind(p_real, p2)
 
-# write to file to check in QGIS
-writeVector(p3, 'D:/ontario_inventory/test/scale_m_100_ms_10_15_50_AGG.shp', overwrite = T)
+# write to file
+writeVector(p3, 'D:/ontario_inventory/segmentation/ms_10_15_50_agg_na.shp')
 
-# load polygon dataset
-p <- vect('D:/ontario_inventory/test/scale_100/scale_m_100_ms_10_10_100.shp')
-
-# subset by polygons that only have one pixel (NA) and polygons that have more
-p_na <- p[p$nbPixels==1,]
-p_real <- p[p$nbPixels>1,]
-
-# dissolve polygons that only have 1 pixels
-p2 <- aggregate(p_na, by='nbPixels')
-
-# add back into single file
-p3 <- rbind(p_real, p2)
-
-# write to file to check in QGIS
-writeVector(p3, 'D:/ontario_inventory/test/scale_m_100_ms_10_10_100_AGG.shp', overwrite = T)
+# remove variables
+rm(p, p_na, p_real, p2, p3)
 
 ########################################
 ###TRY A SPECTRAL CLUSTERING APPROACH###
 ########################################
 
-# clear environment
-# rm(list=ls())
-
-# load example polygons from MS
-p <- vect('D:/ontario_inventory/test/scale_100_ms_10_15_50_AGG.shp')
-
-# get centroids of polygons
-cent <- centroids(p)
-
-# convert to df
-cent_df <- as.data.frame(cent)
-
-# remove row with NA values
-cent_df <- subset(cent_df, nbPixels!=1)
-
-#
+# # clear environment
+# # rm(list=ls())
+# 
+# # load example polygons from MS
+# p <- vect('D:/ontario_inventory/test/scale_100_ms_10_15_50_AGG.shp')
+# 
+# # get centroids of polygons
+# cent <- centroids(p)
+# 
+# # convert to df
+# cent_df <- as.data.frame(cent)
+# 
+# # remove row with NA values
+# cent_df <- subset(cent_df, nbPixels!=1)

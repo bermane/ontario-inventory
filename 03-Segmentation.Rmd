@@ -12,7 +12,7 @@ Third, the output segmentation is compared to polygons derived from manual inter
 
 ## Create Multi-band Raster {-#create-raster}
 
-```{r, create-raster, results=FALSE, message=FALSE, warning=FALSE, fig.height=8}
+```{r, create-raster, results=FALSE, message=FALSE, warning=FALSE}
 # load packages
 library(terra)
 library(meanShiftR)
@@ -99,7 +99,7 @@ writeRaster(spl, filename='D:/ontario_inventory/segmentation_ex/spl_stack.tif', 
 
 ## Run Mean Shift Segmentation {-#run-segmentation}
 
-```{r, run-segmentation, results=FALSE, message=FALSE, warning=FALSE, fig.height=8}
+```{r, run-segmentation, results=FALSE, message=FALSE, warning=FALSE}
 # set working directory where temp files will be output
 setwd('D:/temp')
 
@@ -151,7 +151,7 @@ writeVector(p3, 'D:/ontario_inventory/segmentation_ex/ms_10_10_100_agg_na.shp', 
 
 ## Compare Datasets {-#compare-datasets}
 
-```{r, compare-datasets1, results=FALSE, message=FALSE, warning=FALSE, fig.height=8}
+```{r, compare-datasets1, results=FALSE, message=FALSE, warning=FALSE}
 # load base imagery
 base <- rast('D:/ontario_inventory/romeo/RMF_Sample_Base.tif')
 
@@ -171,7 +171,7 @@ plot(man_poly, border = 'mediumvioletred', add = T)
 
 The above plot shows the manually derived forest stand polygons in the sample area, overlaid on recent true color imagery. Note the clean edges around water bodies, rivers/streams, and road features.
 
-```{r, compare-datasets2, results=FALSE, message=FALSE, warning=FALSE, fig.height=8}
+```{r, compare-datasets2, results=FALSE, message=FALSE, warning=FALSE}
 # plot base imagery with mean shift polygons
 plot(ms_poly, main = 'Polygonal Forest Stands Derived from EFI Layers using Mean Shift')
 plotRGB(base, stretch = 'lin', add = T)

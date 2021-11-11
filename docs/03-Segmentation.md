@@ -13,6 +13,8 @@ Third, the output segmentation is compared to polygons derived from manual inter
 ## Create Multi-band Raster {-#create-raster}
 
 
+
+
 ```r
 # load packages
 library(terra)
@@ -40,7 +42,7 @@ plot(rmf, col = 'grey',
 plot(rmf_samp, col = 'red', add = T)
 ```
 
-<img src="03-Segmentation_files/figure-html/create-raster-1.png" width="672" />
+<img src="03-Segmentation_files/figure-html/create-raster-1.png" width="1152" />
 
 ```r
 # crop raster stack to sample area
@@ -96,19 +98,19 @@ spl[[3]] <- scale_100(spl[[3]])
 plot(spl[[1]], main = "Lorey's Height (scaled 0-100)")
 ```
 
-<img src="03-Segmentation_files/figure-html/create-raster-2.png" width="672" />
+<img src="03-Segmentation_files/figure-html/create-raster-2.png" width="1152" />
 
 ```r
 plot(spl[[2]], main = "Canopy Cover (scaled 0-100)")
 ```
 
-<img src="03-Segmentation_files/figure-html/create-raster-3.png" width="672" />
+<img src="03-Segmentation_files/figure-html/create-raster-3.png" width="1152" />
 
 ```r
 plot(spl[[3]], main = "Coefficient of Variation (scaled 0-100)")
 ```
 
-<img src="03-Segmentation_files/figure-html/create-raster-4.png" width="672" />
+<img src="03-Segmentation_files/figure-html/create-raster-4.png" width="1152" />
 
 ```r
 # write raster to tif
@@ -188,7 +190,7 @@ plotRGB(base, stretch = 'lin', add = T)
 plot(man_poly, border = 'mediumvioletred', add = T)
 ```
 
-<img src="03-Segmentation_files/figure-html/compare-datasets1-1.png" width="672" />
+<img src="03-Segmentation_files/figure-html/compare-datasets1-1.png" width="1152" />
 
 The above plot shows the manually derived forest stand polygons in the sample area, overlaid on recent true color imagery. Note the clean edges around water bodies, rivers/streams, and road features.
 
@@ -200,7 +202,7 @@ plotRGB(base, stretch = 'lin', add = T)
 plot(ms_poly, border = 'red2', add = T)
 ```
 
-<img src="03-Segmentation_files/figure-html/compare-datasets2-1.png" width="672" />
+<img src="03-Segmentation_files/figure-html/compare-datasets2-1.png" width="1152" />
 
 The above plot shows the mean shift derived forest stand polygons in the sample area. Note that the automated segmentation also has clean edges around water bodies and road features, since these features were masked in the first step. Rivers/streams were not masked due to no clear pattern dictating which features manual interpreters included/excluded. The workflow gives the user control over which features in the landscape should be excluded from the segmentation process. Also note that the polygons never reach the same maximum size as the polygons derived manually. The algorithm takes minimum polygon size as an input parameter, but in general does not cluster the landscape into as large polygons.
 

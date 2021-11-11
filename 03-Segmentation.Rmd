@@ -12,6 +12,10 @@ Third, the output segmentation is compared to polygons derived from manual inter
 
 ## Create Multi-band Raster {-#create-raster}
 
+```{r, options, results=FALSE, message=FALSE, warning=FALSE, echo=FALSE}
+knitr::opts_chunk$set(fig.width=12, fig.height=8)
+```
+
 ```{r, create-raster, results=FALSE, message=FALSE, warning=FALSE}
 # load packages
 library(terra)

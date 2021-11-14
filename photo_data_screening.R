@@ -23,6 +23,8 @@ NROW(dat[dat$AREA < 500000,])
 # subset data
 dat_1a <- dat[dat$AREA < 500000,]
 
+# look AT HISTOGRAM OF VERY LARGE POLYGONS AND GET RID OF THEM and ONLY FOR POLYGONS!!!
+
 # B. Within-polygon height and canopy cover coefficient of variation < 0.5
 
 # load loreys height and canopy cover from LiDAR
@@ -96,7 +98,96 @@ NROW(lc_poly[lc_poly$perc_for > .5,])
 # subset dat based on lc info
 dat_1c <- dat[dat$num_uniq <=2 & dat$perc_for > .5,]
 
-# EXTRA: Some sort of criteria based on year the polygon was updated? 
-# i.e. how closely it matches the timing of the LiDAR acquisition
+###########################
+###DATA SCREENING PART 2###
+###########################
 
-# do we only want polygons that are listed as FOREST? probably...
+# A. Linear regression of Height vs. Lorey's Height
+
+# WE PROBABLY WANT TO RUN THIS WITHOUT WATER POLYGONS!!
+# PRODUCTIVE FOREST ONLY? OR ALL LAND POLYGONS? OR PROD and NONPROD FOREST ONLY?
+
+# Load Lorey's Height from LiDAR
+lor <- rast('D:/ontario_inventory/romeo/RMF_EFI_layers/ABA layers SPL 2018/RMF_20m_T130cm_lor.tif')
+
+# project poly to crs of rasters
+poly_lor <- project(poly, lor)
+
+# extract median within each polygon
+# chen did not use edge pixels -- here edge pixels are still included so can consider
+# writing code to remove edge pixels from the calculation
+lor_med <- terra::extract(lor, poly_lor, fun = function(x){median(x, na.rm = T)})
+
+# add new column into dat
+dat <- dat %>% add_column(lor_med = lor_med[,2])
+
+# remove layers
+rm(lor, lor_med, poly_lor)
+
+# remove rows with missing values
+dat_2a <- dat[is.na(dat$HT) == F & is.na(dat$lor_med) == F,]
+
+# plot variables against each other
+plot(dat$lor_med, dat$HT)
+plot(dat$lor_med[dat$POLYTYPE == 'FOR'], dat$HT[dat$POLYTYPE == 'FOR'])
+
+# run simple linear model
+lm_ht <- lm(HT ~ lor_med, data = dat_2a)
+summary(lm_ht)
+
+# bind residuals to data
+dat_2a <- dat_2a %>% add_column(lm_ht_resid = resid(lm_ht))
+
+# find 20th and 80th percentile
+lm_ht_perc <- quantile(dat_2a$lm_ht_resid, probs = c(.20, .80))
+
+# remove lower 20 and upper 20 from dat
+dat_2a <- dat_2a[dat_2a$lm_ht_resid > lm_ht_perc[1] & dat_2a$lm_ht_resid < lm_ht_perc[2],]
+
+# re plot relationship
+plot(dat_2a$lor_med, dat_2a$HT)
+
+# B. Linear regression of Canopy Closure vs. LiDAR Canopy Cover
+
+# WE PROBABLY WANT TO RUN THIS WITHOUT WATER POLYGONS!!
+# PRODUCTIVE FOREST ONLY? OR ALL LAND POLYGONS? OR PROD and NONPROD FOREST ONLY?
+
+# Load canopy cover from LiDAR
+cc <- rast('D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_2m_cov.tif')
+
+# project poly to crs of rasters
+poly_cc <- project(poly, cc)
+
+# extract median within each polygon
+# chen did not use edge pixels -- here edge pixels are still included so can consider
+# writing code to remove edge pixels from the calculation
+cc_med <- terra::extract(cc, poly_cc, fun = function(x){median(x, na.rm = T)})
+
+# add new column into dat
+dat <- dat %>% add_column(cc_med = cc_med[,2])
+
+# remove layers
+rm(cc, cc_med, poly_cc)
+
+# remove rows with missing values
+dat_2b <- dat[is.na(dat$CC) == F & is.na(dat$cc_med) == F,]
+
+# plot variables against each other
+plot(dat$cc_med, dat$CC)
+plot(dat$cc_med[dat$POLYTYPE == 'FOR'], dat$CC[dat$POLYTYPE == 'FOR'])
+
+# run simple linear model
+lm_cc <- lm(CC ~ cc_med, data = dat_2b)
+summary(lm_cc)
+
+# bind residuals to data
+dat_2b <- dat_2b %>% add_column(lm_cc_resid = resid(lm_cc))
+
+# find 20th and 80th percentile
+lm_cc_perc <- quantile(dat_2b$lm_cc_resid, probs = c(.20, .80))
+
+# remove lower 20 and upper 20 from dat
+dat_2b <- dat_2b[dat_2b$lm_cc_resid > lm_cc_perc[1] & dat_2b$lm_cc_resid < lm_cc_perc[2],]
+
+# re plot relationship
+plot(dat_2b$cc_med, dat_2b$CC)

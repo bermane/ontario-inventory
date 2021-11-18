@@ -31,7 +31,7 @@ mal <- yai(x = x, y = y, method = "mahalanobis")
 msn <- yai(x = x, y = y, method = "msn")
 gnn <- yai(x = x, y = y, method = "gnn")
 ica <- yai(x = x, y = y, method = "ica")
-
+d
 y2 <- cbind(whatsMax(y[, 1:4]), y[, 5])
 names(y2) <- c("MajorSpecies", "BasalAreaMajorSp", "TotalBA")
 rf <- yai(x = x, y = y2, method = "randomForest")

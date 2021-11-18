@@ -168,7 +168,7 @@ summary(lm_ht)
 dat_2a <- dat_2a %>% add_column(lm_ht_resid = resid(lm_ht))
 
 # find 20th and 80th percentile
-lm_ht_perc <- quantile(dat_2a$lm_ht_resid, probs = c(.20, .80))
+lm_ht_perc <- quantile(dat_2a$lm_ht_resid, probs = c(.10, .90))
 
 # remove lower 20 and upper 20 from dat
 dat_2a <- dat_2a[dat_2a$lm_ht_resid > lm_ht_perc[1] & dat_2a$lm_ht_resid < lm_ht_perc[2],]
@@ -214,7 +214,7 @@ summary(lm_cc)
 dat_2b <- dat_2b %>% add_column(lm_cc_resid = resid(lm_cc))
 
 # find 20th and 80th percentile
-lm_cc_perc <- quantile(dat_2b$lm_cc_resid, probs = c(.20, .80))
+lm_cc_perc <- quantile(dat_2b$lm_cc_resid, probs = c(.10, .90))
 
 # remove lower 20 and upper 20 from dat
 dat_2b <- dat_2b[dat_2b$lm_cc_resid > lm_cc_perc[1] & dat_2b$lm_cc_resid < lm_cc_perc[2],]
@@ -272,7 +272,7 @@ summary(lm_ba)
 dat_2c <- dat_2c %>% add_column(lm_ba_resid = resid(lm_ba))
 
 # find 20th and 80th percentile
-lm_ba_perc <- quantile(dat_2c$lm_ba_resid, probs = c(.20, .80))
+lm_ba_perc <- quantile(dat_2c$lm_ba_resid, probs = c(.10, .90))
 
 # remove lower 20 and upper 20 from dat
 dat_2c <- dat_2c[dat_2c$lm_ba_resid > lm_ba_perc[1] & dat_2c$lm_ba_resid < lm_ba_perc[2],]
@@ -290,11 +290,24 @@ summary(lm_ba2)
 ### COMBINE INTERSECTION OF DATA ###
 ####################################
 
-# combine results from part 1 (POLYID column only)
-dat_1 <- intersect(dat_1b %>% subset(select = POLYID), dat_1c %>% subset(select = POLYID))
+# # combine results from part 1 (POLYID column only)
+# dat_1 <- intersect(dat_1b %>% subset(select = POLYID), dat_1c %>% subset(select = POLYID))
+# 
+# # combine results from part 2 (POLYID column only)
+# dat_2 <- intersect(dat_2a %>% subset(select = POLYID), dat_2b %>% subset(select = POLYID)) %>% 
+#   intersect(., dat_2c %>% subset(select = POLYID))
+# 
+# # combine all
+# dat_screen <- intersect(dat_1, dat_2)
+# 
+# # reload attributes
+# dat_screen <- dat[dat$POLYID %in% dat_screen$POLYID,]
 
-# combine results from part 2 (POLYID column only)
-dat_2 <- intersect(dat_2a %>% subset(select = POLYID), dat_2b %>% subset(select = POLYID)) %>% 
+# combine results from part 1 (POLYID column only)
+dat_1 <- dat_1b %>% subset(select = POLYID)
+
+# combine results from pa rt 2 (POLYID column only)
+dat_2 <- intersect(dat_2a %>% subset(select = POLYID), dat_2b %>% subset(select = POLYID)) %>%
   intersect(., dat_2c %>% subset(select = POLYID))
 
 # combine all
@@ -303,8 +316,14 @@ dat_screen <- intersect(dat_1, dat_2)
 # reload attributes
 dat_screen <- dat[dat$POLYID %in% dat_screen$POLYID,]
 
+# check some values/distributions
+table(dat_screen$POLYTYPE)
+table(dat$POLYTYPE)
+# we lost a lot of the variability in polygon type probably because of the linear regression models not
+# matching in those other poly types
+
 # write to disk
-write.csv(dat_screen, file = 'D:/ontario_inventory/imputation/dat_screen.csv', row.names = F)
+write.csv(dat_screen, file = 'D:/ontario_inventory/imputation/dat_screen_1b_2_10perc.csv', row.names = F)
 
 # save working image to speed up future changes
 save.image('D:/ontario_inventory/imputation/photo_data_screening.RData')

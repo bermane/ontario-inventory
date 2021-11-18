@@ -36,7 +36,7 @@ y2 <- cbind(whatsMax(y[, 1:4]), y[, 5])
 names(y2) <- c("MajorSpecies", "BasalAreaMajorSp", "TotalBA")
 rf <- yai(x = x, y = y2, method = "randomForest")
 head(y2)
-
+d
 plot(rf, vars = yvars(rf))
 
 rfImp <- impute(rf)

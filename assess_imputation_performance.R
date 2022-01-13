@@ -405,3 +405,90 @@ for(l in 1:length(rmsd_s)){
 
 # output csv
 write.csv(var_compare, file = 'D:/ontario_inventory/imputation/test_results/dat_screen_compare.csv', row.names = F)
+
+# PART E
+# Test different number of trees in random forest algorithm
+
+# clear workspace
+rm(list=ls())
+
+# load extracted data frame
+load('D:/ontario_inventory/imputation/imputation_df.RData')
+
+# load final datasets after screening
+dat_screen <- read.csv('D:/ontario_inventory/imputation/dat_screen_2_30_70.csv')
+
+# subset dat based on screening
+dat_sc <- dat[dat$POLYID %in% dat_screen$POLYID,]
+
+# change all non-numeric variables to factor
+dat_sc[sapply(dat_sc, is.character)] <- lapply(dat_sc[sapply(dat_sc, is.character)], 
+                                               as.factor)
+
+# load ref vars
+ref_vars <- list(c('cc', 'p80', 'avg', 'qav', 'cv', 'kur', 'max', 'ske', 'agb', 'ba', 'dens', 'lor', 'qmdbh', 'top_height', 'v', 'v_merch'))
+
+# load tar vars
+tar_vars <- list(c('HT', 'POLYTYPE'),
+                 c('HT', 'BA', 'POLYTYPE'),
+                 c('HT', 'CC', 'POLYTYPE'),
+                 c('HT', 'CC', 'BA', 'POLYTYPE'))
+
+# set number of different iterations of trees
+tree_iter <- c('50%', '75%', '90%', '100%',
+               '110%', '125%', '150%')
+
+# allocate output lists
+rmsd <- list()
+rmsd_s <- list()
+
+# start tick and timer
+tick <- 1
+tictoc::tic()
+  
+# run imputation algorithm over list of variable combinations
+for(i in 1:length(ref_vars)){
+  for(j in 1:length(tar_vars)){
+    for(iter in 1:length(tree_iter)){
+      
+      # set reference and target variables
+      x <- dat_sc[, ref_vars[[i]]]
+      y <- dat_sc[, tar_vars[[j]]]
+      
+      # run imputation algorithm based on tree iter
+      if(iter == 1) rf <- yai(x = x, y = y, method = 'randomForest', ntree = 100*NCOL(y)*0.5)
+      if(iter == 2) rf <- yai(x = x, y = y, method = 'randomForest', ntree = 100*NCOL(y)*0.75)
+      if(iter == 3) rf <- yai(x = x, y = y, method = 'randomForest', ntree = 100*NCOL(y)*0.9)
+      if(iter == 4) rf <- yai(x = x, y = y, method = 'randomForest', ntree = 100*NCOL(y))
+      if(iter == 5) rf <- yai(x = x, y = y, method = 'randomForest', ntree = 100*NCOL(y)*1.1)
+      if(iter == 6) rf <- yai(x = x, y = y, method = 'randomForest', ntree = 100*NCOL(y)*1.25)
+      if(iter == 7) rf <- yai(x = x, y = y, method = 'randomForest', ntree = 100*NCOL(y)*1.5)
+      
+      # calculate RMSD for each variable
+      rmsd[[tick]] <- rmsd(rf, vars = yvars(rf))
+      
+      # calculate scaled RMSD for model
+      rmsd_s_hold <- rmsd(rf, vars = yvars(rf), scale = T)
+      rmsd_s[[tick]] <- data.frame(rmsd_s = as.numeric(rmsd_s_hold[,1]) %>% mean(na.rm = T),
+                                   ref_vars = paste(ref_vars[[i]], collapse = ', '),
+                                   tar_vars = paste(tar_vars[[j]], collapse = ', '),
+                                   num_trees = tree_iter[iter])
+      
+      # advance tick
+      tick <- tick + 1
+    }
+  }
+}
+    
+# stop timer
+tictoc::toc()
+
+# put results into table
+var_compare <- data.frame()
+
+for(l in 1:length(rmsd_s)){
+  var_compare <- rbind(var_compare, rmsd_s[[l]])
+}
+
+# output csv
+write.csv(var_compare, file = 'D:/ontario_inventory/imputation/test_results/num_trees_compare.csv', row.names = F)

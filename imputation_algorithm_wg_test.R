@@ -50,7 +50,7 @@ plot(rmsd)
 
 # # load photo interpreted polygons
 # poly <- vect('D:/ontario_inventory/romeo/RMF_EFI_layers/Polygons Inventory/RMF_PolygonForest.shp')
-#
+# 
 # # convert to df
 # dat <- as.data.frame(poly)
 
@@ -69,29 +69,29 @@ plot(rmsd)
 #            'qmdbh' = 'D:/ontario_inventory/romeo/RMF_EFI_layers/ABA layers SPL 2018/RMF_20m_T130cm_qmdbh.tif',
 #            'dens' = 'D:/ontario_inventory/romeo/RMF_EFI_layers/ABA layers SPL 2018/RMF_20m_T130cm_dens.tif',
 #            'agb' = 'D:/ontario_inventory/romeo/RMF_EFI_layers/ABA layers SPL 2018/RMF_20m_T130cm_AGB_ha.tif')
-#
+# 
 # # loop through LiDAR datasets and add to main dataframe
 # for(i in 1:length(lidar)){
-#
+#   
 #   # load raster variable
 #   ras <- rast(lidar[i])
-#
+#   
 #   # project poly to crs of raster
 #   poly_ras <- project(poly, ras)
-#
+#   
 #   # extract median values within each polygon
 #   ras_med <- terra::extract(ras, poly_ras, fun = function(x){median(x, na.rm = T)})
-#
+#   
 #   # add new column into dat
 #   dat <- dat %>% add_column(ras = ras_med[,2])
-#
+#   
 #   # change column name
 #   colnames(dat)[NCOL(dat)] <- names(lidar[i])
-#
+#   
 #   # clean up
 #   rm(ras, poly_ras, ras_med)
 # }
-#
+# 
 # # clean up
 # rm(i, lidar)
 # 
@@ -115,6 +115,9 @@ dat <- dat[dat$FOREST_ID %in% dat_screen$FOREST_ID,]
 ###RUN IMPUTATION ALGORITHM###
 ##############################
 
+# change missing WG values to "UCL" so they aren't blank
+dat$WG[dat$WG == ""] <- "UCL"
+
 # change all non-numeric variables to factor
 dat[sapply(dat, is.character)] <- lapply(dat[sapply(dat, is.character)], 
                                        as.factor)
@@ -127,7 +130,7 @@ ref_vars <- c('cc', 'p80', 'avg', 'qav', 'cv', 'kur', 'max', 'ske', 'agb', 'ba',
 x <- dat[, ref_vars]
 
 # build dataframe of target variables
-tar_vars <- c('HT', 'CC', 'BA', 'POLYTYPE')
+tar_vars <- c('HT', 'CC', 'BA', 'POLYTYPE', 'WG')
 y <- dat[, tar_vars]
 
 # build dataframe of ancillary data
@@ -208,11 +211,11 @@ plot(rf, vars = yvars(rf))
 # 
 # # clean up
 # rm(i, lidar)
-# 
-# # save loaded LiDAR attributes
-# save(dat_lidar, file = 'D:/ontario_inventory/imputation/seg_df_ms_10_10_100_agg_na.RData')
 
-# load LiDAR attributes
+# save loaded LiDAR attributes
+#save(dat_lidar, file = 'D:/ontario_inventory/imputation/seg_df_ms_10_10_100_agg_na.RData')
+
+# load lidar attributes
 load('D:/ontario_inventory/imputation/seg_df_ms_10_10_100_agg_na.RData')
 
 # run imputation over new polygons
@@ -259,8 +262,8 @@ imp_fri <- impute(object = rf,
                   observed = F)
 
 # save dat and imp_fri
-write.csv(dat, file = 'D:/ontario_inventory/imputation/dat_out.csv', row.names = F)
-write.csv(imp_fri, file = 'D:/ontario_inventory/imputation/dat_out_imp.csv', row.names = F)
+write.csv(dat, file = 'D:/ontario_inventory/imputation/test_imp_wg/dat_out.csv', row.names = F)
+write.csv(imp_fri, file = 'D:/ontario_inventory/imputation/test_imp_wg/dat_out_imp.csv', row.names = F)
 
 # compare input data and imputed data plots
 plot(dat$HT, imp_fri$HT)
@@ -303,7 +306,7 @@ class(accmat_pt_ext) <- "table"
 accmat_pt_ext
 
 # write to csv
-write.csv(accmat_pt_ext, file = 'D:/ontario_inventory/imputation/accmat_pt.csv')
+write.csv(accmat_pt_ext, file = 'D:/ontario_inventory/imputation/test_imp_wg/accmat_pt.csv')
 
 # calculate kappa coefficient
 kappa <- function(m) {
@@ -330,7 +333,7 @@ rmse_df <- data.frame(AGE = c(rmse(dat$AGE, imp_fri$AGE),
 rownames(rmse_df) <- c('raw_rmsd', 'scaled_rmsd')
 
 # write table
-write.csv(rmse_df, file = 'D:/ontario_inventory/imputation/rmsd_dat_imp.csv')
+write.csv(rmse_df, file = 'D:/ontario_inventory/imputation/test_imp_wg/rmsd_dat_imp.csv')
 
 # create df of WG
 wg <- data.frame(obs = dat$WG,
@@ -371,7 +374,7 @@ class(accmat_wg_ext) <- "table"
 accmat_wg_ext
 
 # write to csv
-write.csv(accmat_wg_ext, file = 'D:/ontario_inventory/imputation/accmat_wg.csv')
+write.csv(accmat_wg_ext, file = 'D:/ontario_inventory/imputation/test_imp_wg/accmat_wg.csv')
 
 # calculate kappa coefficient
 kappa(accmat_wg)

@@ -15,58 +15,8 @@ library(randomForest)
 ###LOAD POLYGON DATASET AND ADD LIDAR ATTRIBUTES###
 ###################################################
 
-# # load photo interpreted polygons
-# poly <- vect('D:/ontario_inventory/romeo/RMF_EFI_layers/Polygons Inventory/RMF_PolygonForest.shp')
-#
-# # convert to df
-# dat <- as.data.frame(poly)
-
-# load LiDAR datasets we need to extract over polygons
-# create named vector with variable names and data links
-
-# lidar <- c('cc' = 'D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_2m_cov.tif',
-#            'avg' = 'D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_avg.tif',
-#            'max' = 'D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_max.tif',
-#            'qav' = 'D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_qav.tif',
-#            'ske' = 'D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_ske.tif',
-#            'kur' = 'D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_kur.tif',
-#            'cv' = 'D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_cv.tif',
-#            'lor' = 'D:/ontario_inventory/romeo/RMF_EFI_layers/ABA layers SPL 2018/RMF_20m_T130cm_lor.tif',
-#            'ba' = 'D:/ontario_inventory/romeo/RMF_EFI_layers/ABA layers SPL 2018/RMF_20m_T130cm_ba_ha.tif',
-#            'qmdbh' = 'D:/ontario_inventory/romeo/RMF_EFI_layers/ABA layers SPL 2018/RMF_20m_T130cm_qmdbh.tif',
-#            'dens' = 'D:/ontario_inventory/romeo/RMF_EFI_layers/ABA layers SPL 2018/RMF_20m_T130cm_dens.tif',
-#            'agb' = 'D:/ontario_inventory/romeo/RMF_EFI_layers/ABA layers SPL 2018/RMF_20m_T130cm_AGB_ha.tif')
-#
-# # loop through LiDAR datasets and add to main dataframe
-# for(i in 1:length(lidar)){
-#
-#   # load raster variable
-#   ras <- rast(lidar[i])
-#
-#   # project poly to crs of raster
-#   poly_ras <- project(poly, ras)
-#
-#   # extract median values within each polygon
-#   ras_med <- terra::extract(ras, poly_ras, fun = function(x){median(x, na.rm = T)})
-#
-#   # add new column into dat
-#   dat <- dat %>% add_column(ras = ras_med[,2])
-#
-#   # change column name
-#   colnames(dat)[NCOL(dat)] <- names(lidar[i])
-#
-#   # clean up
-#   rm(ras, poly_ras, ras_med)
-# }
-#
-# # clean up
-# rm(i, lidar)
-# 
-# # save extracted dataframe for fast rebooting
-# save.image('D:/ontario_inventory/imputation/imputation_df.RData')
-
 # load extracted data frame
-load('D:/ontario_inventory/imputation/imputation_df.RData')
+load('D:/ontario_inventory/dat/dat_fri_100.RData')
 
 # load photo interpreted polygons
 poly <- vect('D:/ontario_inventory/romeo/RMF_EFI_layers/Polygons Inventory/RMF_PolygonForest.shp')
@@ -78,22 +28,19 @@ dat_full <- dat
 dat_full$WG[dat_full$WG == ""] <- "UCL"
 
 # create further separation of data to impute
-# remove WAT POLYTYPE
-dat_imp <- dat_full[dat_full$POLYTYPE != "WAT",]
+# only FOR POLYTYPE
+dat_imp <- dat_full[dat_full$POLYTYPE == "FOR",]
 
 # change all non-numeric variables to factor
 dat_imp[sapply(dat_imp, is.character)] <- lapply(dat_imp[sapply(dat_imp, is.character)], 
                                                    as.factor)
-
-# create ID col based on row names
-# dat_full$ID <- rownames(dat_full)
 
 ##############################################
 ###SUBSET DATA BASED ON SCREENING PROCEDURE###
 ##############################################
 
 # load final dataset after screening
-dat_screen <- read.csv('D:/ontario_inventory/imputation/dat_screen_2_30_70.csv')
+dat_screen <- read.csv('D:/ontario_inventory/imputation/dat_screen_1_2a_10perc_for.csv')
 
 # subset dat based on screening
 dat <- dat[dat$FOREST_ID %in% dat_screen$FOREST_ID,]
@@ -105,25 +52,18 @@ dat <- dat[dat$FOREST_ID %in% dat_screen$FOREST_ID,]
 # SPL vars only
 
 # change missing WG values to "UCL" so they aren't blank
-dat$WG[dat$WG == ""] <- "UCL"
-
-# remove WAT POLYTYPE
-# already did though in screening
-# dat <- dat[dat$POLYTYPE != "WAT",]
+# dat$WG[dat$WG == ""] <- "UCL"
 
 # change all non-numeric variables to factor
 dat[sapply(dat, is.character)] <- lapply(dat[sapply(dat, is.character)], 
                                        as.factor)
 
-#load names of lidar columns added to data above
-colnames(dat[,112:123])
-
 # build dataframe of reference variables
-ref_vars <- c('cc', 'p80', 'avg', 'qav', 'cv', 'kur', 'max', 'ske')
+ref_vars <- c('cc', 'p95', 'avg', 'qav', 'cv', 'kur', 'max', 'ske')
 x <- dat[, ref_vars]
 
 # build dataframe of target variables
-tar_vars <- c('HT', 'CC', 'BA', 'POLYTYPE', 'WG')
+tar_vars <- c('HT', 'CC', 'BA', 'WG')
 y <- dat[, tar_vars]
 
 # build dataframe of ancillary data
@@ -141,72 +81,6 @@ plot(rf, vars = yvars(rf))
 
 # load lidar derived polygons
 poly_lidar <- vect('D:/ontario_inventory/segmentation/ms_10_10_100_agg_na.shp')
-# 
-# # currently testing run on all polygons
-# # take a subset to test imputation
-# # poly_lidar <- poly_lidar[1:1000,]
-# 
-# # convert to df
-# dat_lidar <- as.data.frame(poly_lidar)
-# 
-# # only keep label and nbPixels columns
-# dat_lidar <- dat_lidar %>% select(label, nbPixels)
-# 
-# # we need to set rownames of lidar polygons so they don't overlap reference data
-# # find final rowname from reference and add 1
-# start_r <- as.numeric(rownames(dat)[NROW(dat)]) + 1
-# end_r <- start_r + NROW(dat_lidar) - 1
-# 
-# # change row names so don't overlap with reference dataset
-# rownames(dat_lidar) <- start_r:end_r
-# 
-# # load LiDAR datasets we need to extract over polygons
-# # create named vector with variable names and data links
-# 
-# lidar <- c('cc' = 'D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_2m_cov.tif',
-#            'avg' = 'D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_avg.tif',
-#            'max' = 'D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_max.tif',
-#            'p80' = 'D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_p80.tif',
-#            'qav' = 'D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_qav.tif',
-#            'ske' = 'D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_ske.tif',
-#            'kur' = 'D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_kur.tif',
-#            'cv' = 'D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_cv.tif',
-#            'lor' = 'D:/ontario_inventory/romeo/RMF_EFI_layers/ABA layers SPL 2018/RMF_20m_T130cm_lor.tif',
-#            'ba' = 'D:/ontario_inventory/romeo/RMF_EFI_layers/ABA layers SPL 2018/RMF_20m_T130cm_ba_ha.tif',
-#            'qmdbh' = 'D:/ontario_inventory/romeo/RMF_EFI_layers/ABA layers SPL 2018/RMF_20m_T130cm_qmdbh.tif',
-#            'dens' = 'D:/ontario_inventory/romeo/RMF_EFI_layers/ABA layers SPL 2018/RMF_20m_T130cm_dens.tif',
-#            'agb' = 'D:/ontario_inventory/romeo/RMF_EFI_layers/ABA layers SPL 2018/RMF_20m_T130cm_AGB_ha.tif',
-#            'top_height' = 'D:/ontario_inventory/romeo/RMF_EFI_layers/ABA layers SPL 2018/RMF_20m_T130cm_top_height.tif',
-#            'v' = 'D:/ontario_inventory/romeo/RMF_EFI_layers/ABA layers SPL 2018/RMF_20m_T130cm_V_ha.tif',
-#            'v_merch' = 'D:/ontario_inventory/romeo/RMF_EFI_layers/ABA layers SPL 2018/RMF_20m_T130cm_Vmerch_ha.tif')
-# 
-# # loop through LiDAR datasets and add to main dataframe
-# for(i in 1:length(lidar)){
-# 
-#   # load raster variable
-#   ras <- rast(lidar[i])
-# 
-#   # project poly to crs of raster
-#   poly_ras <- project(poly_lidar, ras)
-# 
-#   # extract median values within each polygon
-#   ras_med <- terra::extract(ras, poly_ras, fun = function(x){median(x, na.rm = T)})
-# 
-#   # add new column into dat
-#   dat_lidar <- dat_lidar %>% add_column(ras = ras_med[,2])
-# 
-#   # change column name
-#   colnames(dat_lidar)[NCOL(dat_lidar)] <- names(lidar[i])
-# 
-#   # clean up
-#   rm(ras, poly_ras, ras_med)
-# }
-# 
-# # clean up
-# rm(i, lidar)
-# 
-# # save loaded LiDAR attributes
-# save(dat_lidar, file = 'D:/ontario_inventory/imputation/seg_df_ms_10_10_100_agg_na.RData')
 
 # load LiDAR attributes
 load('D:/ontario_inventory/imputation/seg_df_ms_10_10_100_agg_na.RData')

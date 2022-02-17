@@ -27,6 +27,9 @@ dat <- filter(dat, POLYTYPE == 'FOR')
 # create smaller polygon set of forested polygons only
 poly_dat <- poly[poly$POLYTYPE == 'FOR']
 
+# export forested polygons only for maps
+# writeVector(poly_dat, filename = 'D:/ontario_inventory/imputation/distributions_for_only/vector/fri_polygons_for_only.shp')
+
 ###########################
 ###DATA SCREENING PART 1###
 ###########################
@@ -163,7 +166,7 @@ colnames(vec) <- names(lidar)
 dat <- cbind(dat, vec)
 
 # How many rows have p95 > 5, which is definition of forest
-NROW(dat[dat$p95>= 5,])
+NROW(dat[dat$p95 >= 5,])
 
 # require p95 > 5
 dat_2_pc <- dat[dat$p95 >= 5,]
@@ -178,7 +181,8 @@ perc_resid <- c(.10, .90)
 dat_2a <- dat[is.na(dat$HT) == F & is.na(dat$p95) == F,]
 
 # plot variables against each other
-plot(dat_2a$p95, dat_2a$HT)
+plot(dat_2a$p95, dat_2a$HT, xlab = 'p95', ylab = 'HT', 
+     main = 'HT vs. p95 in FRI Polygons')
 
 # run simple linear model
 lm_ht <- lm(HT ~ p95, data = dat_2a)
@@ -194,7 +198,8 @@ lm_ht_perc <- quantile(dat_2a$lm_ht_resid, probs = perc_resid)
 dat_2a <- dat_2a[dat_2a$lm_ht_resid > lm_ht_perc[1] & dat_2a$lm_ht_resid < lm_ht_perc[2],]
 
 # re plot relationship
-plot(dat_2a$p95, dat_2a$HT)
+plot(dat_2a$p95, dat_2a$HT, xlab = 'p95', ylab = 'HT', 
+     main = 'HT vs. p95 in FRI Polygons 10/90 Residual Screened')
 
 # run simple linear model on remaining data
 lm_ht2 <- lm(HT ~ p95, data = dat_2a)

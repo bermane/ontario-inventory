@@ -157,5 +157,5 @@ for(m in methods){
 
 
 # write as csv
-write.csv(perform_avg, 
-          file = 'D:/ontario_inventory/imputation/distributions_for_only/rmsd_10_fold_ht_wg_10_perc.csv')
+write.csv(rmsd_df, 
+          file = 'D:/ontario_inventory/imputation/distributions_for_only/rmsd_10_fold_yaimpute_p95_cv_ht.csv')

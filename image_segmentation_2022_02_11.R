@@ -9,7 +9,6 @@
 
 # load packages
 library(terra)
-library(meanShiftR)
 library(tidyverse)
 
 #################################################
@@ -33,30 +32,50 @@ spl[[3]] <- focal(spl[[3]], w=5, fun="mean")
 ###MASK ROADS AND WATER###
 ##########################
 
-# load roads, watercourses and waterbodies
-roads <- vect('D:/ontario_inventory/romeo/RMF_EFI_layers/Roads/RMF_roads.shp') %>%
-  project(., spl)
-waterc <- vect('D:/ontario_inventory/romeo/RMF_EFI_layers/Lakes and rivers/RMF_watercourses.shp') %>%
-  project(., spl)
-waterb <- vect('D:/ontario_inventory/romeo/RMF_EFI_layers/Lakes and rivers/RMF_waterbodies.shp') %>%
-  project(., spl)
+# # load roads, watercourses and waterbodies
+# roads <- vect('D:/ontario_inventory/romeo/RMF_EFI_layers/Roads/RMF_roads.shp') %>%
+#   project(., spl)
+# waterc <- vect('D:/ontario_inventory/romeo/RMF_EFI_layers/Lakes and rivers/RMF_watercourses.shp') %>%
+#   project(., spl)
+# waterb <- vect('D:/ontario_inventory/romeo/RMF_EFI_layers/Lakes and rivers/RMF_waterbodies.shp') %>%
+#   project(., spl)
+# 
+# # subset roads to only mask the main types used by interpreter
+# # RDTYPE = H, P, B
+# roads <- roads[roads$RDTYPE %in% c('H', 'P', 'B'),]
 
-# subset roads to only mask the main types used by interpreter
-# RDTYPE = H, P, B
-roads <- roads[roads$RDTYPE %in% c('H', 'P', 'B'),]
+# create spl template with all values equal to 1
+spl_temp <- spl[[1]]
+spl_temp[] <- 1
 
-# mask road and water body pixels to NA
-spl <- spl %>% 
-  mask(., roads, inverse = T) %>% 
-  mask(., waterb, inverse = T)
-# mask(., waterc, inverse = T) %>% 
+# # create roads polygon
+# spl_r <- mask(spl_temp, roads, touches = T)
+# npix <- sum(values(spl_r), na.rm = T)
+# spl_r <- as.polygons(spl_r)
+# names(spl_r) <- 'POLYTYPE'
+# spl_r$POLYTYPE <- 'RDS'
+# spl_r$nbPixels <- npix
+# 
+# # create waterbodies polygon
+# spl_w <- mask(spl_temp, waterb, touches = T)
+# npix <- sum(values(spl_w), na.rm = T)
+# spl_w <- as.polygons(spl_w)
+# names(spl_w) <- 'POLYTYPE'
+# spl_w$POLYTYPE <- 'WAT'
+# spl_w$nbPixels <- npix
+# 
+# # mask road and water body pixels to NA
+# spl <- spl %>% 
+#   mask(., roads, inverse = T, touches = T) %>% 
+#   mask(., waterb, inverse = T, touches = T)
+# # mask(., waterc, inverse = T) %>% 
 
 ################################
 ###MASK NON FORESTED POLYGONS###
 ################################
 
-# will try leaving non-forested polygons in
-# and taking them out and dealing with them later
+# mask non-forested polygons from segmentation
+# add them back in as polygons with their polytype
 
 # load photo interpreted polygons
 poly <- vect('D:/ontario_inventory/romeo/RMF_EFI_layers/Polygons Inventory/RMF_PolygonForest.shp')
@@ -67,8 +86,37 @@ poly_sub <- poly[poly$POLYTYPE != 'FOR']
 # reproject to match lidar
 poly_sub <- project(poly_sub, spl)
 
+# loop through non-forested polygons, mask raster, and vectorize
+for(i in seq_along(poly_sub)){
+  pt <- poly_sub$POLYTYPE[i]
+  if(i == 1){
+    spl_pt <- spl_temp %>% crop(poly_sub[i], snap = 'out') %>%
+      mask(poly_sub[i], touches = T)
+    npix <- sum(values(spl_pt), na.rm = T)
+    spl_pt <- as.polygons(spl_pt)
+    names(spl_pt) <- 'POLYTYPE'
+    spl_pt$POLYTYPE <- pt
+    spl_pt$nbPixels <- npix
+  } else{
+    spl_hold <- spl_temp %>% crop(poly_sub[i], snap = 'out') %>%
+      mask(poly_sub[i], touches = T)
+    npix <- sum(values(spl_hold), na.rm = T)
+    spl_hold <- as.polygons(spl_hold)
+    names(spl_hold) <- 'POLYTYPE'
+    spl_hold$POLYTYPE <- pt
+    spl_hold$nbPixels <- npix
+    spl_pt <- rbind(spl_pt, spl_hold)
+  }
+}
+
+# reproject whole FRI to match lidar
+poly <- project(poly, spl)
+
+# mask lidar outside of FRI
+spl <- mask(spl, poly, inverse = F, touches = T)
+
 # mask non forested polygons
-spl <- mask(spl, poly_sub, inverse = T)
+spl <- mask(spl, poly_sub, inverse = T, touches = T)
 
 ##################################
 ###MASK USING LANDCOVER AND p95###
@@ -124,7 +172,7 @@ spl[[3]] <- scale_100(spl[[3]])
 writeRaster(spl, filename='D:/ontario_inventory/segmentation/spl_stack_for_polytype.tif', overwrite=T)
 
 # remove variables
-rm(cc, cv, p95, spl, roads, waterb, waterc, poly, poly_sub)
+rm(cc, cv, p95, spl, roads, waterb, waterc, poly, poly_sub, spl_hold)
 
 ##############################
 ###RUN MEAN SHIFT ALGORITHM###
@@ -180,28 +228,48 @@ meanshift_otb(otb_path = "C:/OTB/bin",
 #               minsize = "50",
 #               ram = "1024")
 
-##################################################################
-###COMBINE MISSING PIXELS FROM SEGMENTATION INTO SINGLE POLYGON###
-##################################################################
+##################################
+### ADD PRE-ALLOCATED POLYGONS ###
+##################################
 
 # load polygon dataset
 p <- vect('D:/ontario_inventory/segmentation/ms_10_10_100_for_polytype.shp')
 
-# subset by polygons that only have one pixel (NA) and polygons that have more
-p_na <- p[p$nbPixels==1,]
-p_real <- p[p$nbPixels>1,]
+# mask out missing pixels
+# p1 <- p[p$nbPixels > 1]
+p <- p[is.na(p$meanB0) == F]
 
-# dissolve polygons that only have 1 pixels
-p2 <- aggregate(p_na, by='nbPixels')
+# check out data frame
+pd <- as.data.frame(p) %>% filter(nbPixels == 1)
 
-# add back into single file
-p3 <- rbind(p_real, p2)
+# add non-FOR POLYTYPE polygons back in
+p2 <- rbind(p, spl_pt)
+
+p2$POLYTYPE[is.na(p2$POLYTYPE)] <- 'FOR'
 
 # write to file to check in QGIS
-writeVector(p3, 'D:/ontario_inventory/segmentation/ms_10_10_100_for_polytype_agg_na.shp')
+writeVector(p2, 'D:/ontario_inventory/segmentation/ms_10_10_100_for_polytype_add_pt.shp',
+            overwrite = T)
 
-# remove variables
-rm(p, p_na, p_real, p2, p3)
+##################################################################
+###COMBINE MISSING PIXELS FROM SEGMENTATION INTO SINGLE POLYGON###
+##################################################################
+
+# # subset by polygons that only have one pixel (NA) and polygons that have more
+# p_na <- p[p$nbPixels==1,]
+# p_real <- p[p$nbPixels>1,]
+# 
+# # dissolve polygons that only have 1 pixels
+# p2 <- aggregate(p_na, by='nbPixels')
+# 
+# # add back into single file
+# p3 <- rbind(p_real, p2)
+# 
+# # write to file to check in QGIS
+# writeVector(p3, 'D:/ontario_inventory/segmentation/ms_10_10_100_for_polytype_agg_na.shp')
+# 
+# # remove variables
+# rm(p, p_na, p_real, p2, p3)
 
 ############################################
 ###EXTRACT POLYGON SUMMARY STATS AND PLOTS##
@@ -212,7 +280,7 @@ extract_ms_stats <- function(file, name){
   
   # load polygon and remove polygons with 1 pixel (eventually need to merge these maybe?)
   # need a spatially contiguous file
-  p <- vect(file) %>% .[.$nbPixels>1,]
+  p <- vect(file)
   
   # create dataframe with values wanted
   df <- data.frame(name = name,
@@ -239,13 +307,41 @@ extract_ms_stats <- function(file, name){
   ggsave(str_c('D:/ontario_inventory/segmentation/plots/', name, '.png'),
          width = 2100, height = 2100, units = 'px')
   
+  # subset forested polygons only
+  p <- p[p$POLYTYPE=='FOR',]
+  
+  # rbind df with forested values
+  df <- rbind(df, data.frame(name = str_c(name, '_FOR'),
+                             min_ha = (min(p$nbPixels)*0.04) %>% round(2),
+                             mean_ha = (mean(p$nbPixels)*0.04) %>% round(2),
+                             med_ha = (median(p$nbPixels)*0.04) %>% round(2),
+                             max_ha = (max(p$nbPixels)*0.04) %>% round(2),
+                             num_poly = NROW(p)))
+  
+  # plot density
+  ggplot(data.frame(nbPixels = p$nbPixels), aes(x = nbPixels*0.04)) +
+    geom_density() +
+    xlim(c(0,100)) +
+    ylim(c(0, 0.2)) +
+    geom_vline(aes(xintercept = median(nbPixels*0.04, na.rm = T)), 
+               linetype = "dashed", size = 0.6) +
+    theme_bw() +
+    xlab('Number of Hectares') +
+    ylab('Density') +
+    ggtitle(str_c('Forested ', name, ' Polygons')) +
+    theme(text = element_text(size = 20))
+  
+  # save plot
+  ggsave(str_c('D:/ontario_inventory/segmentation/plots/', name, '_for.png'),
+         width = 2100, height = 2100, units = 'px')
+  
   #return df
   return(df)
 }
 
 # compare meanshift test run specs
-ms_df <- extract_ms_stats('D:/ontario_inventory/segmentation/ms_10_10_100_for_polytype_agg_na.shp',
-                          'ms_10_10_100_for_polytype_agg_na')
+ms_df <- extract_ms_stats('D:/ontario_inventory/segmentation/ms_10_10_100_for_polytype_add_pt.shp',
+                          'ms_10_10_100_for_polytype_add_pt')
 
 # load interpreter derived polygons to extract statistics
 poly <- vect('D:/ontario_inventory/romeo/RMF_EFI_layers/Polygons Inventory/RMF_PolygonForest.shp') %>%
@@ -289,7 +385,7 @@ out_df <- rbind(ms_df, int_df)
 
 # write df as csv
 write.csv(out_df,
-          file = 'D:/ontario_inventory/segmentation/plots/polygon_table_for_polytype.csv',
+          file = 'D:/ontario_inventory/segmentation/plots/polygon_table_for_polytype_add_pt.csv',
           row.names = F)
 
 # output histograms from interpreter polygons
@@ -347,21 +443,3 @@ ggsave('D:/ontario_inventory/segmentation/plots/land_interp.png',
 #remove variables
 rm(poly, poly_for, poly_land)
 
-########################################
-###TRY A SPECTRAL CLUSTERING APPROACH###
-########################################
-
-# # clear environment
-# # rm(list=ls())
-# 
-# # load example polygons from MS
-# p <- vect('D:/ontario_inventory/test/scale_100_ms_10_15_50_AGG.shp')
-# 
-# # get centroids of polygons
-# cent <- centroids(p)
-# 
-# # convert to df
-# cent_df <- as.data.frame(cent)
-# 
-# # remove row with NA values
-# cent_df <- subset(cent_df, nbPixels!=1)

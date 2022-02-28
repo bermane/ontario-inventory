@@ -10,6 +10,9 @@
 # load packages
 library(terra)
 library(tidyverse)
+library(exactextractr)
+library(sf)
+library(janitor)
 
 #################################################
 ###LOAD MULTI BAND SPL RASTER FOR SEGMENTATION###
@@ -229,7 +232,7 @@ meanshift_otb(otb_path = "C:/OTB/bin",
 #               ram = "1024")
 
 ##################################
-### ADD PRE-ALLOCATED POLYGONS ###
+### ADD PRE-ALLOCATED POLYGONS AND LANDCOVER###
 ##################################
 
 # load polygon dataset
@@ -246,6 +249,92 @@ pd <- as.data.frame(p) %>% filter(nbPixels == 1)
 p2 <- rbind(p, spl_pt)
 
 p2$POLYTYPE[is.na(p2$POLYTYPE)] <- 'FOR'
+
+# load VLCE 2.0 landcover dataset from 2018
+lc <- rast('D:/ontario_inventory/VLCE/CA_forest_VLCE2_2018_CLIPPED.tif')
+
+# project polygons to CRS of raster
+p_lc <- project(p2, lc)
+
+# convert to sf
+p_lcsf <- st_as_sf(p_lc)
+
+# extract landcover values
+lc_vals <- exact_extract(lc, p_lcsf)
+
+# set landcover class key
+lc_key <- c(`20` = 'Water',
+            `31` = 'Snow/Ice',
+            `32` = 'Rock/Rubble',
+            `33` = 'Exposed/Barren Land',
+            `40` = 'Bryoids',
+            `50` = 'Shrubland',
+            `80` = 'Wetland',
+            `81` = 'Wetland-Treed',
+            `100` = 'Herbs',
+            `210` = 'Coniferous',
+            `220` = 'Broadleaf',
+            `230` = 'Mixed Wood')
+
+# # load mode function
+# get_mode <- function(x) {
+#   ux <- unique(x)
+#   ux[which.max(tabulate(match(x, ux)))]
+# }
+
+# # load mode function for multiple modes
+# get_mode2 <- function(x) {
+#   ux <- unique(x)
+#   tab <- tabulate(match(x, ux))
+#   ux[tab == max(tab)]
+# }
+# 
+# # set cov fraction
+# cov_frac <- 0
+
+# find dominant lc type in each polygon
+# if there are multiple modes keep them
+# apply over list
+lc_mode <- sapply(lc_vals, function(x){
+  x$value <- recode(x$value, !!!lc_key)
+  x <- x %>% group_by(value) %>% summarize(sum = sum(coverage_fraction))
+  m <- x$value[which(x$sum == max(x$sum))]
+  # m <- get_mode2(x$value[x$coverage_fraction >= cov_frac])
+  return(paste(m, collapse = " "))
+})
+
+# add to polygon dataset
+p2$dom_lc <- lc_mode
+
+# set landcover class key with single forested class
+lc_key_for <- c(`20` = 'Water',
+                `31` = 'Snow/Ice',
+                `32` = 'Rock/Rubble',
+                `33` = 'Exposed/Barren Land',
+                `40` = 'Bryoids',
+                `50` = 'Shrubland',
+                `80` = 'Wetland',
+                `81` = 'Forest',
+                `100` = 'Herbs',
+                `210` = 'Forest',
+                `220` = 'Forest',
+                `230` = 'Forest')
+
+# find pixels with forest at least 50% of pixel
+# apply over list
+lc_dom_for <- sapply(lc_vals, function(x){
+  x$value <- recode(x$value, !!!lc_key_for)
+  x <- x %>% group_by(value) %>% summarize(sum = sum(coverage_fraction))
+  m <- x$value[which(x$sum == max(x$sum))]
+  if((length(m) == 1) & (m == 'Forest')[1]){
+    if(x$sum[x$value == m]/sum(x$sum) >= 0.5){
+      return('Yes')
+    }else{return('No')}
+  }else{return('No')}
+})
+
+# add to polygon dataset
+p2$dom_for <- lc_dom_for
 
 # write to file to check in QGIS
 writeVector(p2, 'D:/ontario_inventory/segmentation/ms_10_10_100_for_polytype_add_pt.shp',
@@ -442,4 +531,32 @@ ggsave('D:/ontario_inventory/segmentation/plots/land_interp.png',
 
 #remove variables
 rm(poly, poly_for, poly_land)
+
+##################################################
+### ANALYZE FORESTED POLYGONS NON-FOR POLYTYPE ###
+##################################################
+
+# load polygons
+poly <- vect('D:/ontario_inventory/segmentation/ms_10_10_100_for_polytype_add_pt.shp')
+
+# convert to df
+p <- as.data.frame(poly)
+
+# pre allocate lists
+dom_lc <- list()
+dom_for <- list()
+
+# loop through unique POLYTYPES to create table of dom_lc and dom_for
+for(i in unique(p$POLYTYPE)){
+  
+  # subset by polytype
+  psub <- p %>% filter(POLYTYPE == i)
+  
+  # add dom_lc and dom_for tables to list
+  dom_lc[[i]] <- psub %>% tabyl(dom_lc) %>% arrange(desc(n)) %>% mutate(percent = round(percent*100,2))
+  dom_for[[i]] <- psub %>% tabyl(dom_for) %>% arrange(desc(n)) %>% mutate(percent = round(percent*100,2))
+  
+}
+
+
 

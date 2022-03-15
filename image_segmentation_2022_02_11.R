@@ -83,8 +83,8 @@ spl_temp[] <- 1
 # load photo interpreted polygons
 poly <- vect('D:/ontario_inventory/romeo/RMF_EFI_layers/Polygons Inventory/RMF_PolygonForest.shp')
 
-# subset polygons that are not FOR POLYTYPE
-poly_sub <- poly[poly$POLYTYPE != 'FOR']
+# subset polygons that are WAT OR UCL
+poly_sub <- poly[poly$POLYTYPE %in% c('WAT', 'UCL')]
 
 # reproject to match lidar
 poly_sub <- project(poly_sub, spl)
@@ -118,7 +118,7 @@ poly <- project(poly, spl)
 # mask lidar outside of FRI
 spl <- mask(spl, poly, inverse = F, touches = T)
 
-# mask non forested polygons
+# mask WAT and UCL polygons
 spl <- mask(spl, poly_sub, inverse = T, touches = T)
 
 ##################################
@@ -172,14 +172,29 @@ spl[[2]] <- scale_100(spl[[2]])
 spl[[3]] <- scale_100(spl[[3]])
 
 # write raster to tif
-writeRaster(spl, filename='D:/ontario_inventory/segmentation/spl_stack_for_polytype.tif', overwrite=T)
+writeRaster(spl, filename='D:/ontario_inventory/segmentation/spl_stack_mask_wat_ucl_polytype.tif', overwrite=T)
+
+# save spl_pt
+writeVector(spl_pt, 'D:/ontario_inventory/segmentation/mask_wat_ucl/wat_ucl_polygons.shp',
+            overwrite = T)
 
 # remove variables
-rm(cc, cv, p95, spl, roads, waterb, waterc, poly, poly_sub, spl_hold)
+rm(cc, cv, p95, spl, poly, poly_sub, spl_hold, spl_temp, spl_pt)
 
 ##############################
 ###RUN MEAN SHIFT ALGORITHM###
 ##############################
+
+# load water and ucl polygons
+spl_pt <- vect('D:/ontario_inventory/segmentation/mask_wat_ucl/wat_ucl_polygons.shp')
+
+# SET PARAMETERS
+rast_in <- 'D:/ontario_inventory/segmentation/spl_stack_for_polytype.tif'
+out_p <- "D:/ontario_inventory/segmentation/mask_wat_ucl"
+name_out <- "ms_10_10_100"
+spat_r <- "10"
+rang_r <- "10"
+m_size <- "100"
 
 # set working directory where temp files will be output
 setwd('D:/temp')
@@ -203,12 +218,12 @@ meanshift_otb <- function(otb_path = "", raster_in = "", out_path = "", name =""
 
 # run mean shift
 meanshift_otb(otb_path = "C:/OTB/bin",
-              raster_in = 'D:/ontario_inventory/segmentation/spl_stack_for_polytype.tif',
-              out_path = "D:/ontario_inventory/segmentation",
-              name = "ms_10_10_100_for_polytype",
-              spatialr = "10",
-              ranger = "10",
-              minsize = "100",
+              raster_in = rast_in,
+              out_path = out_p,
+              name = name_out,
+              spatialr = spat_r,
+              ranger = rang_r,
+              minsize = m_size,
               ram = "1024")
 
 # # usage, you can set any option listed above
@@ -231,24 +246,23 @@ meanshift_otb(otb_path = "C:/OTB/bin",
 #               minsize = "50",
 #               ram = "1024")
 
-##################################
-### ADD PRE-ALLOCATED POLYGONS AND LANDCOVER###
-##################################
+################################################
+### ADD PRE-ALLOCATED POLYGONS AND LANDCOVER ###
+################################################
+
+# load name in and name out 
+name_i <- str_c(out_p, '/', name_out, '.shp')
+name_o <- str_c(out_p, '/', name_out, '_add_pt.shp')
 
 # load polygon dataset
-p <- vect('D:/ontario_inventory/segmentation/ms_10_10_100_for_polytype.shp')
+p <- vect('D:/ontario_inventory/segmentation/ms_10_10_100_for_polytype_mask_wat_ucl.shp')
 
 # mask out missing pixels
 # p1 <- p[p$nbPixels > 1]
 p <- p[is.na(p$meanB0) == F]
 
-# check out data frame
-pd <- as.data.frame(p) %>% filter(nbPixels == 1)
-
 # add non-FOR POLYTYPE polygons back in
 p2 <- rbind(p, spl_pt)
-
-p2$POLYTYPE[is.na(p2$POLYTYPE)] <- 'FOR'
 
 # load VLCE 2.0 landcover dataset from 2018
 lc <- rast('D:/ontario_inventory/VLCE/CA_forest_VLCE2_2018_CLIPPED.tif')
@@ -336,8 +350,25 @@ lc_dom_for <- sapply(lc_vals, function(x){
 # add to polygon dataset
 p2$dom_for <- lc_dom_for
 
+# load p95 lidar values
+p95 <- rast('D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_p95.tif')
+
+# project polygons to CRS of raster
+p_p95 <- project(p2, p95)
+
+# convert to sf
+p_p95sf <- st_as_sf(p_p95)
+
+#extract median values
+p95_med <- exact_extract(p95, p_p95sf, fun = function(df){
+  median(df$value[df$coverage_fraction == 1], na.rm = T)
+}, summarize_df = T)
+
+# add to polygon dataset
+p2$p95 <- p95_med
+
 # write to file to check in QGIS
-writeVector(p2, 'D:/ontario_inventory/segmentation/ms_10_10_100_for_polytype_add_pt.shp',
+writeVector(p2, name_o,
             overwrite = T)
 
 ##################################################################
@@ -364,73 +395,91 @@ writeVector(p2, 'D:/ontario_inventory/segmentation/ms_10_10_100_for_polytype_add
 ###EXTRACT POLYGON SUMMARY STATS AND PLOTS##
 ############################################
 
-# create function to extract polygon stats from qgis meanshift test runs
-extract_ms_stats <- function(file, name){
-  
-  # load polygon and remove polygons with 1 pixel (eventually need to merge these maybe?)
-  # need a spatially contiguous file
-  p <- vect(file)
-  
-  # create dataframe with values wanted
-  df <- data.frame(name = name,
-                   min_ha = (min(p$nbPixels)*0.04) %>% round(2),
-                   mean_ha = (mean(p$nbPixels)*0.04) %>% round(2),
-                   med_ha = (median(p$nbPixels)*0.04) %>% round(2),
-                   max_ha = (max(p$nbPixels)*0.04) %>% round(2),
-                   num_poly = NROW(p))
-  
-  # plot density
-  ggplot(data.frame(nbPixels = p$nbPixels), aes(x = nbPixels*0.04)) +
-    geom_density() +
-    xlim(c(0,100)) +
-    ylim(c(0, 0.2)) +
-    geom_vline(aes(xintercept = median(nbPixels*0.04, na.rm = T)), 
-               linetype = "dashed", size = 0.6) +
-    theme_bw() +
-    xlab('Number of Hectares') +
-    ylab('Density') +
-    ggtitle(name) +
-    theme(text = element_text(size = 20))
-  
-  # save plot
-  ggsave(str_c('D:/ontario_inventory/segmentation/plots/', name, '.png'),
-         width = 2100, height = 2100, units = 'px')
-  
-  # subset forested polygons only
-  p <- p[p$POLYTYPE=='FOR',]
-  
-  # rbind df with forested values
-  df <- rbind(df, data.frame(name = str_c(name, '_FOR'),
-                             min_ha = (min(p$nbPixels)*0.04) %>% round(2),
-                             mean_ha = (mean(p$nbPixels)*0.04) %>% round(2),
-                             med_ha = (median(p$nbPixels)*0.04) %>% round(2),
-                             max_ha = (max(p$nbPixels)*0.04) %>% round(2),
-                             num_poly = NROW(p)))
-  
-  # plot density
-  ggplot(data.frame(nbPixels = p$nbPixels), aes(x = nbPixels*0.04)) +
-    geom_density() +
-    xlim(c(0,100)) +
-    ylim(c(0, 0.2)) +
-    geom_vline(aes(xintercept = median(nbPixels*0.04, na.rm = T)), 
-               linetype = "dashed", size = 0.6) +
-    theme_bw() +
-    xlab('Number of Hectares') +
-    ylab('Density') +
-    ggtitle(str_c('Forested ', name, ' Polygons')) +
-    theme(text = element_text(size = 20))
-  
-  # save plot
-  ggsave(str_c('D:/ontario_inventory/segmentation/plots/', name, '_for.png'),
-         width = 2100, height = 2100, units = 'px')
-  
-  #return df
-  return(df)
-}
+# extract polygon stats from qgis meanshift test runs
+# load polygon and remove polygons with 1 pixel (eventually need to merge these maybe?)
+# need a spatially contiguous file
+p <- vect(name_o) %>% as.data.frame
 
-# compare meanshift test run specs
-ms_df <- extract_ms_stats('D:/ontario_inventory/segmentation/ms_10_10_100_for_polytype_add_pt.shp',
-                          'ms_10_10_100_for_polytype_add_pt')
+# create dataframe with values wanted
+ms_df <- data.frame(name = name,
+                 min_ha = (min(p$nbPixels)*0.04) %>% round(2),
+                 mean_ha = (mean(p$nbPixels)*0.04) %>% round(2),
+                 med_ha = (median(p$nbPixels)*0.04) %>% round(2),
+                 max_ha = (max(p$nbPixels)*0.04) %>% round(2),
+                 num_poly = NROW(p))
+
+# plot density
+ggplot(data.frame(nbPixels = p$nbPixels), aes(x = nbPixels*0.04)) +
+  geom_density() +
+  xlim(c(0,100)) +
+  ylim(c(0, 0.2)) +
+  geom_vline(aes(xintercept = median(nbPixels*0.04, na.rm = T)), 
+             linetype = "dashed", size = 0.6) +
+  theme_bw() +
+  xlab('Number of Hectares') +
+  ylab('Density') +
+  ggtitle(name) +
+  theme(text = element_text(size = 20))
+
+# save plot
+ggsave(str_c('D:/ontario_inventory/segmentation/mask_wat_ucl/plots/', name_out, '.png'),
+       width = 2100, height = 2100, units = 'px')
+
+# subset reliable forested polygons
+p2 <- p %>% filter(dom_for == 'Yes', is.na(POLYTYPE), p95 >= 5)
+
+# rbind df with forested values
+ms_df <- rbind(ms_df, data.frame(name = str_c(name, '_for'),
+                           min_ha = (min(p2$nbPixels)*0.04) %>% round(2),
+                           mean_ha = (mean(p2$nbPixels)*0.04) %>% round(2),
+                           med_ha = (median(p2$nbPixels)*0.04) %>% round(2),
+                           max_ha = (max(p2$nbPixels)*0.04) %>% round(2),
+                           num_poly = NROW(p2)))
+
+# plot density
+ggplot(data.frame(nbPixels = p2$nbPixels), aes(x = nbPixels*0.04)) +
+  geom_density() +
+  xlim(c(0,100)) +
+  ylim(c(0, 0.2)) +
+  geom_vline(aes(xintercept = median(nbPixels*0.04, na.rm = T)), 
+             linetype = "dashed", size = 0.6) +
+  theme_bw() +
+  xlab('Number of Hectares') +
+  ylab('Density') +
+  ggtitle(str_c('Forested ', name, ' Polygons')) +
+  theme(text = element_text(size = 20))
+
+# save plot
+ggsave(str_c('D:/ontario_inventory/segmentation/mask_wat_ucl/plots/', name_out, '_for.png'),
+       width = 2100, height = 2100, units = 'px')
+
+# subset non masked WAT and UCL polygons
+p3 <- p %>% filter(is.na(POLYTYPE))
+
+# rbind df with forested values
+ms_df <- rbind(ms_df, data.frame(name = str_c(name, '_mask_wat_ucl'),
+                           min_ha = (min(p3$nbPixels)*0.04) %>% round(2),
+                           mean_ha = (mean(p3$nbPixels)*0.04) %>% round(2),
+                           med_ha = (median(p3$nbPixels)*0.04) %>% round(2),
+                           max_ha = (max(p3$nbPixels)*0.04) %>% round(2),
+                           num_poly = NROW(p3)))
+
+# plot density
+ggplot(data.frame(nbPixels = p3$nbPixels), aes(x = nbPixels*0.04)) +
+  geom_density() +
+  xlim(c(0,100)) +
+  ylim(c(0, 0.2)) +
+  geom_vline(aes(xintercept = median(nbPixels*0.04, na.rm = T)), 
+             linetype = "dashed", size = 0.6) +
+  theme_bw() +
+  xlab('Number of Hectares') +
+  ylab('Density') +
+  ggtitle(str_c('Non WAT/UCL ', name, ' Polygons')) +
+  theme(text = element_text(size = 20))
+
+# save plot
+ggsave(str_c('D:/ontario_inventory/segmentation/mask_wat_ucl/plots/', name_out, '_mask_wat_ucl.png'),
+       width = 2100, height = 2100, units = 'px')
 
 # load interpreter derived polygons to extract statistics
 poly <- vect('D:/ontario_inventory/romeo/RMF_EFI_layers/Polygons Inventory/RMF_PolygonForest.shp') %>%
@@ -457,12 +506,12 @@ int_df <- rbind(int_df,
                            max_ha = (max(poly_for$AREA)/10000) %>% round(2),
                            num_poly = NROW(poly_for)))
 
-# subset all non water polygons
-poly_land <- poly[poly$POLYTYPE!='WAT',]
+# subset all non water/ucl polygons
+poly_land <- poly[!(poly$POLYTYPE %in% c('WAT', 'UCL')),]
 
 # from non water polygons only
 int_df <- rbind(int_df,
-                data.frame(name = 'interp_land',
+                data.frame(name = 'interp_non_wat_ucl',
                            min_ha = (min(poly_land$AREA)/10000) %>% round(1),
                            mean_ha = (mean(poly_land$AREA)/10000) %>% round(1),
                            med_ha = (median(poly_land$AREA)/10000) %>% round(1),
@@ -474,7 +523,7 @@ out_df <- rbind(ms_df, int_df)
 
 # write df as csv
 write.csv(out_df,
-          file = 'D:/ontario_inventory/segmentation/plots/polygon_table_for_polytype_add_pt.csv',
+          file = str_c('D:/ontario_inventory/segmentation/mask_wat_ucl/plots/', name_out, '_poly_tab.csv'),
           row.names = F)
 
 # output histograms from interpreter polygons
@@ -512,7 +561,7 @@ ggplot(poly_for, aes(x = AREA/10000)) +
 ggsave('D:/ontario_inventory/segmentation/plots/forested_interp.png',
        width = 2100, height = 2100, units = 'px')
 
-# area hist non water polys
+# area hist non water/ucl polys
 ggplot(poly_land, aes(x = AREA/10000)) +
   geom_density() +
   xlim(c(0,100)) +
@@ -522,11 +571,11 @@ ggplot(poly_land, aes(x = AREA/10000)) +
   theme_bw() +
   xlab('Number of Hectares') +
   ylab('Density') +
-  ggtitle('Non-Water Interpreter Polygons') +
+  ggtitle('Non-Water/Ucl Interpreter Polygons') +
   theme(text = element_text(size = 20))
 
 # save plot
-ggsave('D:/ontario_inventory/segmentation/plots/land_interp.png',
+ggsave('D:/ontario_inventory/segmentation/plots/non_wat_ucl_interp.png',
        width = 2100, height = 2100, units = 'px')
 
 #remove variables
@@ -537,7 +586,7 @@ rm(poly, poly_for, poly_land)
 ##################################################
 
 # load polygons
-poly <- vect('D:/ontario_inventory/segmentation/ms_10_10_100_for_polytype_add_pt.shp')
+poly <- vect('D:/ontario_inventory/segmentation/ms_10_10_100_for_polytype_mask_wat_ucl_add_pt.shp')
 
 # convert to df
 p <- as.data.frame(poly)
@@ -557,6 +606,3 @@ for(i in unique(p$POLYTYPE)){
   dom_for[[i]] <- psub %>% tabyl(dom_for) %>% arrange(desc(n)) %>% mutate(percent = round(percent*100,2))
   
 }
-
-
-

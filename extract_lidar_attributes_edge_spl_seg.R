@@ -1,5 +1,5 @@
 # this code extracts lidar attributes within spl segmented polygons
-# it only uses data if more than 95% of a given pixel is inside the polygon
+# it only uses data if 100% of a given pixel is inside the polygon
 # the idea being edge pixels may negatively impact performance
 
 # load packages
@@ -9,7 +9,7 @@ library(exactextractr)
 library(sf)
 
 # load spl segmented polygons
-poly <- vect('D:/ontario_inventory/segmentation/ms_10_10_100_for_only_agg_na.shp')
+poly <- vect('D:/ontario_inventory/segmentation/ms_10_10_100_for_polytype_mask_wat_ucl_add_pt.shp')
 
 # convert to df
 dat <- as.data.frame(poly)
@@ -61,4 +61,4 @@ dat <- cbind(dat, vec)
 dat_lidar <- dat
 
 # save extracted dataframe for fast rebooting
-save(dat_lidar, file = 'D:/ontario_inventory/imputation/seg_df_ms_10_10_100_agg_na.RData')
+save(dat_lidar, file = 'D:/ontario_inventory/imputation/seg_df_ms_10_10_100_for_polytype_mask_wat_ucl_add_pt.RData')

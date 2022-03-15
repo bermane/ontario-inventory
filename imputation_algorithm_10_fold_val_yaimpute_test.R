@@ -28,11 +28,11 @@ library(viridis)
 # masking pixels that do not fall 100 % inside polygons
 load('D:/ontario_inventory/dat/dat_fri_100.RData')
 
-# save full original dataset
-dat_orig <- dat
-
-# only keep forested polygons
-dat_orig <- filter(dat_orig, POLYTYPE == 'FOR')
+# # save full original dataset
+# dat_orig <- dat
+# 
+# # only keep forested polygons
+# dat_orig <- filter(dat_orig, POLYTYPE == 'FOR')
 
 # load photo interpreted polygons
 poly <- vect('D:/ontario_inventory/romeo/RMF_EFI_layers/Polygons Inventory/RMF_PolygonForest.shp')
@@ -42,7 +42,7 @@ poly <- vect('D:/ontario_inventory/romeo/RMF_EFI_layers/Polygons Inventory/RMF_P
 ##############################################
 
 # load final dataset after screening
-dat_screen <- read.csv('D:/ontario_inventory/imputation/dat_screen_1bc_2apc_10perc_for.csv')
+dat_screen <- read.csv('D:/ontario_inventory/imputation/dat_screen_1bc_2a_2pc_30perc_wat_ucl.csv')
 
 # subset dat based on screening
 dat <- dat[dat$FOREST_ID %in% dat_screen$FOREST_ID,]

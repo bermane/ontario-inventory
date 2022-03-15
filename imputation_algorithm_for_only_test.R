@@ -41,7 +41,7 @@ poly <- vect('D:/ontario_inventory/romeo/RMF_EFI_layers/Polygons Inventory/RMF_P
 ##############################################
 
 # load final dataset after screening
-dat_screen <- read.csv('D:/ontario_inventory/imputation/dat_screen_1bc_2apc_10perc_for.csv')
+dat_screen <- read.csv('D:/ontario_inventory/imputation/dat_screen_1bc_2a_2pc_10perc_wat_ucl.csv')
 
 # subset dat based on screening
 dat <- dat[dat$FOREST_ID %in% dat_screen$FOREST_ID,]
@@ -51,6 +51,9 @@ dat <- dat[dat$FOREST_ID %in% dat_screen$FOREST_ID,]
 ##############################
 
 # SPL vars only
+
+# set missing WG values to UCL
+dat$WG[dat$WG == ""] <- "UCL"
 
 # change all non-numeric variables to factor
 dat[sapply(dat, is.character)] <- lapply(dat[sapply(dat, is.character)], 

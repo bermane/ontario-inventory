@@ -6,13 +6,10 @@ library(sf)
 library(janitor)
 
 # set parameters to loop through
-n_o <- c("ms_3_20_25",
-         "ms_3_20_50",
-         'ms_3_25_25',
-         'ms_5_25_50')
-s_r <- c("3", '3', '3', '5')
-r_r <- c("20", '20', '25', '25')
-m_s <- c("25", '50', '25', '50')
+n_o <- c("ms_5_10_50")
+s_r <- c("5")
+r_r <- c("10")
+m_s <- c("50")
 
 # loop through segmentaiton
 for(i in seq_along(n_o)){

@@ -166,6 +166,22 @@ scale_100 <- function(x){
   return(x)
 }
 
+# create function to rescale values from 0 to 1 using 1 and 99 percentile
+scale_1 <- function(x){
+  
+  # calculate 1st and 99th percentile of input raster
+  perc <- values(x, mat=F) %>% quantile(., probs=c(0.01, 0.99), na.rm=T)
+  
+  # rescale raster using 1st and 99th %
+  x <- (x-perc[1])/(perc[2] - perc[1])
+  
+  #reset values below 0 and above 100
+  x[x < 0] <- 0
+  x[x > 1] <- 1
+  
+  return(x)
+}
+
 # rescale rasters from 0 to 100
 spl[[1]] <- scale_100(spl[[1]])
 spl[[2]] <- scale_100(spl[[2]])
@@ -367,6 +383,23 @@ p95_med <- exact_extract(p95, p_p95sf, fun = function(df){
 # add to polygon dataset
 p2$p95 <- p95_med
 
+# load canopy cover lidar values
+cc <- rast('D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_2m_cov.tif')
+
+# project polygons to CRS of raster
+p_cc <- project(p2, cc)
+
+# convert to sf
+p_ccsf <- st_as_sf(p_cc)
+
+#extract median values
+cc_med <- exact_extract(cc, p_ccsf, fun = function(df){
+  median(df$value[df$coverage_fraction == 1], na.rm = T)
+}, summarize_df = T)
+
+# add to polygon dataset
+p2$cc <- cc_med
+
 # write to file to check in QGIS
 writeVector(p2, name_o,
             overwrite = T)
@@ -412,7 +445,7 @@ ms_df <- data.frame(name = name,
 ggplot(data.frame(nbPixels = p$nbPixels), aes(x = nbPixels*0.04)) +
   geom_density() +
   xlim(c(0,100)) +
-  ylim(c(0, 0.2)) +
+  ylim(c(0, 0.35)) +
   geom_vline(aes(xintercept = median(nbPixels*0.04, na.rm = T)), 
              linetype = "dashed", size = 0.6) +
   theme_bw() +
@@ -440,7 +473,7 @@ ms_df <- rbind(ms_df, data.frame(name = str_c(name, '_for'),
 ggplot(data.frame(nbPixels = p2$nbPixels), aes(x = nbPixels*0.04)) +
   geom_density() +
   xlim(c(0,100)) +
-  ylim(c(0, 0.2)) +
+  ylim(c(0, 0.35)) +
   geom_vline(aes(xintercept = median(nbPixels*0.04, na.rm = T)), 
              linetype = "dashed", size = 0.6) +
   theme_bw() +
@@ -468,7 +501,7 @@ ms_df <- rbind(ms_df, data.frame(name = str_c(name, '_mask_wat_ucl'),
 ggplot(data.frame(nbPixels = p3$nbPixels), aes(x = nbPixels*0.04)) +
   geom_density() +
   xlim(c(0,100)) +
-  ylim(c(0, 0.2)) +
+  ylim(c(0, 0.35)) +
   geom_vline(aes(xintercept = median(nbPixels*0.04, na.rm = T)), 
              linetype = "dashed", size = 0.6) +
   theme_bw() +
@@ -531,7 +564,7 @@ write.csv(out_df,
 ggplot(poly, aes(x = AREA/10000)) +
   geom_density() +
   xlim(c(0,100)) +
-  ylim(c(0, 0.2)) +
+  ylim(c(0, 0.35)) +
   geom_vline(aes(xintercept = median(AREA/10000, na.rm = T)),
              linetype = "dashed", size = 0.6) +
   theme_bw() +
@@ -541,14 +574,14 @@ ggplot(poly, aes(x = AREA/10000)) +
   theme(text = element_text(size = 20))
 
 # save plot
-ggsave('D:/ontario_inventory/segmentation/plots/all_interp.png',
+ggsave('D:/ontario_inventory/segmentation/plots/all_interp_35.png',
        width = 2100, height = 2100, units = 'px')
 
 # area hist only forest polys
 ggplot(poly_for, aes(x = AREA/10000)) +
   geom_density() +
   xlim(c(0,100)) +
-  ylim(c(0, 0.2)) +
+  ylim(c(0, 0.35)) +
   geom_vline(aes(xintercept = median(AREA/10000, na.rm = T)),
              linetype = "dashed", size = 0.6) +
   theme_bw() +
@@ -565,7 +598,7 @@ ggsave('D:/ontario_inventory/segmentation/plots/forested_interp.png',
 ggplot(poly_land, aes(x = AREA/10000)) +
   geom_density() +
   xlim(c(0,100)) +
-  ylim(c(0, 0.2)) +
+  ylim(c(0, 0.35)) +
   geom_vline(aes(xintercept = median(AREA/10000, na.rm = T)),
              linetype = "dashed", size = 0.6) +
   theme_bw() +

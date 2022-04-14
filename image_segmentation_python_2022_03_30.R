@@ -4,11 +4,12 @@ library(tidyverse)
 library(exactextractr)
 library(sf)
 library(janitor)
+library(lwgeom)
 
 # set parameters
-in_name <- 'D:/ontario_inventory/segmentation/python/segments/segments_slic0_1000k_01_short.tif'
-out_name <- 'D:/ontario_inventory/segmentation/python/shp/segments_slic0_1000k_01_short_add_pt.shp'
-name <- 'slic0_1000k_01_short'
+in_name <- 'D:/ontario_inventory/segmentation/python/segments/segments_slic_400k_100.tif'
+out_name <- 'D:/ontario_inventory/segmentation/python/shp/segments_slic_400k_100_add_pt.shp'
+name <- 'slic_400k_100'
 
 # load segmented image from python
 img <- rast(in_name)
@@ -228,6 +229,7 @@ ms_df <- data.frame(name = name,
                     max_ha = (max(p$nbPixels)*0.04) %>% round(2),
                     mean_p_a = mean(p$p_to_a) %>% round(3),
                     med_p_a = median(p$p_to_a) %>% round(3),
+                    msi = round(sum(p$perim/sqrt(pi * p$area))/NROW(p), 3),
                     num_poly = NROW(p))
 
 # plot density
@@ -258,6 +260,7 @@ ms_df <- rbind(ms_df, data.frame(name = str_c(name, '_for'),
                                  max_ha = (max(p2$nbPixels)*0.04) %>% round(2),
                                  mean_p_a = mean(p2$p_to_a) %>% round(3),
                                  med_p_a = median(p2$p_to_a) %>% round(3),
+                                 msi = round(sum(p2$perim/sqrt(pi * p2$area))/NROW(p2), 3),
                                  num_poly = NROW(p2)))
 
 # plot density
@@ -288,6 +291,7 @@ ms_df <- rbind(ms_df, data.frame(name = str_c(name, '_mask_wat_ucl'),
                                  max_ha = (max(p3$nbPixels)*0.04) %>% round(2),
                                  mean_p_a = mean(p3$p_to_a) %>% round(3),
                                  med_p_a = median(p3$p_to_a) %>% round(3),
+                                 msi = round(sum(p3$perim/sqrt(pi * p3$area))/NROW(p3), 3),
                                  num_poly = NROW(p3)))
 
 # plot density
@@ -331,11 +335,12 @@ poly <- vect('D:/ontario_inventory/romeo/RMF_EFI_layers/Polygons Inventory/RMF_P
 poly_sf <- st_as_sf(poly)
 
 # covert poly to df
-poly <- poly %>%
-  as.data.frame
+poly <- poly %>% as.data.frame
 
 # calculate perimeter to area ratio
-poly$p_to_a <- (st_perimeter(poly_sf)/st_area(poly_sf)) %>% round(3)
+poly$perim <- st_perimeter(poly_sf)
+poly$area <- st_area(poly_sf)
+poly$p_to_a <- (poly$perim / poly$area) %>% round(3)
 
 # create df of interpreter polygons
 # from full interpreter dataset
@@ -346,6 +351,7 @@ int_df <- data.frame(name = 'interp_full',
                      max_ha = (max(poly$AREA)/10000) %>% round(2),
                      mean_p_a = mean(poly$p_to_a) %>% round(3),
                      med_p_a = median(poly$p_to_a) %>% round(3),
+                     msi = round(sum(poly$perim/sqrt(pi * poly$area))/NROW(poly), 3),
                      num_poly = NROW(poly))
 
 # subset forested polygons only
@@ -360,6 +366,7 @@ int_df <- rbind(int_df,
                            max_ha = (max(poly_for$AREA)/10000) %>% round(2),
                            mean_p_a = mean(poly_for$p_to_a) %>% round(3),
                            med_p_a = median(poly_for$p_to_a) %>% round(3),
+                           msi = round(sum(poly_for$perim/sqrt(pi * poly_for$area))/NROW(poly_for), 3),
                            num_poly = NROW(poly_for)))
 
 # subset all non water/ucl polygons
@@ -374,6 +381,7 @@ int_df <- rbind(int_df,
                            max_ha = (max(poly_land$AREA)/10000) %>% round(1),
                            mean_p_a = mean(poly_land$p_to_a) %>% round(3),
                            med_p_a = median(poly_land$p_to_a) %>% round(3),
+                           msi = round(sum(poly_land$perim/sqrt(pi * poly_land$area))/NROW(poly_land), 3),
                            num_poly = NROW(poly_land)))
 
 # combine dfs from mean shift and interpreter

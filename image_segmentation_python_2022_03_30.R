@@ -7,9 +7,9 @@ library(janitor)
 library(lwgeom)
 
 # set parameters
-in_name <- 'D:/ontario_inventory/segmentation/python/segments/segments_slic_400k_100.tif'
-out_name <- 'D:/ontario_inventory/segmentation/python/shp/segments_slic_400k_100_add_pt.shp'
-name <- 'slic_400k_100'
+in_name <- 'D:/ontario_inventory/segmentation/python/segments/segments_slic_400k_001.tif'
+out_name <- 'D:/ontario_inventory/segmentation/python/shp/segments_slic_400k_001_add_pt.shp'
+name <- 'slic_400k_001'
 
 # load segmented image from python
 img <- rast(in_name)

@@ -9,34 +9,18 @@ library(foreach)
 library(doParallel)
 
 # set parameters to loop through
-n_o <- c("grm_5_01_05",
-         "grm_5_01_02",
-         "grm_5_01_07",
-         "grm_5_02_05",
-         "grm_10_01_07",
-         "grm_10_01_02",
-         "grm_10_02_05")
-thresh_r <- c('5',
-              '5',
-              '5',
-              '5',
-              '10',
-              '10',
-              '10') 
-spec_r <- c("0.1",
-            "0.1",
-            "0.1",
-            "0.2",
-            "0.1",
-            "0.1",
-            "0.2")
+n_o <- c("grm_10_09_05",
+         "grm_15_09_05",
+         "grm_20_09_05")
+thresh_r <- c('10',
+              '15',
+              '20') 
+spec_r <- c("0.9",
+            "0.9",
+            '0.9')
 spat_r <- c("0.5",
-            "0.2",
-            "0.7",
             "0.5",
-            "0.7",
-            "0.2",
-            "0.5")
+            '0.5')
 
 # check table
 tibble(n_o, thresh_r, spec_r, spat_r)

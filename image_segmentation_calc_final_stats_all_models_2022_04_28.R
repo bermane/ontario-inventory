@@ -9,73 +9,15 @@ library(sf)
 library(lwgeom)
 library(exactextractr)
 
-# create list of polygon files, names and parameters
-# file <- c('D:/ontario_inventory/segmentation/grm/shp/grm_10_01_05.shp',
-#           'D:/ontario_inventory/segmentation/grm/shp/grm_5_01_05.shp',
-#           'D:/ontario_inventory/segmentation/grm/shp/grm_15_02_05.shp',
-#           'D:/ontario_inventory/segmentation/python/shp/segments_slic_1000k_01_short_add_pt.shp',
-#           'D:/ontario_inventory/segmentation/python/shp/segments_slic0_1000k_01_short_add_pt.shp',
-#           'D:/ontario_inventory/segmentation/python/shp/segments_slic_400k_01_add_pt.shp',
-#           'D:/ontario_inventory/segmentation/mask_wat_ucl/ms_10_10_100_add_pt.shp',
-#           'D:/ontario_inventory/segmentation/mask_wat_ucl/ms_5_15_50_add_pt.shp')
-# alg <- c('GRM',
-#          'GRM',
-#          'GRM',
-#          'SLIC',
-#          'SLIC',
-#          'SLIC',
-#          'MS',
-#          'MS')
-# param <- c('10_0.1_0.5',
-#            '5_0.1_0.5',
-#            '15_0.2_0.5',
-#            '1000k_01',
-#            '1000k_01_zero',
-#            '400k_01',
-#            '10_10_100',
-#            '5_15_50')
-# name <- c('10_01_05',
-#           '5_01_05',
-#           '15_02_05',
-#           '1000k_01',
-#           '1000k_01_zero',
-#           '400k_01',
-#           '10_10_100',
-#           '5_15_50')
+# create list of polygon files and names
+file <- list.files(path = 'D:/ontario_inventory/segmentation/grm/shp', 
+                   pattern = glob2rx('*.shp'),
+                   full.names = T)
 
-# create list of polygon files, names and parameters
-file <- c('D:/ontario_inventory/segmentation/grm/shp/grm_10_01_05.shp',
-          'D:/ontario_inventory/segmentation/grm/shp/grm_5_01_05.shp',
-          'D:/ontario_inventory/segmentation/grm/shp/grm_15_02_05.shp',
-          'D:/ontario_inventory/segmentation/python/shp/segments_slic_1000k_01_short_add_pt.shp',
-          'D:/ontario_inventory/segmentation/python/shp/segments_slic0_1000k_01_short_add_pt.shp',
-          'D:/ontario_inventory/segmentation/python/shp/segments_slic_400k_01_add_pt.shp',
-          'D:/ontario_inventory/segmentation/mask_wat_ucl/ms_10_10_100_add_pt.shp',
-          'D:/ontario_inventory/segmentation/mask_wat_ucl/ms_5_15_50_add_pt.shp')
-alg <- c('GRM',
-         'GRM',
-         'GRM',
-         'SLIC',
-         'SLIC',
-         'SLIC',
-         'MS',
-         'MS')
-param <- c('10_0.1_0.5',
-           '5_0.1_0.5',
-           '15_0.2_0.5',
-           '1000k_01',
-           '1000k_01_zero',
-           '400k_01',
-           '10_10_100',
-           '5_15_50')
-name <- c('10_01_05',
-          '5_01_05',
-          '15_02_05',
-          '1000k_01',
-          '1000k_01_zero',
-          '400k_01',
-          '10_10_100',
-          '5_15_50')
+file_names <- list.files(path = 'D:/ontario_inventory/segmentation/grm/shp', 
+                         pattern = glob2rx('*.shp'))
+
+file_names <- gsub("\\..*","", file_names)
 
 # create standard error function
 se <- function(x) sd(x)/sqrt(length(x))
@@ -169,8 +111,7 @@ for(i in 1:length(file)){
   r2_all <- (sum(r2_p95, r2_cc, r2_cv) / 3) %>% round(3)
   
   # create dataframe with values wanted
-  ms_df <- data.frame(alg = alg[i],
-                      param = param[i],
+  ms_df <- data.frame(file = file_names[i],
                       min_pix = (min(p2$nbPixels)),
                       max_pix = (max(p2$nbPixels)),
                       mean_pix = (mean(p2$nbPixels)),
@@ -220,59 +161,6 @@ for(i in 1:length(file)){
   }else{
     df <- rbind(df, ms_df)
   }
-  
-  #############################
-  ### CALCULATE FINAL PLOTS ###
-  #############################
-  
-  # plot density
-  ggplot(data.frame(nbPixels = p2$nbPixels), aes(x = nbPixels)) +
-    geom_density() +
-    xlim(c(0,500)) +
-    ylim(c(0, 0.05)) +
-    geom_vline(aes(xintercept = median(nbPixels)), 
-               linetype = "dashed", size = 0.6) +
-    theme_bw() +
-    xlab('Number of Pixels') +
-    ylab('Density') +
-    ggtitle(str_c(alg[i], ' ', param[i])) +
-    theme(text = element_text(size = 20))
-  
-  ggsave(str_c('D:/ontario_inventory/segmentation/results_paper/plots/', alg[i], '_', name[i], '_pix_dens.png'),
-         width = 2100, height = 2100, units = 'px')
-  
-  # plot perimeter to area ratio
-  ggplot(data.frame(p_to_a = as.numeric(p2$p_to_a)), aes(x = p_to_a)) +
-    geom_density() +
-    xlim(c(0,0.2)) +
-    ylim(c(0, 100)) +
-    geom_vline(aes(xintercept = median(p_to_a)),
-               linetype = "dashed", size = 0.6) +
-    theme_bw() +
-    xlab('Perimeter to Area Ratio') +
-    ylab('Density') +
-    ggtitle(str_c(alg[i], ' ', param[i])) +
-    theme(text = element_text(size = 20))
-  
-  ggsave(str_c('D:/ontario_inventory/segmentation/results_paper/plots/', alg[i], '_', name[i], '_ptoa_dens.png'),
-         width = 2100, height = 2100, units = 'px')
-  
-  # plot shape index
-  ggplot(data.frame(msi = as.numeric(p2$msi)), aes(x = msi)) +
-    geom_density() +
-    xlim(c(0,8)) +
-    ylim(c(0, 4)) +
-    geom_vline(aes(xintercept = median(msi)),
-               linetype = "dashed", size = 0.6) +
-    theme_bw() +
-    xlab('Shape Index') +
-    ylab('Density') +
-    ggtitle(str_c(alg[i], ' ', param[i])) +
-    theme(text = element_text(size = 20))
-  
-  ggsave(str_c('D:/ontario_inventory/segmentation/results_paper/plots/', alg[i], '_', name[i], '_shape_dens.png'),
-         width = 2100, height = 2100, units = 'px')
-  
 }
 
 #####################
@@ -368,8 +256,7 @@ r2_cv <- 1 - (sse[3]/sst[3]) %>% round(3)
 r2_all <- (sum(r2_p95, r2_cc, r2_cv) / 3) %>% round(3)
 
 # create dataframe with values wanted
-ms_df <- data.frame(alg = 'FRI',
-                    param = 'FRI',
+ms_df <- data.frame(file = 'FRI',
                     min_pix = (min(p2$area / 400)),
                     max_pix = (max(p2$area / 400)),
                     mean_pix = (mean(p2$area / 400)),
@@ -419,57 +306,5 @@ df <- rbind(df, ms_df)
 
 # write df as csv
 write.csv(df,
-          file = 'D:/ontario_inventory/segmentation/results_paper/summary_stats_2022_04_28.csv',
+          file = 'D:/ontario_inventory/segmentation/results_paper/summary_stats_grm_2022_04_28.csv',
           row.names = F)
-
-#############################
-### CALCULATE FINAL PLOTS ###
-#############################
-
-# plot density
-ggplot(data.frame(nbPixels = p2$area / 400), aes(x = nbPixels)) +
-  geom_density() +
-  xlim(c(0,500)) +
-  ylim(c(0, 0.05)) +
-  geom_vline(aes(xintercept = median(nbPixels)), 
-             linetype = "dashed", size = 0.6) +
-  theme_bw() +
-  xlab('Number of Pixels') +
-  ylab('Density') +
-  ggtitle('FRI') +
-  theme(text = element_text(size = 20))
-
-ggsave(str_c('D:/ontario_inventory/segmentation/results_paper/plots/fri_pix_dens.png'),
-       width = 2100, height = 2100, units = 'px')
-
-# plot perimeter to area ratio
-ggplot(data.frame(p_to_a = as.numeric(p2$p_to_a)), aes(x = p_to_a)) +
-  geom_density() +
-  xlim(c(0,0.2)) +
-  ylim(c(0, 100)) +
-  geom_vline(aes(xintercept = median(p_to_a)),
-             linetype = "dashed", size = 0.6) +
-  theme_bw() +
-  xlab('Perimeter to Area Ratio') +
-  ylab('Density') +
-  ggtitle('FRI') +
-  theme(text = element_text(size = 20))
-
-ggsave(str_c('D:/ontario_inventory/segmentation/results_paper/plots/fri_ptoa_dens.png'),
-       width = 2100, height = 2100, units = 'px')
-
-# plot shape index
-ggplot(data.frame(msi = as.numeric(p2$msi)), aes(x = msi)) +
-  geom_density() +
-  xlim(c(0,8)) +
-  ylim(c(0, 4)) +
-  geom_vline(aes(xintercept = median(msi)),
-             linetype = "dashed", size = 0.6) +
-  theme_bw() +
-  xlab('Shape Index') +
-  ylab('Density') +
-  ggtitle('FRI') +
-  theme(text = element_text(size = 20))
-
-ggsave(str_c('D:/ontario_inventory/segmentation/results_paper/plots/fri_shape_dens.png'),
-       width = 2100, height = 2100, units = 'px')

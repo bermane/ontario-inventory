@@ -15,6 +15,7 @@ library(tidyverse)
 library(yaImpute)
 library(randomForest)
 library(viridis)
+library(magrittr)
 
 ###################################################
 ###LOAD POLYGON DATASET AND ADD LIDAR ATTRIBUTES###

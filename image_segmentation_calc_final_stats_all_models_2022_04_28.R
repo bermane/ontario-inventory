@@ -22,6 +22,25 @@ file_names <- gsub("\\..*","", file_names)
 # create standard error function
 se <- function(x) sd(x)/sqrt(length(x))
 
+#######################################
+### EXTRACT P95 AND LOR CORRELATION ###
+#######################################
+
+# load p95
+ras <- rast('D:/ontario_inventory/segmentation/spl_stack_mask_wat_ucl_polytype.tif')
+ras <- ras[[1]]
+
+# load lor
+lor <- rast('D:/ontario_inventory/romeo/RMF_EFI_layers/ABA layers SPL 2018/RMF_20m_T130cm_lor_FOR.tif') %>%
+  project(ras) %>% mask(ras)
+
+# as numeric
+ras %<>% as.vector
+lor %<>% as.vector
+
+# check correlation
+cor(ras, lor, use = 'complete.obs')
+
 ###########################################
 ### EXTRACT FINAL POLYGON SUMMARY STATS ###
 ###########################################

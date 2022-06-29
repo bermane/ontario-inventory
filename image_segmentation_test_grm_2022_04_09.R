@@ -44,9 +44,9 @@ foreach(i = 1:length(n_o)) %dopar% {
   library(foreach)
   library(doParallel)
   
-  ##############################
-  ###RUN MEAN SHIFT ALGORITHM###
-  ##############################
+  #######################
+  ###RUN GRM ALGORITHM###
+  #######################
   
   # load water and ucl polygons
   spl_pt <- vect('D:/ontario_inventory/segmentation/mask_wat_ucl/wat_ucl_polygons.shp')

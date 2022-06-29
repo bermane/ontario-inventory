@@ -254,6 +254,7 @@ rm(pvals2)
 
 # calculate SST
 sst <- sapply(pvals, FUN = function(x){
+  
   # subset values based on coverage fraction
   x %<>% filter(coverage_fraction >= 0.5)
   

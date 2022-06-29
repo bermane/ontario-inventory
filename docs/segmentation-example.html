@@ -6,11 +6,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Segmentation Example | Integration of Photo Interpreted and LIDAR Attributes Into a Polygonal Forest Inventory Framework</title>
   <meta name="description" content="A place to find background information and follow updates related to the project." />
-  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.27 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Segmentation Example | Integration of Photo Interpreted and LIDAR Attributes Into a Polygonal Forest Inventory Framework" />
   <meta property="og:type" content="book" />
-  <meta property="og:url" content="http://bermane.github.io/ontario-inventory/" />
   
   <meta property="og:description" content="A place to find background information and follow updates related to the project." />
   <meta name="github-repo" content="bermane/ontario-inventory" />
@@ -24,7 +23,7 @@
 <meta name="author" content="Ethan Berman" />
 
 
-<meta name="date" content="2021-11-11" />
+<meta name="date" content="2022-06-29" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -32,8 +31,7 @@
   
   
 <link rel="prev" href="project-details.html"/>
-
-<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<link rel="next" href="segmentation-update.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -51,8 +49,9 @@
 
 
 
-<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 
 
 <style type="text/css">
@@ -146,19 +145,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="" data-path="people.html"><a href="people.html#ubc"><i class="fa fa-check"></i>University of British Columbia</a>
 <ul>
-<li><a href="people.html#ncc">Prof. Nicholas Coops, <em>project lead</em></a></li>
-<li><a href="people.html#eb">Ethan Berman, <em>research scientist</em></a></li>
+<li class="chapter" data-level="" data-path="people.html"><a href="people.html#ncc"><i class="fa fa-check"></i>Prof. Nicholas Coops, <em>project lead</em></a></li>
+<li class="chapter" data-level="" data-path="people.html"><a href="people.html#eb"><i class="fa fa-check"></i>Ethan Berman, <em>research scientist</em></a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="people.html"><a href="people.html#greenfirst"><i class="fa fa-check"></i>GreenFirst Forest Products</a>
 <ul>
-<li><a href="people.html#cm">Chris McDonell, <em>partner</em></a></li>
-<li><a href="people.html#gm">Grant McCartney, <em>partner</em></a></li>
+<li class="chapter" data-level="" data-path="people.html"><a href="people.html#cm"><i class="fa fa-check"></i>Chris McDonell, <em>partner</em></a></li>
+<li class="chapter" data-level="" data-path="people.html"><a href="people.html#gm"><i class="fa fa-check"></i>Grant McCartney, <em>partner</em></a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="people.html"><a href="people.html#ministry"><i class="fa fa-check"></i>Ontario Ministry of Northern Development, Mines, Natural Resources and Forestry</a>
 <ul>
-<li><a href="people.html#is">Ian Sinclair, <em>partner</em></a></li>
-<li><a href="people.html#dl">Derek Landry, <em>partner</em></a></li>
-<li><a href="people.html#grm">Geordie Robere-McGugan, <em>partner</em></a></li>
+<li class="chapter" data-level="" data-path="people.html"><a href="people.html#is"><i class="fa fa-check"></i>Ian Sinclair, <em>partner</em></a></li>
+<li class="chapter" data-level="" data-path="people.html"><a href="people.html#dl"><i class="fa fa-check"></i>Derek Landry, <em>partner</em></a></li>
+<li class="chapter" data-level="" data-path="people.html"><a href="people.html#grm"><i class="fa fa-check"></i>Geordie Robere-McGugan, <em>partner</em></a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="project-details.html"><a href="project-details.html"><i class="fa fa-check"></i>Project Details</a>
@@ -182,6 +181,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="segmentation-example.html"><a href="segmentation-example.html#run-segmentation"><i class="fa fa-check"></i>Run Mean Shift Segmentation</a></li>
 <li class="chapter" data-level="" data-path="segmentation-example.html"><a href="segmentation-example.html#compare-datasets"><i class="fa fa-check"></i>Compare Datasets</a></li>
 </ul></li>
+<li class="chapter" data-level="" data-path="segmentation-update.html"><a href="segmentation-update.html"><i class="fa fa-check"></i>Segmentation Update</a>
+<ul>
+<li class="chapter" data-level="" data-path="segmentation-example.html"><a href="segmentation-example.html#intro"><i class="fa fa-check"></i>Intro</a></li>
+<li class="chapter" data-level="" data-path="segmentation-example.html"><a href="segmentation-example.html#create-raster"><i class="fa fa-check"></i>1. Create Multi-band Raster</a></li>
+<li class="chapter" data-level="" data-path="segmentation-example.html"><a href="segmentation-example.html#run-segmentation"><i class="fa fa-check"></i>2. Run GRM Segmentation</a></li>
+<li class="chapter" data-level="" data-path="segmentation-update.html"><a href="segmentation-update.html#calculate-stats"><i class="fa fa-check"></i>3a. Calculate Summary Statistics</a></li>
+<li class="chapter" data-level="" data-path="segmentation-update.html"><a href="segmentation-update.html#compare-outputs"><i class="fa fa-check"></i>3b. Compare GRM Segmentation Output to FRI</a></li>
+</ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 
@@ -202,17 +209,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="segmentation-example" class="section level1 unnumbered">
-<h1>Segmentation Example</h1>
-<div id="intro" class="section level2 unnumbered">
-<h2>Intro</h2>
+<div id="segmentation-example" class="section level1 unnumbered hasAnchor">
+<h1>Segmentation Example<a href="segmentation-example.html#segmentation-example" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="intro" class="section level2 unnumbered hasAnchor">
+<h2>Intro<a href="segmentation-example.html#intro" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>This page provides an example of the image segmentation approach used to derive polygonal forest stands from LiDAR-based raster data. The example data provided is from the Romeo Malette Forest (RMF).</p>
 <p>First, a three band raster at 20 m spatial resolution is generated from Enhanced Forest Inventory (EFI) metrics. The three bands comprise Lorey’s height, canopy cover (% cover above 2m) and coefficient of variation (standard deviation of LiDAR return heights divided by mean). These bands are re-scaled to comprise values from 0-100, setting the minimum and maximum values to be the 1st and 99th percentile of data observations. Large roads and waterbodies are also masked to prevent them from being included in forest stand polygons.</p>
 <p>Second, the mean shift algorithm is used to derive forest stand polygons from the input raster. The algorithm used is the <a href="https://www.orfeo-toolbox.org/CookBook-6.4/Applications/app_LargeScaleMeanShift.html">LargeScaleMeanShift</a> function from Orfeo ToolBox. Mean Shift is a robust and efficient segmentation algorithm that allows users to provide several parameters to ensure the output polygons meet certain specifications (input parameters described in above link). Although this example only runs the segmentation over a small part of the RMF, segmentation of the entire RMF only takes around 1.5 hrs on a single desktop machine.</p>
 <p>Third, the output segmentation is compared to polygons derived from manual interpretation.</p>
 </div>
-<div id="create-raster" class="section level2 unnumbered">
-<h2>Create Multi-band Raster</h2>
+<div id="create-raster" class="section level2 unnumbered hasAnchor">
+<h2>Create Multi-band Raster<a href="segmentation-example.html#create-raster" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="segmentation-example.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load packages</span></span>
 <span id="cb1-2"><a href="segmentation-example.html#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra)</span>
 <span id="cb1-3"><a href="segmentation-example.html#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(meanShiftR)</span>
@@ -297,8 +304,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="segmentation-example.html#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># write raster to tif</span></span>
 <span id="cb5-2"><a href="segmentation-example.html#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">writeRaster</span>(spl, <span class="at">filename=</span><span class="st">&#39;D:/ontario_inventory/segmentation_ex/spl_stack.tif&#39;</span>, <span class="at">overwrite=</span>T)</span></code></pre></div>
 </div>
-<div id="run-segmentation" class="section level2 unnumbered">
-<h2>Run Mean Shift Segmentation</h2>
+<div id="run-segmentation" class="section level2 unnumbered hasAnchor">
+<h2>Run Mean Shift Segmentation<a href="segmentation-example.html#run-segmentation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="segmentation-example.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set working directory where temp files will be output</span></span>
 <span id="cb6-2"><a href="segmentation-example.html#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">setwd</span>(<span class="st">&#39;D:/temp&#39;</span>)</span>
 <span id="cb6-3"><a href="segmentation-example.html#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -346,8 +353,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb6-45"><a href="segmentation-example.html#cb6-45" aria-hidden="true" tabindex="-1"></a><span class="co"># write to file</span></span>
 <span id="cb6-46"><a href="segmentation-example.html#cb6-46" aria-hidden="true" tabindex="-1"></a><span class="fu">writeVector</span>(p3, <span class="st">&#39;D:/ontario_inventory/segmentation_ex/ms_10_10_100_agg_na.shp&#39;</span>, <span class="at">overwrite =</span> T)</span></code></pre></div>
 </div>
-<div id="compare-datasets" class="section level2 unnumbered">
-<h2>Compare Datasets</h2>
+<div id="compare-datasets" class="section level2 unnumbered hasAnchor">
+<h2>Compare Datasets<a href="segmentation-example.html#compare-datasets" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="segmentation-example.html#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load base imagery</span></span>
 <span id="cb7-2"><a href="segmentation-example.html#cb7-2" aria-hidden="true" tabindex="-1"></a>base <span class="ot">&lt;-</span> <span class="fu">rast</span>(<span class="st">&#39;D:/ontario_inventory/romeo/RMF_Sample_Base.tif&#39;</span>)</span>
 <span id="cb7-3"><a href="segmentation-example.html#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -381,8 +388,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-<a href="project-details.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="project-details.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="segmentation-update.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

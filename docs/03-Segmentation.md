@@ -182,7 +182,7 @@ man_poly <- vect('D:/ontario_inventory/romeo/RMF_EFI_layers/Polygons Inventory/R
 
 # load mean shift derived polygons and change to raster proj
 ms_poly <- vect('D:/ontario_inventory/segmentation_ex/ms_10_10_100_agg_na.shp') %>%
-  project(., base)
+  project(., base) %>% crop(., base)
 
 # plot base imagery with interpreter polygons
 plot(man_poly, main = 'Polygonal Forest Stands Derived Manually')
@@ -192,7 +192,7 @@ plot(man_poly, border = 'mediumvioletred', add = T)
 
 <img src="03-Segmentation_files/figure-html/compare-datasets1-1.png" width="1728" />
 
-The above plot shows the manually derived forest stand polygons in the sample area, overlaid on recent true color imagery. Note the clean edges around water bodies, rivers/streams, and road features.
+The above plot shows the manually derived forest stand polygons in part of the sample area, overlaid on recent true color imagery. Note the clean edges around water bodies, rivers/streams, and road features.
 
 
 ```r
@@ -204,7 +204,7 @@ plot(ms_poly, border = 'red2', add = T)
 
 <img src="03-Segmentation_files/figure-html/compare-datasets2-1.png" width="1728" />
 
-The above plot shows the mean shift derived forest stand polygons in the sample area. Note that the automated segmentation also has clean edges around water bodies and road features, since these features were masked in the first step. Rivers/streams were not masked due to no clear pattern dictating which features manual interpreters included/excluded. The workflow gives the user control over which features in the landscape should be excluded from the segmentation process. Also note that the polygons never reach the same maximum size as the polygons derived manually. The algorithm takes minimum polygon size as an input parameter, but in general does not cluster the landscape into as large polygons.
+The above plot shows the mean shift derived forest stand polygons in part of the sample area. Note that the automated segmentation also has clean edges around water bodies and road features, since these features were masked in the first step. Rivers/streams were not masked due to no clear pattern dictating which features manual interpreters included/excluded. The workflow gives the user control over which features in the landscape should be excluded from the segmentation process. Also note that the polygons never reach the same maximum size as the polygons derived manually. The algorithm takes minimum polygon size as an input parameter, but in general does not cluster the landscape into as large polygons.
 
 We will continue to tweak the segmentation algorithm until we are satisfied with the polygonal output. We have also begun working on the imputation step of the project and will provide further results as they become available. 
 

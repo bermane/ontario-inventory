@@ -23,7 +23,7 @@
 <meta name="author" content="Ethan Berman" />
 
 
-<meta name="date" content="2022-06-29" />
+<meta name="date" content="2022-07-03" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -364,20 +364,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb7-7"><a href="segmentation-example.html#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-8"><a href="segmentation-example.html#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co"># load mean shift derived polygons and change to raster proj</span></span>
 <span id="cb7-9"><a href="segmentation-example.html#cb7-9" aria-hidden="true" tabindex="-1"></a>ms_poly <span class="ot">&lt;-</span> <span class="fu">vect</span>(<span class="st">&#39;D:/ontario_inventory/segmentation_ex/ms_10_10_100_agg_na.shp&#39;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb7-10"><a href="segmentation-example.html#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">project</span>(., base)</span>
+<span id="cb7-10"><a href="segmentation-example.html#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">project</span>(., base) <span class="sc">%&gt;%</span> <span class="fu">crop</span>(., base)</span>
 <span id="cb7-11"><a href="segmentation-example.html#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-12"><a href="segmentation-example.html#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co"># plot base imagery with interpreter polygons</span></span>
 <span id="cb7-13"><a href="segmentation-example.html#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(man_poly, <span class="at">main =</span> <span class="st">&#39;Polygonal Forest Stands Derived Manually&#39;</span>)</span>
 <span id="cb7-14"><a href="segmentation-example.html#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="fu">plotRGB</span>(base, <span class="at">stretch =</span> <span class="st">&#39;lin&#39;</span>, <span class="at">add =</span> T)</span>
 <span id="cb7-15"><a href="segmentation-example.html#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(man_poly, <span class="at">border =</span> <span class="st">&#39;mediumvioletred&#39;</span>, <span class="at">add =</span> T)</span></code></pre></div>
 <p><img src="03-Segmentation_files/figure-html/compare-datasets1-1.png" width="1728" /></p>
-<p>The above plot shows the manually derived forest stand polygons in the sample area, overlaid on recent true color imagery. Note the clean edges around water bodies, rivers/streams, and road features.</p>
+<p>The above plot shows the manually derived forest stand polygons in part of the sample area, overlaid on recent true color imagery. Note the clean edges around water bodies, rivers/streams, and road features.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="segmentation-example.html#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># plot base imagery with mean shift polygons</span></span>
 <span id="cb8-2"><a href="segmentation-example.html#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(ms_poly, <span class="at">main =</span> <span class="st">&#39;Polygonal Forest Stands Derived from EFI Layers using Mean Shift&#39;</span>)</span>
 <span id="cb8-3"><a href="segmentation-example.html#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plotRGB</span>(base, <span class="at">stretch =</span> <span class="st">&#39;lin&#39;</span>, <span class="at">add =</span> T)</span>
 <span id="cb8-4"><a href="segmentation-example.html#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(ms_poly, <span class="at">border =</span> <span class="st">&#39;red2&#39;</span>, <span class="at">add =</span> T)</span></code></pre></div>
 <p><img src="03-Segmentation_files/figure-html/compare-datasets2-1.png" width="1728" /></p>
-<p>The above plot shows the mean shift derived forest stand polygons in the sample area. Note that the automated segmentation also has clean edges around water bodies and road features, since these features were masked in the first step. Rivers/streams were not masked due to no clear pattern dictating which features manual interpreters included/excluded. The workflow gives the user control over which features in the landscape should be excluded from the segmentation process. Also note that the polygons never reach the same maximum size as the polygons derived manually. The algorithm takes minimum polygon size as an input parameter, but in general does not cluster the landscape into as large polygons.</p>
+<p>The above plot shows the mean shift derived forest stand polygons in part of the sample area. Note that the automated segmentation also has clean edges around water bodies and road features, since these features were masked in the first step. Rivers/streams were not masked due to no clear pattern dictating which features manual interpreters included/excluded. The workflow gives the user control over which features in the landscape should be excluded from the segmentation process. Also note that the polygons never reach the same maximum size as the polygons derived manually. The algorithm takes minimum polygon size as an input parameter, but in general does not cluster the landscape into as large polygons.</p>
 <p>We will continue to tweak the segmentation algorithm until we are satisfied with the polygonal output. We have also begun working on the imputation step of the project and will provide further results as they become available.</p>
 <p>We look forward to receiving feedback!</p>
 

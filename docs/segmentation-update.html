@@ -23,7 +23,7 @@
 <meta name="author" content="Ethan Berman" />
 
 
-<meta name="date" content="2022-06-29" />
+<meta name="date" content="2022-07-03" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -745,14 +745,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb16-15"><a href="segmentation-update.html#cb16-15" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fri_poly, <span class="at">border =</span> <span class="st">&#39;mediumvioletred&#39;</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">add =</span> T)</span>
 <span id="cb16-16"><a href="segmentation-update.html#cb16-16" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="at">main =</span> <span class="st">&#39;FRI Polygons Overlaid on True Color Image&#39;</span>, <span class="at">line =</span> <span class="sc">-</span><span class="dv">2</span>, <span class="at">cex.main =</span> <span class="dv">3</span>)</span></code></pre></div>
 <p><img src="04-Segmentation-Update_files/figure-html/compare-datasets1-1.png" width="1728" /></p>
-<p><strong><em>The above plot shows the FRI polygons in the sample area, overlaid on recent true color imagery. Note the clean edges around water bodies, rivers/streams, and road features.</em></strong></p>
+<p><strong><em>The above plot shows the FRI polygons in part of the sample area, overlaid on recent true color imagery. Note the clean edges around water bodies, rivers/streams, and road features.</em></strong></p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="segmentation-update.html#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># plot base imagery with GRM polygons</span></span>
 <span id="cb17-2"><a href="segmentation-update.html#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(grm_poly)</span>
 <span id="cb17-3"><a href="segmentation-update.html#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plotRGB</span>(base, <span class="at">stretch =</span> <span class="st">&#39;lin&#39;</span>, <span class="at">add =</span> T)</span>
 <span id="cb17-4"><a href="segmentation-update.html#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(grm_poly, <span class="at">border =</span> <span class="st">&#39;red2&#39;</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">add =</span> T)</span>
 <span id="cb17-5"><a href="segmentation-update.html#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="at">main =</span> <span class="st">&#39;GRM Polygons Overlaid on True Color Image&#39;</span>, <span class="at">line =</span> <span class="sc">-</span><span class="dv">2</span>, <span class="at">cex.main =</span> <span class="dv">3</span>)</span></code></pre></div>
 <p><img src="04-Segmentation-Update_files/figure-html/compare-datasets2-1.png" width="1728" /></p>
-<p><strong><em>The above plot shows the GRM derived polygons in the sample area. Note that the automated segmentation also has clean edges around water and road features, since these features were masked in the first step, and the polygons re-added after segmentation. The GRM polygons are also much more compact and uniform than the FRI polygons, and generally do not have issues with the line-work (overlapping and parallel lines), which was an important point mentioned in our meetings.</em></strong></p>
+<p><strong><em>The above plot shows the GRM derived polygons in part of the sample area. Note that the automated segmentation also has clean edges around water and road features, since these features were masked in the first step, and the polygons re-added after segmentation. The GRM polygons are also much more compact and uniform than the FRI polygons, and generally do not have issues with the line-work (overlapping and parallel lines), which was an important point mentioned in our meetings.</em></strong></p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="segmentation-update.html#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="do">####################################</span></span>
 <span id="cb18-2"><a href="segmentation-update.html#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="do">### DISTRIBUTION OF POLYGON SIZE </span><span class="al">###</span></span>
 <span id="cb18-3"><a href="segmentation-update.html#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="do">####################################</span></span>

@@ -551,7 +551,7 @@ plot(fri_poly, border = 'mediumvioletred', lwd = 2, add = T)
 title(main = 'FRI Polygons Overlaid on True Color Image', line = -2, cex.main = 3)
 ```
 
-***The above plot shows the FRI polygons in the sample area, overlaid on recent true color imagery. Note the clean edges around water bodies, rivers/streams, and road features.***
+***The above plot shows the FRI polygons in part of the sample area, overlaid on recent true color imagery. Note the clean edges around water bodies, rivers/streams, and road features.***
 
 ```{r, compare-datasets2, results=FALSE, message=FALSE, warning=FALSE, fig.width=18, fig.height=12}
 # plot base imagery with GRM polygons
@@ -561,7 +561,7 @@ plot(grm_poly, border = 'red2', lwd = 2, add = T)
 title(main = 'GRM Polygons Overlaid on True Color Image', line = -2, cex.main = 3)
 ```
 
-***The above plot shows the GRM derived polygons in the sample area. Note that the automated segmentation also has clean edges around water and road features, since these features were masked in the first step, and the polygons re-added after segmentation. The GRM polygons are also much more compact and uniform than the FRI polygons, and generally do not have issues with the line-work (overlapping and parallel lines), which was an important point mentioned in our meetings.***
+***The above plot shows the GRM derived polygons in part of the sample area. Note that the automated segmentation also has clean edges around water and road features, since these features were masked in the first step, and the polygons re-added after segmentation. The GRM polygons are also much more compact and uniform than the FRI polygons, and generally do not have issues with the line-work (overlapping and parallel lines), which was an important point mentioned in our meetings.***
 
 ```{r, compare-datasets3, results=FALSE, message=FALSE, warning=FALSE, fig.width=18, fig.height=12}
 

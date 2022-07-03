@@ -22,7 +22,7 @@ Third, the segmentation output is compared to polygons derived from manual inter
 3. Mean, standard error, and standard deviation of polygon area, perimeter, and shape index
 4. R2 to assess the performance of segmentation outputs in explaining variation in the input variables: P95 height, canopy cover, and coefficient of variation
 
-## 1. Create Multi-band Raster {-#create-raster}
+## 1. Create Multi-band Raster {-#updatep1}
 
 ```{r, options, results=FALSE, message=FALSE, warning=FALSE, echo=FALSE}
 knitr::opts_chunk$set(fig.width=18, fig.height=12)
@@ -167,7 +167,7 @@ writeVector(spl_pt, 'D:/ontario_inventory/segmentation_ex/wat_ucl_polygons.shp',
 
 ```
 
-## 2. Run GRM Segmentation {-#run-segmentation}
+## 2. Run GRM Segmentation {-#updatep2}
 
 ```{r, run-segmentation, results=FALSE, message=FALSE, warning=FALSE, fig.width=18, fig.height=12}
 #########################
@@ -250,7 +250,7 @@ grm_otb(otb_path = "C:/OTB/bin",
 
 ```
 
-## 3a. Calculate Summary Statistics {-#calculate-stats}
+## 3a. Calculate Summary Statistics {-#updatep3a}
 
 ```{r, calculate-stats, results=FALSE, message=FALSE, warning=FALSE, fig.width=18, fig.height=12}
 ##############################################
@@ -530,7 +530,7 @@ write.csv(df,
 
 ```
 
-## 3b. Compare GRM Segmentation Output to FRI {-#compare-outputs}
+## 3b. Compare GRM Segmentation Output to FRI {-#updatep3b}
 
 ```{r, compare-datasets1, results=FALSE, message=FALSE, warning=FALSE, fig.width=18, fig.height=12}
 # load base imagery

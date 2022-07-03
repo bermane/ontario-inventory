@@ -22,7 +22,7 @@ Third, the segmentation output is compared to polygons derived from manual inter
 3. Mean, standard error, and standard deviation of polygon area, perimeter, and shape index
 4. R2 to assess the performance of segmentation outputs in explaining variation in the input variables: P95 height, canopy cover, and coefficient of variation
 
-## 1. Create Multi-band Raster {-#create-raster}
+## 1. Create Multi-band Raster {-#updatep1}
 
 
 
@@ -183,7 +183,7 @@ writeVector(spl_pt, 'D:/ontario_inventory/segmentation_ex/wat_ucl_polygons.shp',
             overwrite = T)
 ```
 
-## 2. Run GRM Segmentation {-#run-segmentation}
+## 2. Run GRM Segmentation {-#updatep2}
 
 
 ```r
@@ -266,7 +266,7 @@ grm_otb(otb_path = "C:/OTB/bin",
   vec$nbPixels <- vec_dat$nbPixels
 ```
 
-## 3a. Calculate Summary Statistics {-#calculate-stats}
+## 3a. Calculate Summary Statistics {-#updatep3a}
 
 
 ```r
@@ -546,7 +546,7 @@ write.csv(df,
           row.names = F)
 ```
 
-## 3b. Compare GRM Segmentation Output to FRI {-#compare-outputs}
+## 3b. Compare GRM Segmentation Output to FRI {-#updatep3b}
 
 
 ```r

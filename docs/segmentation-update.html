@@ -184,10 +184,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="segmentation-update.html"><a href="segmentation-update.html"><i class="fa fa-check"></i>Segmentation Update</a>
 <ul>
 <li class="chapter" data-level="" data-path="segmentation-example.html"><a href="segmentation-example.html#intro"><i class="fa fa-check"></i>Intro</a></li>
-<li class="chapter" data-level="" data-path="segmentation-example.html"><a href="segmentation-example.html#create-raster"><i class="fa fa-check"></i>1. Create Multi-band Raster</a></li>
-<li class="chapter" data-level="" data-path="segmentation-example.html"><a href="segmentation-example.html#run-segmentation"><i class="fa fa-check"></i>2. Run GRM Segmentation</a></li>
-<li class="chapter" data-level="" data-path="segmentation-update.html"><a href="segmentation-update.html#calculate-stats"><i class="fa fa-check"></i>3a. Calculate Summary Statistics</a></li>
-<li class="chapter" data-level="" data-path="segmentation-update.html"><a href="segmentation-update.html#compare-outputs"><i class="fa fa-check"></i>3b. Compare GRM Segmentation Output to FRI</a></li>
+<li class="chapter" data-level="" data-path="segmentation-update.html"><a href="segmentation-update.html#updatep1"><i class="fa fa-check"></i>1. Create Multi-band Raster</a></li>
+<li class="chapter" data-level="" data-path="segmentation-update.html"><a href="segmentation-update.html#updatep2"><i class="fa fa-check"></i>2. Run GRM Segmentation</a></li>
+<li class="chapter" data-level="" data-path="segmentation-update.html"><a href="segmentation-update.html#updatep3a"><i class="fa fa-check"></i>3a. Calculate Summary Statistics</a></li>
+<li class="chapter" data-level="" data-path="segmentation-update.html"><a href="segmentation-update.html#updatep3b"><i class="fa fa-check"></i>3b. Compare GRM Segmentation Output to FRI</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -229,8 +229,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>R2 to assess the performance of segmentation outputs in explaining variation in the input variables: P95 height, canopy cover, and coefficient of variation</li>
 </ol>
 </div>
-<div id="create-raster" class="section level2 unnumbered hasAnchor">
-<h2>1. Create Multi-band Raster<a href="segmentation-example.html#create-raster" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="updatep1" class="section level2 unnumbered hasAnchor">
+<h2>1. Create Multi-band Raster<a href="segmentation-update.html#updatep1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="segmentation-update.html#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load packages</span></span>
 <span id="cb9-2"><a href="segmentation-update.html#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra)</span>
 <span id="cb9-3"><a href="segmentation-update.html#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
@@ -369,8 +369,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb13-5"><a href="segmentation-update.html#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">writeVector</span>(spl_pt, <span class="st">&#39;D:/ontario_inventory/segmentation_ex/wat_ucl_polygons.shp&#39;</span>,</span>
 <span id="cb13-6"><a href="segmentation-update.html#cb13-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">overwrite =</span> T)</span></code></pre></div>
 </div>
-<div id="run-segmentation" class="section level2 unnumbered hasAnchor">
-<h2>2. Run GRM Segmentation<a href="segmentation-example.html#run-segmentation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="updatep2" class="section level2 unnumbered hasAnchor">
+<h2>2. Run GRM Segmentation<a href="segmentation-update.html#updatep2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="segmentation-update.html#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="do">#########################</span></span>
 <span id="cb14-2"><a href="segmentation-update.html#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="do">### RUN GRM ALGORITHM </span><span class="al">###</span></span>
 <span id="cb14-3"><a href="segmentation-update.html#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="do">#########################</span></span>
@@ -449,8 +449,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb14-76"><a href="segmentation-update.html#cb14-76" aria-hidden="true" tabindex="-1"></a>  vec<span class="sc">$</span>id <span class="ot">&lt;-</span> vec_dat<span class="sc">$</span>id</span>
 <span id="cb14-77"><a href="segmentation-update.html#cb14-77" aria-hidden="true" tabindex="-1"></a>  vec<span class="sc">$</span>nbPixels <span class="ot">&lt;-</span> vec_dat<span class="sc">$</span>nbPixels</span></code></pre></div>
 </div>
-<div id="calculate-stats" class="section level2 unnumbered hasAnchor">
-<h2>3a. Calculate Summary Statistics<a href="segmentation-update.html#calculate-stats" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="updatep3a" class="section level2 unnumbered hasAnchor">
+<h2>3a. Calculate Summary Statistics<a href="segmentation-update.html#updatep3a" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="segmentation-update.html#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="do">##############################################</span></span>
 <span id="cb15-2"><a href="segmentation-update.html#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="do">### RE-ADD WATER AND UNCLASSIFIED POLYGONS </span><span class="al">###</span></span>
 <span id="cb15-3"><a href="segmentation-update.html#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="do">##############################################</span></span>
@@ -726,8 +726,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb15-273"><a href="segmentation-update.html#cb15-273" aria-hidden="true" tabindex="-1"></a>          <span class="at">file =</span> <span class="st">&#39;D:/ontario_inventory/segmentation_ex/grm_ex_summary_stats.csv&#39;</span>,</span>
 <span id="cb15-274"><a href="segmentation-update.html#cb15-274" aria-hidden="true" tabindex="-1"></a>          <span class="at">row.names =</span> F)</span></code></pre></div>
 </div>
-<div id="compare-outputs" class="section level2 unnumbered hasAnchor">
-<h2>3b. Compare GRM Segmentation Output to FRI<a href="segmentation-update.html#compare-outputs" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="updatep3b" class="section level2 unnumbered hasAnchor">
+<h2>3b. Compare GRM Segmentation Output to FRI<a href="segmentation-update.html#updatep3b" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="segmentation-update.html#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load base imagery</span></span>
 <span id="cb16-2"><a href="segmentation-update.html#cb16-2" aria-hidden="true" tabindex="-1"></a>base <span class="ot">&lt;-</span> <span class="fu">rast</span>(<span class="st">&#39;D:/ontario_inventory/romeo/RMF_Sample_Base.tif&#39;</span>)</span>
 <span id="cb16-3"><a href="segmentation-update.html#cb16-3" aria-hidden="true" tabindex="-1"></a></span>

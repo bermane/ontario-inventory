@@ -45,7 +45,7 @@ poly_ras <- st_as_sf(poly_ras)
 
 #extract median values
 vec <- exact_extract(lidar_ras, poly_ras, function(values, coverage_fraction){
-  values <- values[coverage_fraction >= .95,]
+  values <- values[coverage_fraction >= .5,]
   apply(values, 2, function(x) median(x, na.rm = T))
 })
 
@@ -59,4 +59,4 @@ colnames(vec) <- names(lidar)
 dat <- cbind(dat, vec)
 
 # save extracted dataframe for fast rebooting
-save(dat, file = 'D:/ontario_inventory/dat/dat_fri_95.RData')
+save(dat, file = 'D:/ontario_inventory/dat/dat_fri_50.RData')

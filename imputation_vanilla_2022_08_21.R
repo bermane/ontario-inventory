@@ -14,6 +14,7 @@ library(terra)
 library(tidyverse)
 library(magrittr)
 library(RANN)
+library(corrplot)
 
 ###################################################
 ###LOAD POLYGON DATASET AND ADD LIDAR ATTRIBUTES###
@@ -22,6 +23,7 @@ library(RANN)
 # load extracted data frame
 # dat_fri_100 is loaded with LiDAR arributes derived from
 # masking pixels that do not fall 100 % inside polygons
+# do we want to use 100%? 50% as in paper 1???
 load('D:/ontario_inventory/dat/dat_fri_100.RData')
 
 # # save full original dataset
@@ -30,20 +32,38 @@ load('D:/ontario_inventory/dat/dat_fri_100.RData')
 # # only keep forested polygons
 # dat_orig <- filter(dat_orig, POLYTYPE == 'FOR')
 
-# # load photo interpreted polygons
-# poly <-
-#   vect(
-#     'D:/ontario_inventory/romeo/RMF_EFI_layers/Polygons Inventory/RMF_PolygonForest.shp'
-#   )
+# load photo interpreted polygons
+poly <-
+  vect(
+    'D:/ontario_inventory/romeo/RMF_EFI_layers/Polygons Inventory/RMF_PolygonForest.shp'
+  )
+
+# cbind centroids to dat
+dat <- cbind(dat, centroids(poly) %>% crds)
 
 ##############################################
 ###SUBSET DATA BASED ON SCREENING PROCEDURE###
 ##############################################
 
+# # load final dataset after screening
+# # old with HT LM
+# dat_screen <-
+#   read.csv(
+#     'D:/ontario_inventory/imputation/fri_data_screen_1bc_2a_2p95_2cc_10perc_2022_07_06.csv'
+#   )
+
+# # load final dataset after screening
+# # without HT lm and with cv 0.1
+# dat_screen <-
+#   read.csv(
+#     'D:/ontario_inventory/imputation/dat_screen_1b_01_1c_2pc_for.csv'
+#   )
+
 # load final dataset after screening
+# only dom for and ht > 5
 dat_screen <-
   read.csv(
-    'D:/ontario_inventory/imputation/fri_data_screen_1bc_2a_2p95_2cc_10perc_2022_07_06.csv'
+    'D:/ontario_inventory/imputation/dat_screen_1d_2pc_for.csv'
   )
 
 # subset dat based on screening
@@ -52,16 +72,61 @@ dat <- dat[dat$FOREST_ID %in% dat_screen$FOREST_ID, ]
 # remove any missing values
 dat <- na.omit(dat)
 
-#####################################
-###RUN NEAREST NEIGHBOR IMPUTATION###
-#####################################
+####################
+###EXPLORE SPCOMP###
+####################
 
-#####################
-###P95, CC, and CV###
-#####################
+# look at first few rows
+head(dat$SPCOMP)
 
-# lets try using p95, cc and cv, just like the segmentation
-dat_nn <- dat %>% select(p95, cc, cv)
+# parse SPCOMP strings
+sp <- str_split(dat$SPCOMP, pattern = "\\s{2}")
+
+# add first species to dat
+dat$SP1 <- sapply(sp, FUN = function(x){
+  str <- x[1]
+  str <- str_sub(str, start = 1, end = 2)
+  return(str)
+})
+
+# add first species percent to dat
+dat$SP1P <- sapply(sp, FUN = function(x){
+  str <- x[2]
+  if(is.na(str)){
+    str <- 100
+  } else{
+    str <- str_sub(str, start = 1, end = 2)
+  }
+  return(str)
+})
+
+# add second species to dat
+dat$SP2 <- sapply(sp, FUN = function(x){
+  str <- x[2]
+  if(is.na(str) == F){
+    str <- str_sub(str, start = 3, end = 4)
+  }
+  return(str)
+})
+
+# add second species percent to dat
+dat$SP2P <- sapply(sp, FUN = function(x){
+  str <- x[3]
+  if(is.na(str) == F){
+    str <- str_sub(str, start = 1, end = 2)
+  }
+  return(str)
+})
+
+########################################################
+###RUN NEAREST NEIGHBOR IMPUTATION USING FRI AS QUERY###
+########################################################
+
+############################
+###top_height, ba, cc, cv###
+############################
+
+dat_nn <- dat %>% select(top_height, ba, cc, cv)
 
 # scale for nn computation
 dat_nn_scaled <- dat_nn %>% scale
@@ -70,14 +135,22 @@ dat_nn_scaled <- dat_nn %>% scale
 nn <- nn2(dat_nn_scaled, dat_nn_scaled, k = 2)
 
 # create tibble of results
-nn_tab <- tibble(p95 = dat_nn[,1],
-                 cc = dat_nn[,2],
-                 cv = dat_nn[,3],
+nn_tab <- tibble(top_height = dat_nn[,1],
+                 ba = dat_nn[,2],
+                 cc = dat_nn[,3],
+                 cv = dat_nn[,4],
                  age = dat$AGE,
-                 p95_nn = dat_nn[nn[[1]][,2],1],
-                 cc_nn = dat_nn[nn[[1]][,2],2],
-                 cv_nn = dat_nn[nn[[1]][,2],3],
-                 age_nn = dat$AGE[nn[[1]][,2]])
+                 wg = dat$WG,
+                 sp1 = dat$SP1,
+                 sp2 = dat$SP2,
+                 top_height_nn = dat_nn[nn[[1]][,2],1],
+                 ba_nn = dat_nn[nn[[1]][,2],2],
+                 cc_nn = dat_nn[nn[[1]][,2],3],
+                 cv_nn = dat_nn[nn[[1]][,2],4],
+                 age_nn = dat$AGE[nn[[1]][,2]],
+                 wg_nn = dat$WG[nn[[1]][,2]],
+                 sp1_nn = dat$SP1[nn[[1]][,2]],
+                 sp2_nn = dat$SP2[nn[[1]][,2]])
 
 # calculate rmse different variables
 rmse <- function(obs, est){
@@ -87,12 +160,15 @@ rmse <- function(obs, est){
 # calculate rmse metrics
 perform_df <-
   data.frame(
-    p95_raw_rmse = rmse(nn_tab$p95, nn_tab$p95_nn),
+    top_height_raw_rmse = rmse(nn_tab$top_height, nn_tab$top_height_nn),
+    ba_raw_rmse = rmse(nn_tab$ba, nn_tab$ba_nn),
     cc_raw_rmse = rmse(nn_tab$cc, nn_tab$cc_nn),
     cv_raw_rmse = rmse(nn_tab$cv, nn_tab$cv_nn),
     age_raw_rmse = rmse(nn_tab$age, nn_tab$age_nn),
-    p95_scaled_rmse = rmse(nn_tab$p95, nn_tab$p95_nn) /
-      sd(nn_tab$p95),
+    top_height_scaled_rmse = rmse(nn_tab$top_height, nn_tab$top_height_nn) /
+      sd(nn_tab$top_height),
+    ba_scaled_rmse = rmse(nn_tab$ba, nn_tab$ba_nn) /
+      sd(nn_tab$ba),
     cc_scaled_rmse = rmse(nn_tab$cc, nn_tab$cc_nn) /
       sd(nn_tab$cc),
     cv_scaled_rmse = rmse(nn_tab$cv, nn_tab$cv_nn) /
@@ -101,35 +177,78 @@ perform_df <-
       sd(nn_tab$age)
   )
 
-###########################
-###ALS HT, CC, BA vs FRI###
-###########################
 
-# create df for als and fri metrics
-dat_als <- dat %>% select(lor, cc, ba)
-dat_fri <- dat %>% select(HT, CC, BA)
+# calculate wg accuracy
+# create df of WG
+wg <- data.frame(obs = nn_tab$wg,
+                 est = nn_tab$wg_nn)
 
-# change als colnames
-colnames(dat_als) <- c('HT', 'CC', 'BA')
+# create column of match or not
+wg$match <- wg$obs == wg$est
+
+# add total percent of matching WG to perform_df
+perform_df <- cbind(perform_df,
+                    data.frame(wg_accuracy = NROW(wg[wg$match == T,]) /
+                                 NROW(wg)))
+
+# calculate SP1 accuracy
+# create df of SP1
+sp1 <- data.frame(obs = nn_tab$sp1,
+                 est = nn_tab$sp1_nn)
+
+# create column of match or not
+sp1$match <- sp1$obs == sp1$est
+
+# add total percent of matching SP1 to perform_df
+perform_df <- cbind(perform_df,
+                    data.frame(sp1_accuracy = NROW(sp1[sp1$match == T,]) /
+                                 NROW(sp1)))
+
+# calculate SP2 accuracy
+# create df of SP2
+sp2 <- data.frame(obs = nn_tab$sp2,
+                  est = nn_tab$sp2_nn)
+
+# create column of match or not
+sp2$match <- sp2$obs == sp2$est
+
+# add total percent of matching SP2 to perform_df
+perform_df <- cbind(perform_df,
+                    data.frame(sp2_accuracy = NROW(sp2[sp2$match == T,]) /
+                                 NROW(sp2)))
+
+########################
+###FRI HT, CC, and BA###
+########################
+
+dat_nn <- dat %>% select(HT, CC, BA)
 
 # scale for nn computation
-# need to combine and scale all values together then separate again
-dat_alsfri_scaled <- rbind(dat_als, dat_fri) %>% scale
-dat_als_scaled <- dat_alsfri_scaled[1:NROW(dat),]
-dat_fri_scaled <- dat_alsfri_scaled[(NROW(dat)+1):(NROW(dat)*2),]
+dat_nn_scaled <- dat_nn %>% scale
 
 # run nearest neighbor
-nn <- nn2(dat_fri_scaled, dat_als_scaled, k = 2)
+nn <- nn2(dat_nn_scaled, dat_nn_scaled, k = 2)
 
 # create tibble of results
-nn_tab <- tibble(ht = dat_als[,1],
-                 cc = dat_als[,2],
-                 ba = dat_als[,3],
+nn_tab <- tibble(ht = dat_nn[,1],
+                 cc = dat_nn[,2],
+                 ba = dat_nn[,3],
                  age = dat$AGE,
-                 ht_nn = dat_fri[nn[[1]][,1],1],
-                 cc_nn = dat_fri[nn[[1]][,1],2],
-                 ba_nn = dat_fri[nn[[1]][,1],3],
-                 age_nn = dat$AGE[nn[[1]][,1]])
+                 wg = dat$WG,
+                 sp1 = dat$SP1,
+                 sp2 = dat$SP2,
+                 ht_nn = dat_nn[nn[[1]][,2],1],
+                 cc_nn = dat_nn[nn[[1]][,2],2],
+                 ba_nn = dat_nn[nn[[1]][,2],3],
+                 age_nn = dat$AGE[nn[[1]][,2]],
+                 wg_nn = dat$WG[nn[[1]][,2]],
+                 sp1_nn = dat$SP1[nn[[1]][,2]],
+                 sp2_nn = dat$SP2[nn[[1]][,2]])
+
+# calculate rmse different variables
+rmse <- function(obs, est){
+  sqrt(mean((obs - est) ^ 2))
+}
 
 # calculate rmse metrics
 perform_df <-
@@ -149,13 +268,1018 @@ perform_df <-
   )
 
 
-library(RANN)
+# calculate wg accuracy
+# create df of WG
+wg <- data.frame(obs = nn_tab$wg,
+                 est = nn_tab$wg_nn)
 
-set.seed(20)
-r <- seq(1,100,1)
-q <- seq(1,100,1) %>% sample
+# create column of match or not
+wg$match <- wg$obs == wg$est
 
-nn <- nn2(r, q, k = 1)
+# add total percent of matching WG to perform_df
+perform_df <- cbind(perform_df,
+                    data.frame(wg_accuracy = NROW(wg[wg$match == T,]) /
+                                 NROW(wg)))
 
-check <- tibble(obs = q,
-                est = r[nn[[1]][,1]])
+# calculate SP1 accuracy
+# create df of SP1
+sp1 <- data.frame(obs = nn_tab$sp1,
+                  est = nn_tab$sp1_nn)
+
+# create column of match or not
+sp1$match <- sp1$obs == sp1$est
+
+# add total percent of matching SP1 to perform_df
+perform_df <- cbind(perform_df,
+                    data.frame(sp1_accuracy = NROW(sp1[sp1$match == T,]) /
+                                 NROW(sp1)))
+
+# calculate SP2 accuracy
+# create df of SP2
+sp2 <- data.frame(obs = nn_tab$sp2,
+                  est = nn_tab$sp2_nn)
+
+# create column of match or not
+sp2$match <- sp2$obs == sp2$est
+
+# add total percent of matching SP2 to perform_df
+perform_df <- cbind(perform_df,
+                    data.frame(sp2_accuracy = NROW(sp2[sp2$match == T,]) /
+                                 NROW(sp2)))
+
+#####################
+###P95, CC, and CV###
+#####################
+
+# # lets try using p95, cc and cv, just like the segmentation
+# dat_nn <- dat %>% select(p95, cc, cv)
+# 
+# # scale for nn computation
+# dat_nn_scaled <- dat_nn %>% scale
+# 
+# # run nearest neighbor
+# nn <- nn2(dat_nn_scaled, dat_nn_scaled, k = 2)
+# 
+# # create tibble of results
+# nn_tab <- tibble(p95 = dat_nn[,1],
+#                  cc = dat_nn[,2],
+#                  cv = dat_nn[,3],
+#                  age = dat$AGE,
+#                  wg = dat$WG,
+#                  p95_nn = dat_nn[nn[[1]][,2],1],
+#                  cc_nn = dat_nn[nn[[1]][,2],2],
+#                  cv_nn = dat_nn[nn[[1]][,2],3],
+#                  age_nn = dat$AGE[nn[[1]][,2]],
+#                  wg_nn = dat$WG[nn[[1]][,2]])
+# 
+# # calculate rmse different variables
+# rmse <- function(obs, est){
+#   sqrt(mean((obs - est) ^ 2))
+# }
+# 
+# # calculate rmse metrics
+# perform_df <-
+#   data.frame(
+#     p95_raw_rmse = rmse(nn_tab$p95, nn_tab$p95_nn),
+#     cc_raw_rmse = rmse(nn_tab$cc, nn_tab$cc_nn),
+#     cv_raw_rmse = rmse(nn_tab$cv, nn_tab$cv_nn),
+#     age_raw_rmse = rmse(nn_tab$age, nn_tab$age_nn),
+#     p95_scaled_rmse = rmse(nn_tab$p95, nn_tab$p95_nn) /
+#       sd(nn_tab$p95),
+#     cc_scaled_rmse = rmse(nn_tab$cc, nn_tab$cc_nn) /
+#       sd(nn_tab$cc),
+#     cv_scaled_rmse = rmse(nn_tab$cv, nn_tab$cv_nn) /
+#       sd(nn_tab$cv),
+#     age_scaled_rmse = rmse(nn_tab$age, nn_tab$age_nn) /
+#       sd(nn_tab$age)
+#   )
+# 
+# 
+# # calculate wg accuracy
+# # create df of WG
+# wg <- data.frame(obs = nn_tab$wg,
+#                  est = nn_tab$wg_nn)
+# 
+# # create column of match or not
+# wg$match <- wg$obs == wg$est
+# 
+# # add total percent of matching WG to perform_df
+# perform_df <- cbind(perform_df,
+#                     data.frame(wg_accuracy = NROW(wg[wg$match == T,]) /
+#                                  NROW(wg)))
+
+# ###########################
+# ###ALS HT, CC, BA vs FRI###
+# ###########################
+# 
+# # create df for als and fri metrics
+# dat_als <- dat %>% select(lor, cc, ba)
+# dat_fri <- dat %>% select(HT, CC, BA)
+# 
+# # change als colnames
+# colnames(dat_als) <- c('HT', 'CC', 'BA')
+# 
+# # scale for nn computation
+# # need to combine and scale all values together then separate again
+# dat_alsfri_scaled <- rbind(dat_als, dat_fri) %>% scale
+# dat_als_scaled <- dat_alsfri_scaled[1:NROW(dat),]
+# dat_fri_scaled <- dat_alsfri_scaled[(NROW(dat)+1):(NROW(dat)*2),]
+# 
+# # run nearest neighbor
+# nn <- nn2(dat_fri_scaled, dat_als_scaled, k = 2)
+# 
+# # create tibble of results
+# nn_tab <- tibble(ht = dat_als[,1],
+#                  cc = dat_als[,2],
+#                  ba = dat_als[,3],
+#                  age = dat$AGE,
+#                  wg = dat$WG,
+#                  ht_nn = dat_fri[nn[[1]][,1],1],
+#                  cc_nn = dat_fri[nn[[1]][,1],2],
+#                  ba_nn = dat_fri[nn[[1]][,1],3],
+#                  age_nn = dat$AGE[nn[[1]][,1]],
+#                  wg_nn = dat$WG[nn[[1]][,1]])
+# 
+# # calculate rmse metrics
+# perform_df <-
+#   data.frame(
+#     ht_raw_rmse = rmse(nn_tab$ht, nn_tab$ht_nn),
+#     cc_raw_rmse = rmse(nn_tab$cc, nn_tab$cc_nn),
+#     ba_raw_rmse = rmse(nn_tab$ba, nn_tab$ba_nn),
+#     age_raw_rmse = rmse(nn_tab$age, nn_tab$age_nn),
+#     ht_scaled_rmse = rmse(nn_tab$ht, nn_tab$ht_nn) /
+#       sd(nn_tab$ht),
+#     cc_scaled_rmse = rmse(nn_tab$cc, nn_tab$cc_nn) /
+#       sd(nn_tab$cc),
+#     ba_scaled_rmse = rmse(nn_tab$ba, nn_tab$ba_nn) /
+#       sd(nn_tab$ba),
+#     age_scaled_rmse = rmse(nn_tab$age, nn_tab$age_nn) /
+#       sd(nn_tab$age)
+#   )
+# 
+# # calculate wg accuracy
+# # create df of WG
+# wg <- data.frame(obs = nn_tab$wg,
+#                  est = nn_tab$wg_nn)
+# 
+# # create column of match or not
+# wg$match <- wg$obs == wg$est
+# 
+# # add total percent of matching WG to perform_df
+# perform_df <- cbind(perform_df,
+#                     data.frame(wg_accuracy = NROW(wg[wg$match == T,]) /
+#                                  NROW(wg)))
+
+####################################
+###top_height, ba, cc, cv (K = 5)###
+####################################
+
+# create mode function
+getmode <- function(v) {
+  uniqv <- unique(v)
+  uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+
+# subset data
+dat_nn <- dat %>% select(top_height, ba, cc, cv)
+
+# scale for nn computation
+dat_nn_scaled <- dat_nn %>% scale
+
+# run nearest neighbor
+nn <- nn2(dat_nn_scaled, dat_nn_scaled, k = 6)
+
+# get nn indices
+nni <- nn[[1]][, 2:6]
+
+# create tibble of results
+nn_tab <- tibble(top_height = dat_nn[,1],
+                 ba = dat_nn[,2],
+                 cc = dat_nn[,3],
+                 cv = dat_nn[,4],
+                 age = dat$AGE,
+                 wg = dat$WG,
+                 sp1 = dat$SP1,
+                 sp2 = dat$SP2,
+                 top_height_nn = apply(nni, MARGIN = 1, FUN = function(x){
+                   mean(dat_nn[x, 1])
+                 }),
+                 ba_nn = apply(nni, MARGIN = 1, FUN = function(x){
+                   mean(dat_nn[x, 2])
+                 }),
+                 cc_nn = apply(nni, MARGIN = 1, FUN = function(x){
+                   mean(dat_nn[x, 3])
+                 }),
+                 cv_nn = apply(nni, MARGIN = 1, FUN = function(x){
+                   mean(dat_nn[x, 4])
+                 }),
+                 age_nn = apply(nni, MARGIN = 1, FUN = function(x){
+                   mean(dat$AGE[x])
+                 }),
+                 wg_nn = apply(nni, MARGIN = 1, FUN = function(x){
+                   getmode(dat$WG[x])
+                 }),
+                 sp1_nn = apply(nni, MARGIN = 1, FUN = function(x){
+                   getmode(dat$SP1[x])
+                 }),
+                 sp2_nn = apply(nni, MARGIN = 1, FUN = function(x){
+                   getmode(dat$SP2[x])
+                 }))
+
+# calculate rmse different variables
+rmse <- function(obs, est){
+  sqrt(mean((obs - est) ^ 2))
+}
+
+# calculate rmse metrics
+perform_df <-
+  data.frame(
+    top_height_raw_rmse = rmse(nn_tab$top_height, nn_tab$top_height_nn),
+    ba_raw_rmse = rmse(nn_tab$ba, nn_tab$ba_nn),
+    cc_raw_rmse = rmse(nn_tab$cc, nn_tab$cc_nn),
+    cv_raw_rmse = rmse(nn_tab$cv, nn_tab$cv_nn),
+    age_raw_rmse = rmse(nn_tab$age, nn_tab$age_nn),
+    top_height_scaled_rmse = rmse(nn_tab$top_height, nn_tab$top_height_nn) /
+      sd(nn_tab$top_height),
+    ba_scaled_rmse = rmse(nn_tab$ba, nn_tab$ba_nn) /
+      sd(nn_tab$ba),
+    cc_scaled_rmse = rmse(nn_tab$cc, nn_tab$cc_nn) /
+      sd(nn_tab$cc),
+    cv_scaled_rmse = rmse(nn_tab$cv, nn_tab$cv_nn) /
+      sd(nn_tab$cv),
+    age_scaled_rmse = rmse(nn_tab$age, nn_tab$age_nn) /
+      sd(nn_tab$age)
+  )
+
+
+# calculate wg accuracy
+# create df of WG
+wg <- data.frame(obs = nn_tab$wg,
+                 est = nn_tab$wg_nn)
+
+# create column of match or not
+wg$match <- wg$obs == wg$est
+
+# add total percent of matching WG to perform_df
+perform_df <- cbind(perform_df,
+                    data.frame(wg_accuracy = NROW(wg[wg$match == T,]) /
+                                 NROW(wg)))
+
+# calculate SP1 accuracy
+# create df of SP1
+sp1 <- data.frame(obs = nn_tab$sp1,
+                  est = nn_tab$sp1_nn)
+
+# create column of match or not
+sp1$match <- sp1$obs == sp1$est
+
+# add total percent of matching SP1 to perform_df
+perform_df <- cbind(perform_df,
+                    data.frame(sp1_accuracy = NROW(sp1[sp1$match == T,]) /
+                                 NROW(sp1)))
+
+# calculate SP2 accuracy
+# create df of SP2
+sp2 <- data.frame(obs = nn_tab$sp2,
+                  est = nn_tab$sp2_nn)
+
+# create column of match or not
+sp2$match <- sp2$obs == sp2$est
+
+# add total percent of matching SP2 to perform_df
+perform_df <- cbind(perform_df,
+                    data.frame(sp2_accuracy = NROW(sp2[sp2$match == T,]) /
+                                 NROW(sp2)))
+
+####################################
+###top_height, ba, cc, cv (K = 10)##
+####################################
+
+# create mode function
+getmode <- function(v) {
+  uniqv <- unique(v)
+  uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+
+# subset data
+dat_nn <- dat %>% select(top_height, ba, cc, cv)
+
+# scale for nn computation
+dat_nn_scaled <- dat_nn %>% scale
+
+# run nearest neighbor
+nn <- nn2(dat_nn_scaled, dat_nn_scaled, k = 11)
+
+# get nn indices
+nni <- nn[[1]][, 2:11]
+
+# create tibble of results
+nn_tab <- tibble(top_height = dat_nn[,1],
+                 ba = dat_nn[,2],
+                 cc = dat_nn[,3],
+                 cv = dat_nn[,4],
+                 age = dat$AGE,
+                 wg = dat$WG,
+                 sp1 = dat$SP1,
+                 sp2 = dat$SP2,
+                 top_height_nn = apply(nni, MARGIN = 1, FUN = function(x){
+                   mean(dat_nn[x, 1])
+                 }),
+                 ba_nn = apply(nni, MARGIN = 1, FUN = function(x){
+                   mean(dat_nn[x, 2])
+                 }),
+                 cc_nn = apply(nni, MARGIN = 1, FUN = function(x){
+                   mean(dat_nn[x, 3])
+                 }),
+                 cv_nn = apply(nni, MARGIN = 1, FUN = function(x){
+                   mean(dat_nn[x, 4])
+                 }),
+                 age_nn = apply(nni, MARGIN = 1, FUN = function(x){
+                   mean(dat$AGE[x])
+                 }),
+                 wg_nn = apply(nni, MARGIN = 1, FUN = function(x){
+                   getmode(dat$WG[x])
+                 }),
+                 sp1_nn = apply(nni, MARGIN = 1, FUN = function(x){
+                   getmode(dat$SP1[x])
+                 }),
+                 sp2_nn = apply(nni, MARGIN = 1, FUN = function(x){
+                   getmode(dat$SP2[x])
+                 }))
+
+# calculate rmse different variables
+rmse <- function(obs, est){
+  sqrt(mean((obs - est) ^ 2))
+}
+
+# calculate rmse metrics
+perform_df <-
+  data.frame(
+    top_height_raw_rmse = rmse(nn_tab$top_height, nn_tab$top_height_nn),
+    ba_raw_rmse = rmse(nn_tab$ba, nn_tab$ba_nn),
+    cc_raw_rmse = rmse(nn_tab$cc, nn_tab$cc_nn),
+    cv_raw_rmse = rmse(nn_tab$cv, nn_tab$cv_nn),
+    age_raw_rmse = rmse(nn_tab$age, nn_tab$age_nn),
+    top_height_scaled_rmse = rmse(nn_tab$top_height, nn_tab$top_height_nn) /
+      sd(nn_tab$top_height),
+    ba_scaled_rmse = rmse(nn_tab$ba, nn_tab$ba_nn) /
+      sd(nn_tab$ba),
+    cc_scaled_rmse = rmse(nn_tab$cc, nn_tab$cc_nn) /
+      sd(nn_tab$cc),
+    cv_scaled_rmse = rmse(nn_tab$cv, nn_tab$cv_nn) /
+      sd(nn_tab$cv),
+    age_scaled_rmse = rmse(nn_tab$age, nn_tab$age_nn) /
+      sd(nn_tab$age)
+  )
+
+
+# calculate wg accuracy
+# create df of WG
+wg <- data.frame(obs = nn_tab$wg,
+                 est = nn_tab$wg_nn)
+
+# create column of match or not
+wg$match <- wg$obs == wg$est
+
+# add total percent of matching WG to perform_df
+perform_df <- cbind(perform_df,
+                    data.frame(wg_accuracy = NROW(wg[wg$match == T,]) /
+                                 NROW(wg)))
+
+# calculate SP1 accuracy
+# create df of SP1
+sp1 <- data.frame(obs = nn_tab$sp1,
+                  est = nn_tab$sp1_nn)
+
+# create column of match or not
+sp1$match <- sp1$obs == sp1$est
+
+# add total percent of matching SP1 to perform_df
+perform_df <- cbind(perform_df,
+                    data.frame(sp1_accuracy = NROW(sp1[sp1$match == T,]) /
+                                 NROW(sp1)))
+
+# calculate SP2 accuracy
+# create df of SP2
+sp2 <- data.frame(obs = nn_tab$sp2,
+                  est = nn_tab$sp2_nn)
+
+# create column of match or not
+sp2$match <- sp2$obs == sp2$est
+
+# add total percent of matching SP2 to perform_df
+perform_df <- cbind(perform_df,
+                    data.frame(sp2_accuracy = NROW(sp2[sp2$match == T,]) /
+                                 NROW(sp2)))
+
+####################################
+###top_height, ba, cc, cv (K = 3)###
+####################################
+
+# create mode function
+getmode <- function(v) {
+  uniqv <- unique(v)
+  uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+
+# subset data
+dat_nn <- dat %>% select(top_height, ba, cc, cv)
+
+# scale for nn computation
+dat_nn_scaled <- dat_nn %>% scale
+
+# run nearest neighbor
+nn <- nn2(dat_nn_scaled, dat_nn_scaled, k = 4)
+
+# get nn indices
+nni <- nn[[1]][, 2:4]
+
+# create tibble of results
+nn_tab <- tibble(top_height = dat_nn[,1],
+                 ba = dat_nn[,2],
+                 cc = dat_nn[,3],
+                 cv = dat_nn[,4],
+                 age = dat$AGE,
+                 wg = dat$WG,
+                 sp1 = dat$SP1,
+                 sp2 = dat$SP2,
+                 top_height_nn = apply(nni, MARGIN = 1, FUN = function(x){
+                   mean(dat_nn[x, 1])
+                 }),
+                 ba_nn = apply(nni, MARGIN = 1, FUN = function(x){
+                   mean(dat_nn[x, 2])
+                 }),
+                 cc_nn = apply(nni, MARGIN = 1, FUN = function(x){
+                   mean(dat_nn[x, 3])
+                 }),
+                 cv_nn = apply(nni, MARGIN = 1, FUN = function(x){
+                   mean(dat_nn[x, 4])
+                 }),
+                 age_nn = apply(nni, MARGIN = 1, FUN = function(x){
+                   mean(dat$AGE[x])
+                 }),
+                 wg_nn = apply(nni, MARGIN = 1, FUN = function(x){
+                   getmode(dat$WG[x])
+                 }),
+                 sp1_nn = apply(nni, MARGIN = 1, FUN = function(x){
+                   getmode(dat$SP1[x])
+                 }),
+                 sp2_nn = apply(nni, MARGIN = 1, FUN = function(x){
+                   getmode(dat$SP2[x])
+                 }))
+
+# calculate rmse different variables
+rmse <- function(obs, est){
+  sqrt(mean((obs - est) ^ 2))
+}
+
+# calculate rmse metrics
+perform_df <-
+  data.frame(
+    top_height_raw_rmse = rmse(nn_tab$top_height, nn_tab$top_height_nn),
+    ba_raw_rmse = rmse(nn_tab$ba, nn_tab$ba_nn),
+    cc_raw_rmse = rmse(nn_tab$cc, nn_tab$cc_nn),
+    cv_raw_rmse = rmse(nn_tab$cv, nn_tab$cv_nn),
+    age_raw_rmse = rmse(nn_tab$age, nn_tab$age_nn),
+    top_height_scaled_rmse = rmse(nn_tab$top_height, nn_tab$top_height_nn) /
+      sd(nn_tab$top_height),
+    ba_scaled_rmse = rmse(nn_tab$ba, nn_tab$ba_nn) /
+      sd(nn_tab$ba),
+    cc_scaled_rmse = rmse(nn_tab$cc, nn_tab$cc_nn) /
+      sd(nn_tab$cc),
+    cv_scaled_rmse = rmse(nn_tab$cv, nn_tab$cv_nn) /
+      sd(nn_tab$cv),
+    age_scaled_rmse = rmse(nn_tab$age, nn_tab$age_nn) /
+      sd(nn_tab$age)
+  )
+
+
+# calculate wg accuracy
+# create df of WG
+wg <- data.frame(obs = nn_tab$wg,
+                 est = nn_tab$wg_nn)
+
+# create column of match or not
+wg$match <- wg$obs == wg$est
+
+# add total percent of matching WG to perform_df
+perform_df <- cbind(perform_df,
+                    data.frame(wg_accuracy = NROW(wg[wg$match == T,]) /
+                                 NROW(wg)))
+
+# calculate SP1 accuracy
+# create df of SP1
+sp1 <- data.frame(obs = nn_tab$sp1,
+                  est = nn_tab$sp1_nn)
+
+# create column of match or not
+sp1$match <- sp1$obs == sp1$est
+
+# add total percent of matching SP1 to perform_df
+perform_df <- cbind(perform_df,
+                    data.frame(sp1_accuracy = NROW(sp1[sp1$match == T,]) /
+                                 NROW(sp1)))
+
+# calculate SP2 accuracy
+# create df of SP2
+sp2 <- data.frame(obs = nn_tab$sp2,
+                  est = nn_tab$sp2_nn)
+
+# create column of match or not
+sp2$match <- sp2$obs == sp2$est
+
+# add total percent of matching SP2 to perform_df
+perform_df <- cbind(perform_df,
+                    data.frame(sp2_accuracy = NROW(sp2[sp2$match == T,]) /
+                                 NROW(sp2)))
+
+##############################
+###COORDINATES ONLY (K = 5)###
+##############################
+
+# create mode function
+getmode <- function(v) {
+  uniqv <- unique(v)
+  uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+
+# subset data
+dat_nn <- dat %>% select(x,y)
+
+# scale for nn computation
+# dat_nn_scaled <- dat_nn %>% scale
+
+# run nearest neighbor
+nn <- nn2(dat_nn, dat_nn, k = 6)
+
+# get nn indices
+nni <- nn[[1]][, 2:6]
+
+# create tibble of results
+nn_tab <- tibble(top_height = dat$top_height,
+                 ba = dat$ba,
+                 cc = dat$cc,
+                 cv = dat$cv,
+                 age = dat$AGE,
+                 wg = dat$WG,
+                 sp1 = dat$SP1,
+                 sp2 = dat$SP2,
+                 top_height_nn = apply(nni, MARGIN = 1, FUN = function(x){
+                   mean(dat$top_height[x])
+                 }),
+                 ba_nn = apply(nni, MARGIN = 1, FUN = function(x){
+                   mean(dat$ba[x])
+                 }),
+                 cc_nn = apply(nni, MARGIN = 1, FUN = function(x){
+                   mean(dat$cc[x])
+                 }),
+                 cv_nn = apply(nni, MARGIN = 1, FUN = function(x){
+                   mean(dat$cv[x])
+                 }),
+                 age_nn = apply(nni, MARGIN = 1, FUN = function(x){
+                   mean(dat$AGE[x])
+                 }),
+                 wg_nn = apply(nni, MARGIN = 1, FUN = function(x){
+                   getmode(dat$WG[x])
+                 }),
+                 sp1_nn = apply(nni, MARGIN = 1, FUN = function(x){
+                   getmode(dat$SP1[x])
+                 }),
+                 sp2_nn = apply(nni, MARGIN = 1, FUN = function(x){
+                   getmode(dat$SP2[x])
+                 }))
+
+# calculate rmse different variables
+rmse <- function(obs, est){
+  sqrt(mean((obs - est) ^ 2))
+}
+
+# calculate rmse metrics
+perform_df <-
+  data.frame(
+    top_height_raw_rmse = rmse(nn_tab$top_height, nn_tab$top_height_nn),
+    ba_raw_rmse = rmse(nn_tab$ba, nn_tab$ba_nn),
+    cc_raw_rmse = rmse(nn_tab$cc, nn_tab$cc_nn),
+    cv_raw_rmse = rmse(nn_tab$cv, nn_tab$cv_nn),
+    age_raw_rmse = rmse(nn_tab$age, nn_tab$age_nn),
+    top_height_scaled_rmse = rmse(nn_tab$top_height, nn_tab$top_height_nn) /
+      sd(nn_tab$top_height),
+    ba_scaled_rmse = rmse(nn_tab$ba, nn_tab$ba_nn) /
+      sd(nn_tab$ba),
+    cc_scaled_rmse = rmse(nn_tab$cc, nn_tab$cc_nn) /
+      sd(nn_tab$cc),
+    cv_scaled_rmse = rmse(nn_tab$cv, nn_tab$cv_nn) /
+      sd(nn_tab$cv),
+    age_scaled_rmse = rmse(nn_tab$age, nn_tab$age_nn) /
+      sd(nn_tab$age)
+  )
+
+
+# calculate wg accuracy
+# create df of WG
+wg <- data.frame(obs = nn_tab$wg,
+                 est = nn_tab$wg_nn)
+
+# create column of match or not
+wg$match <- wg$obs == wg$est
+
+# add total percent of matching WG to perform_df
+perform_df <- cbind(perform_df,
+                    data.frame(wg_accuracy = NROW(wg[wg$match == T,]) /
+                                 NROW(wg)))
+
+# calculate SP1 accuracy
+# create df of SP1
+sp1 <- data.frame(obs = nn_tab$sp1,
+                  est = nn_tab$sp1_nn)
+
+# create column of match or not
+sp1$match <- sp1$obs == sp1$est
+
+# add total percent of matching SP1 to perform_df
+perform_df <- cbind(perform_df,
+                    data.frame(sp1_accuracy = NROW(sp1[sp1$match == T,]) /
+                                 NROW(sp1)))
+
+# calculate SP2 accuracy
+# create df of SP2
+sp2 <- data.frame(obs = nn_tab$sp2,
+                  est = nn_tab$sp2_nn)
+
+# create column of match or not
+sp2$match <- sp2$obs == sp2$est
+
+# add total percent of matching SP2 to perform_df
+perform_df <- cbind(perform_df,
+                    data.frame(sp2_accuracy = NROW(sp2[sp2$match == T,]) /
+                                 NROW(sp2)))
+
+#####################################
+###top_height/ba/cc/cv/x/y (K = 5)###
+#####################################
+
+# create mode function
+getmode <- function(v) {
+  uniqv <- unique(v)
+  uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+
+# subset data
+dat_nn <- dat %>% select(top_height, ba, cc, cv, x, y)
+
+# scale for nn computation
+dat_nn_scaled <- dat_nn %>% scale
+
+# run nearest neighbor
+nn <- nn2(dat_nn_scaled, dat_nn_scaled, k = 6)
+
+# get nn indices
+nni <- nn[[1]][, 2:6]
+
+# create tibble of results
+nn_tab <- tibble(top_height = dat$top_height,
+                 ba = dat$ba,
+                 cc = dat$cc,
+                 cv = dat$cv,
+                 age = dat$AGE,
+                 wg = dat$WG,
+                 sp1 = dat$SP1,
+                 sp2 = dat$SP2,
+                 top_height_nn = apply(nni, MARGIN = 1, FUN = function(x){
+                   mean(dat$top_height[x])
+                 }),
+                 ba_nn = apply(nni, MARGIN = 1, FUN = function(x){
+                   mean(dat$ba[x])
+                 }),
+                 cc_nn = apply(nni, MARGIN = 1, FUN = function(x){
+                   mean(dat$cc[x])
+                 }),
+                 cv_nn = apply(nni, MARGIN = 1, FUN = function(x){
+                   mean(dat$cv[x])
+                 }),
+                 age_nn = apply(nni, MARGIN = 1, FUN = function(x){
+                   mean(dat$AGE[x])
+                 }),
+                 wg_nn = apply(nni, MARGIN = 1, FUN = function(x){
+                   getmode(dat$WG[x])
+                 }),
+                 sp1_nn = apply(nni, MARGIN = 1, FUN = function(x){
+                   getmode(dat$SP1[x])
+                 }),
+                 sp2_nn = apply(nni, MARGIN = 1, FUN = function(x){
+                   getmode(dat$SP2[x])
+                 }))
+
+# calculate rmse different variables
+rmse <- function(obs, est){
+  sqrt(mean((obs - est) ^ 2))
+}
+
+# calculate rmse metrics
+perform_df <-
+  data.frame(
+    top_height_raw_rmse = rmse(nn_tab$top_height, nn_tab$top_height_nn),
+    ba_raw_rmse = rmse(nn_tab$ba, nn_tab$ba_nn),
+    cc_raw_rmse = rmse(nn_tab$cc, nn_tab$cc_nn),
+    cv_raw_rmse = rmse(nn_tab$cv, nn_tab$cv_nn),
+    age_raw_rmse = rmse(nn_tab$age, nn_tab$age_nn),
+    top_height_scaled_rmse = rmse(nn_tab$top_height, nn_tab$top_height_nn) /
+      sd(nn_tab$top_height),
+    ba_scaled_rmse = rmse(nn_tab$ba, nn_tab$ba_nn) /
+      sd(nn_tab$ba),
+    cc_scaled_rmse = rmse(nn_tab$cc, nn_tab$cc_nn) /
+      sd(nn_tab$cc),
+    cv_scaled_rmse = rmse(nn_tab$cv, nn_tab$cv_nn) /
+      sd(nn_tab$cv),
+    age_scaled_rmse = rmse(nn_tab$age, nn_tab$age_nn) /
+      sd(nn_tab$age)
+  )
+
+
+# calculate wg accuracy
+# create df of WG
+wg <- data.frame(obs = nn_tab$wg,
+                 est = nn_tab$wg_nn)
+
+# create column of match or not
+wg$match <- wg$obs == wg$est
+
+# add total percent of matching WG to perform_df
+perform_df <- cbind(perform_df,
+                    data.frame(wg_accuracy = NROW(wg[wg$match == T,]) /
+                                 NROW(wg)))
+
+# calculate SP1 accuracy
+# create df of SP1
+sp1 <- data.frame(obs = nn_tab$sp1,
+                  est = nn_tab$sp1_nn)
+
+# create column of match or not
+sp1$match <- sp1$obs == sp1$est
+
+# add total percent of matching SP1 to perform_df
+perform_df <- cbind(perform_df,
+                    data.frame(sp1_accuracy = NROW(sp1[sp1$match == T,]) /
+                                 NROW(sp1)))
+
+# calculate SP2 accuracy
+# create df of SP2
+sp2 <- data.frame(obs = nn_tab$sp2,
+                  est = nn_tab$sp2_nn)
+
+# create column of match or not
+sp2$match <- sp2$obs == sp2$est
+
+# add total percent of matching SP2 to perform_df
+perform_df <- cbind(perform_df,
+                    data.frame(sp2_accuracy = NROW(sp2[sp2$match == T,]) /
+                                 NROW(sp2)))
+
+########################
+###FRI HT, CC, and BA###
+########################
+
+dat_nn <- dat %>% select(HT, CC, BA)
+
+# scale for nn computation
+dat_nn_scaled <- dat_nn %>% scale
+
+# run nearest neighbor
+nn <- nn2(dat_nn_scaled, dat_nn_scaled, k = 2)
+
+# create tibble of results
+nn_tab <- tibble(ht = dat_nn[,1],
+                 cc = dat_nn[,2],
+                 ba = dat_nn[,3],
+                 age = dat$AGE,
+                 wg = dat$WG,
+                 sp1 = dat$SP1,
+                 sp2 = dat$SP2,
+                 ht_nn = dat_nn[nn[[1]][,2],1],
+                 cc_nn = dat_nn[nn[[1]][,2],2],
+                 ba_nn = dat_nn[nn[[1]][,2],3],
+                 age_nn = dat$AGE[nn[[1]][,2]],
+                 wg_nn = dat$WG[nn[[1]][,2]],
+                 sp1_nn = dat$SP1[nn[[1]][,2]],
+                 sp2_nn = dat$SP2[nn[[1]][,2]])
+
+# calculate rmse different variables
+rmse <- function(obs, est){
+  sqrt(mean((obs - est) ^ 2))
+}
+
+# calculate rmse metrics
+perform_df <-
+  data.frame(
+    ht_raw_rmse = rmse(nn_tab$ht, nn_tab$ht_nn),
+    cc_raw_rmse = rmse(nn_tab$cc, nn_tab$cc_nn),
+    ba_raw_rmse = rmse(nn_tab$ba, nn_tab$ba_nn),
+    age_raw_rmse = rmse(nn_tab$age, nn_tab$age_nn),
+    ht_scaled_rmse = rmse(nn_tab$ht, nn_tab$ht_nn) /
+      sd(nn_tab$ht),
+    cc_scaled_rmse = rmse(nn_tab$cc, nn_tab$cc_nn) /
+      sd(nn_tab$cc),
+    ba_scaled_rmse = rmse(nn_tab$ba, nn_tab$ba_nn) /
+      sd(nn_tab$ba),
+    age_scaled_rmse = rmse(nn_tab$age, nn_tab$age_nn) /
+      sd(nn_tab$age)
+  )
+
+
+# calculate wg accuracy
+# create df of WG
+wg <- data.frame(obs = nn_tab$wg,
+                 est = nn_tab$wg_nn)
+
+# create column of match or not
+wg$match <- wg$obs == wg$est
+
+# add total percent of matching WG to perform_df
+perform_df <- cbind(perform_df,
+                    data.frame(wg_accuracy = NROW(wg[wg$match == T,]) /
+                                 NROW(wg)))
+
+# calculate SP1 accuracy
+# create df of SP1
+sp1 <- data.frame(obs = nn_tab$sp1,
+                  est = nn_tab$sp1_nn)
+
+# create column of match or not
+sp1$match <- sp1$obs == sp1$est
+
+# add total percent of matching SP1 to perform_df
+perform_df <- cbind(perform_df,
+                    data.frame(sp1_accuracy = NROW(sp1[sp1$match == T,]) /
+                                 NROW(sp1)))
+
+# calculate SP2 accuracy
+# create df of SP2
+sp2 <- data.frame(obs = nn_tab$sp2,
+                  est = nn_tab$sp2_nn)
+
+# create column of match or not
+sp2$match <- sp2$obs == sp2$est
+
+# add total percent of matching SP2 to perform_df
+perform_df <- cbind(perform_df,
+                    data.frame(sp2_accuracy = NROW(sp2[sp2$match == T,]) /
+                                 NROW(sp2)))
+
+####################################
+###RUN IMPUTATION OVER GRM OUTPUT###
+####################################
+
+# load output GRM polygon dataset
+load('D:/ontario_inventory/segmentation/grm/lidar_extracted/grm_10_01_05_ext_100.RData')
+
+# subset forested polygons
+dat_lidar_for <- dat_lidar %>% filter(dom_for == 'Yes')
+
+##################################################
+###RUN CORRELATION ANALYSIS ON LIDAR ATTRIBUTES###
+##################################################
+
+# both within FRI polygons and within LiDAR segmented polygons
+
+# FRI polygons
+# cols 112:127 in dat
+cor <- cor(dat[, 112:127], use = 'complete.obs')
+corrplot(cor, method = 'number')
+
+# GRM polygons
+cor <- cor(dat_lidar_for[,9:24], use = 'complete.obs')
+corrplot(cor, method = 'number')
+
+# all polygons together
+cor_mat <- rbind(dat[,112:127], dat_lidar_for[, 9:24])
+cor <- cor(cor_mat, use = 'complete.obs')
+corrplot(cor, method = 'number')
+
+#####################
+###P95, CC, and CV###
+#####################
+
+# create df for spl and fri metrics
+dat_spl <- dat_lidar_for %>% select(p95, cc, cv) %>% na.omit
+dat_fri <- dat %>% select(p95, cc, cv) %>% na.omit
+
+# scale for nn computation
+# need to combine and scale all values together then separate again
+dat_splfri_scaled <- rbind(dat_spl, dat_fri) %>% scale
+dat_spl_scaled <- dat_splfri_scaled[1:NROW(dat_spl),]
+dat_fri_scaled <- dat_splfri_scaled[(NROW(dat_spl)+1):(NROW(dat_spl)+NROW(dat_fri)),]
+
+# run nearest neighbor
+nn <- nn2(dat_fri_scaled, dat_spl_scaled, k = 1)
+
+# create tibble of results
+nn_tab <- tibble(p95 = dat_spl$p95,
+                 cc = dat_spl$cc,
+                 cv = dat_spl$cv,
+                 p95_nn = dat_fri$p95[nn[[1]]],
+                 cc_nn = dat_fri$cc[nn[[1]]],
+                 cv_nn = dat_fri$cv[nn[[1]]])
+
+# calculate rmse metrics
+perform_df <-
+  data.frame(
+    p95_raw_rmse = rmse(nn_tab$p95, nn_tab$p95_nn),
+    cc_raw_rmse = rmse(nn_tab$cc, nn_tab$cc_nn),
+    cv_raw_rmse = rmse(nn_tab$cv, nn_tab$cv_nn),
+    p95_scaled_rmse = rmse(nn_tab$p95, nn_tab$p95_nn) /
+      sd(nn_tab$p95),
+    cc_scaled_rmse = rmse(nn_tab$cc, nn_tab$cc_nn) /
+      sd(nn_tab$cc),
+    cv_scaled_rmse = rmse(nn_tab$cv, nn_tab$cv_nn) /
+      sd(nn_tab$cv)
+  )
+
+# write.csv(perform_df, 'D:/ontario_inventory/imputation/vanilla/grm_als_als_performance.csv')
+
+###########################
+###ALS HT, CC, BA vs FRI###
+###########################
+
+# create df for als and fri metrics
+dat_spl <- dat_lidar_for %>% select(lor, cc, ba) %>% na.omit
+dat_fri <- dat %>% select(HT, CC, BA) %>% na.omit
+
+# change als colnames
+colnames(dat_spl) <- c('HT', 'CC', 'BA')
+
+# scale for nn computation
+# need to combine and scale all values together then separate again
+dat_splfri_scaled <- rbind(dat_spl, dat_fri) %>% scale
+dat_spl_scaled <- dat_splfri_scaled[1:NROW(dat_spl),]
+dat_fri_scaled <- dat_splfri_scaled[(NROW(dat_spl)+1):(NROW(dat_spl)+NROW(dat_fri)),]
+
+# run nearest neighbor
+nn <- nn2(dat_fri_scaled, dat_spl_scaled, k = 1)
+
+# create tibble of results
+nn_tab <- tibble(ht = dat_spl$HT,
+                 cc = dat_spl$CC,
+                 ba = dat_spl$BA,
+                 ht_nn = dat_fri$HT[nn[[1]]],
+                 cc_nn = dat_fri$CC[nn[[1]]],
+                 ba_nn = dat_fri$BA[nn[[1]]])
+
+# calculate rmse metrics
+perform_df <-
+  data.frame(
+    ht_raw_rmse = rmse(nn_tab$ht, nn_tab$ht_nn),
+    cc_raw_rmse = rmse(nn_tab$cc, nn_tab$cc_nn),
+    ba_raw_rmse = rmse(nn_tab$ba, nn_tab$ba_nn),
+    ht_scaled_rmse = rmse(nn_tab$ht, nn_tab$ht_nn) /
+      sd(nn_tab$ht),
+    cc_scaled_rmse = rmse(nn_tab$cc, nn_tab$cc_nn) /
+      sd(nn_tab$cc),
+    ba_scaled_rmse = rmse(nn_tab$ba, nn_tab$ba_nn) /
+      sd(nn_tab$ba)
+  )
+
+#  write.csv(perform_df, 'D:/ontario_inventory/imputation/vanilla/grm_als_fri_performance.csv')
+
+############################
+###top_height, ba, cc, cv###
+############################
+
+# create df for spl and fri metrics
+dat_spl <- dat_lidar_for %>% select(top_height, ba, cc, cv) %>% na.omit
+dat_fri <- dat %>% select(top_height, ba, cc, cv) %>% na.omit
+
+# scale for nn computation
+# need to combine and scale all values together then separate again
+dat_splfri_scaled <- rbind(dat_spl, dat_fri) %>% scale
+dat_spl_scaled <- dat_splfri_scaled[1:NROW(dat_spl),]
+dat_fri_scaled <- dat_splfri_scaled[(NROW(dat_spl)+1):(NROW(dat_spl)+NROW(dat_fri)),]
+
+# run nearest neighbor
+nn <- nn2(dat_fri_scaled, dat_spl_scaled, k = 1)
+
+# create tibble of results
+nn_tab <- tibble(top_height = dat_spl$top_height,
+                 ba = dat_spl$ba,
+                 cc = dat_spl$cc,
+                 cv = dat_spl$cv,
+                 top_height_nn = dat_fri$top_height[nn[[1]]],
+                 ba_nn = dat_fri$ba[nn[[1]]],
+                 cc_nn = dat_fri$cc[nn[[1]]],
+                 cv_nn = dat_fri$cv[nn[[1]]])
+
+# calculate rmse metrics
+perform_df <-
+  data.frame(
+    top_height_raw_rmse = rmse(nn_tab$top_height, nn_tab$top_height_nn),
+    ba_raw_rmse = rmse(nn_tab$ba, nn_tab$ba_nn),
+    cc_raw_rmse = rmse(nn_tab$cc, nn_tab$cc_nn),
+    cv_raw_rmse = rmse(nn_tab$cv, nn_tab$cv_nn),
+    top_height_scaled_rmse = rmse(nn_tab$top_height, nn_tab$top_height_nn) /
+      sd(nn_tab$top_height),
+    ba_scaled_rmse = rmse(nn_tab$ba, nn_tab$ba_nn) /
+      sd(nn_tab$ba),
+    cc_scaled_rmse = rmse(nn_tab$cc, nn_tab$cc_nn) /
+      sd(nn_tab$cc),
+    cv_scaled_rmse = rmse(nn_tab$cv, nn_tab$cv_nn) /
+      sd(nn_tab$cv)
+  )

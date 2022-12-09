@@ -9,7 +9,7 @@ library(exactextractr)
 library(sf)
 
 # load spl segmented polygons
-poly <- vect('D:/ontario_inventory/segmentation/ms_10_10_100_for_polytype_mask_wat_ucl_add_pt.shp')
+poly <- vect('D:/ontario_inventory/segmentation/grm/shp/grm_10_01_05.shp')
 
 # convert to df
 dat <- as.data.frame(poly)
@@ -55,10 +55,14 @@ vec <- t(vec) %>% as.data.frame
 # change column names
 colnames(vec) <- names(lidar)
 
+# remove p95 and cc columns
+dat <- dat %>% select(-p95, -cc)
+
 # add new column into dat
 dat <- cbind(dat, vec)
 
 dat_lidar <- dat
 
 # save extracted dataframe for fast rebooting
-save(dat_lidar, file = 'D:/ontario_inventory/imputation/seg_df_ms_10_10_100_for_polytype_mask_wat_ucl_add_pt.RData')
+save(dat_lidar, file = 'D:/ontario_inventory/segmentation/grm/lidar_extracted/grm_10_01_05_ext_100.RData')
+

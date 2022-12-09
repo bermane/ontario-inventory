@@ -47,9 +47,9 @@ library(exactextractr)
 file <- c('D:/ontario_inventory/segmentation/grm/shp/grm_10_01_05.shp',
           'D:/ontario_inventory/segmentation/python/shp/segments_slic_1000k_01_short_add_pt.shp',
           'D:/ontario_inventory/segmentation/mask_wat_ucl/ms_10_10_100_add_pt.shp')
-alg <- c('GRM',
-         'SLIC',
-         'MS')
+alg <- c('A) GRM',
+         'C) SLIC',
+         'B) LSMS')
 param <- c('10_0.1_0.5',
            '1000k_01',
            '10_10_100')
@@ -416,7 +416,7 @@ ggplot(data.frame(nbPixels = p2$area / 400), aes(x = nbPixels)) +
   theme_bw() +
   xlab('Number of Pixels') +
   ylab('Density') +
-  ggtitle('FRI') +
+  ggtitle('D) FRI') +
   theme(text = element_text(size = 20))
 
 ggsave(str_c('D:/ontario_inventory/segmentation/results_paper/plots/fri_final_pix_dens.png'),
@@ -448,7 +448,7 @@ ggplot(data.frame(msi = as.numeric(p2$msi)), aes(x = msi)) +
   theme_bw() +
   xlab('Shape Index') +
   ylab('Density') +
-  ggtitle('FRI') +
+  ggtitle('D) FRI') +
   theme(text = element_text(size = 20))
 
 ggsave(str_c('D:/ontario_inventory/segmentation/results_paper/plots/fri_final_shape_dens.png'),

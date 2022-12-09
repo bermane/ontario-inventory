@@ -12,6 +12,9 @@ library(exactextractr)
 library(sf)
 library(magrittr)
 
+# load image to speed up future changes
+load('D:/ontario_inventory/imputation/photo_data_screening_wat_ucl.RData')
+
 # load photo interpreted polygons
 poly <- vect('D:/ontario_inventory/romeo/RMF_EFI_layers/Polygons Inventory/RMF_PolygonForest.shp')
 
@@ -22,11 +25,18 @@ dat <- as.data.frame(poly)
 ###DATA SCREENING PART 0###
 ###########################
 
-# remove water and unclassified polytypes
-dat <- filter(dat, !(POLYTYPE %in% c('WAT', 'UCL')))
+# # remove water and unclassified polytypes
+# dat <- filter(dat, !(POLYTYPE %in% c('WAT', 'UCL')))
 
-# create smaller polygon set without water and unclassified polytypes
-poly_dat <- poly[!(poly$POLYTYPE %in% c('WAT', 'UCL'))]
+# why would we want to keep any polygon that isn't classified as FOR?
+# remove all non-forested polygons
+dat <- filter(dat, POLYTYPE == 'FOR')
+
+# # create smaller polygon set without water and unclassified polytypes
+# poly_dat <- poly[!(poly$POLYTYPE %in% c('WAT', 'UCL'))]
+
+# create smaller polygon set only FOR polytypes
+poly_dat <- poly[poly$POLYTYPE == 'FOR']
 
 # export forested polygons only for maps
 # writeVector(poly_dat, filename = 'D:/ontario_inventory/imputation/distributions_for_only/vector/fri_polygons_for_only.shp')
@@ -66,7 +76,7 @@ poly_ras <- st_as_sf(poly_ras)
 # extract coeff of variation -- no edge pixels
 #extract median values
 vec <- exact_extract(lidar_ras, poly_ras, function(values, coverage_fraction){
-  values <- values[coverage_fraction == 1,]
+  values <- values[coverage_fraction >= 0.5,]
   apply(values, 2, function(x) {sd(x, na.rm = T)/mean(x, na.rm = T)})
 })
 
@@ -80,12 +90,13 @@ colnames(vec) <- c('cc_cv', 'lor_cv', 'p95_cv')
 dat <- cbind(dat, vec)
 
 # check number of polygons with cv < 0.5
-NROW(dat[dat$cc_cv < 0.5,])
-NROW(dat[dat$lor_cv < 0.5,])
-NROW(dat[dat$p95_cv < 0.5,])
+# 0.5 is likely too high. let's try 0.1
+NROW(dat[dat$cc_cv < 0.1,])
+NROW(dat[dat$lor_cv < 0.1,])
+NROW(dat[dat$p95_cv < 0.1,])
 
 # subset dat based on cv
-dat_1b <- dat[dat$cc_cv < 0.5 & dat$p95_cv < 0.5,]
+dat_1b <- dat[dat$cc_cv < 0.1 & dat$p95_cv < 0.1,]
 
 # C. number of land cover types within a polygon < 2
 
@@ -158,9 +169,11 @@ dat <- dat %>% add_column(num_uniq = lc_uni,
 rm(lc, lc_poly, poly_lc, lc_key, lc_key_for,
    lc_dom_for, lc_uni, poly_lcsf)
 
+# check number of polygons with only 1 LC type
+NROW(dat[dat$num_uniq == 1,])
+
 # check number of polygons with LC types < 2
 # perhaps Chen meant LC types <= 2??
-NROW(dat[dat$num_uniq == 1,])
 NROW(dat[dat$num_uniq %in% c(1, 2),])
 
 # # check number of polygons with forested classes > 95%
@@ -170,8 +183,10 @@ NROW(dat[dat$num_uniq %in% c(1, 2),])
 # since we will be imputing into polygons that are dominant forested
 NROW(dat[dat$dom_for == 'Yes',])
 
-# subset dat based on lc info
-dat_1c <- dat[dat$num_uniq %in% c(1,2) & dat$dom_for == 'Yes',]
+# subset dat based on number of LC classes
+dat_1c <- dat[dat$num_uniq %in% c(1,2),]
+
+dat_1d <- dat[dat$dom_for == 'Yes',]
 
 ###########################
 ###DATA SCREENING PART 2###
@@ -308,16 +323,25 @@ summary(lm_ba2)
 ### COMBINE INTERSECTION OF DATA ###
 ####################################
 
-# combine results from part 1
-dat_1 <- intersect(dat_1b %>% subset(select = POLYID), dat_1c %>% subset(select = POLYID))
+# # combine results from part 1
+# dat_1 <- intersect(dat_1b %>% subset(select = POLYID), dat_1c %>% subset(select = POLYID))
+
+# # combine results from part 1. Leave out 1b
+# dat_1 <- intersect(dat_1c %>% subset(select = POLYID), dat_1d %>% subset(select = POLYID))
+
+# Only 1d dom for
+dat_1 <- dat_1d %>% subset(select = POLYID)
 
 # combine results from part 2 (POLYID column only)
 # dat_2 <- intersect(dat_2a %>% subset(select = POLYID), dat_2b %>% subset(select = POLYID)) %>%
 #   intersect(., dat_2c %>% subset(select = POLYID)) %>%
 #   intersect(., dat_2_pc %>% subset(select = POLYID))
 
-# only use results from part 2a since the other models suck
-dat_2 <- intersect(dat_2_pc %>% subset(select = POLYID), dat_2a %>% subset(select = POLYID))
+# # only use results from part 2a since the other models suck
+# dat_2 <- intersect(dat_2_pc %>% subset(select = POLYID), dat_2a %>% subset(select = POLYID))
+
+# only use dat_2_pc we don't want the linear models
+dat_2 <- dat_2_pc %>% subset(select = POLYID)
 
 # combine all
 dat_screen <- intersect(dat_1, dat_2)
@@ -326,7 +350,7 @@ dat_screen <- intersect(dat_1, dat_2)
 dat_screen <- dat[dat$POLYID %in% dat_screen$POLYID,]
 
 # write to disk
-write.csv(dat_screen, file = 'D:/ontario_inventory/imputation/dat_screen_1bc_2a_2pc_10perc_wat_ucl.csv', row.names = F)
+write.csv(dat_screen, file = 'D:/ontario_inventory/imputation/dat_screen_1d_2pc_for.csv', row.names = F)
 
 # save working image to speed up future changes
-save.image('D:/ontario_inventory/imputation/photo_data_screening_wat_ucl.RData')
+# save.image('D:/ontario_inventory/imputation/photo_data_screening_wat_ucl.RData')

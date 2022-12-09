@@ -26,23 +26,23 @@
 # p95 = 95th percentile of Height returns
 # cc = canopy cover (% of FIRST returns above 2 m)
 # cv = coefficient of variation (sd of height/mean height)
-p95_f <- 'D:/ontario_inventory/nipissing/als/NIPISSING_Metrics/NIPISSING_p95.tif'
-cc_f <- 'D:/ontario_inventory/nipissing/als/NIPISSING_Metrics/NIPISSING_cov.tif'
-cv_f <- 'D:/ontario_inventory/nipissing/als/NIPISSING_Metrics/NIPISSING_cv.tif'
+p95_f <- 'D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_p95.tif'
+cc_f <- 'D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_2m_cov.tif'
+cv_f <- 'D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_cv.tif'
 
 # set file location of roads shape file (spatial lines)
 # roads will be polygonized, masked from segmentation
 # and re-added to final dataset as polygons
 roads_f <-
-  'D:/ontario_inventory/nipissing/roads/NFRoad_Export.shp'
+  'D:/ontario_inventory/romeo/RMF_EFI_layers/Roads/RMF_roads.shp'
 
 # set file location of FRI polygons shape file
 # FRI POLYTYPE should have a "WAT" classification to mask water polygons
-fri <- 'D:/ontario_inventory/nipissing/nipissing_fri.shp'
+fri <- 'D:/ontario_inventory/romeo/RMF_EFI_layers/Polygons Inventory/RMF_PolygonForest.shp'
 
 # set output folder for files generated
 # make sure no "/" at end of folder location!
-out_dir <- 'D:/ontario_inventory/nipissing/segmentation_example'
+out_dir <- 'C:/Users/bermane/Desktop/out'
 
 # set folder location of OTB (where you installed OTB earlier)
 otb_dir <- "C:/OTB/bin"

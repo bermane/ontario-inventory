@@ -94,5 +94,5 @@ poly_dom_sp_group <- inner_join(poly_dom_sp_group,
                                 abbreviation_dict)
 
 write.csv(poly_dom_sp_group,
-          'D:/ontario_inventory/romeo/RMF_EFI_layers/Polygons Inventory/RMF_PolygonForest_SPGROUP.shp',
+          'D:/ontario_inventory/romeo/RMF_EFI_layers/Polygons Inventory/RMF_PolygonForest_SPGROUP.csv',
           row.names = F)

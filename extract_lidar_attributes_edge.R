@@ -1,6 +1,6 @@
 # this code extracts lidar attributes within FRI polygons
-# it only uses data if more than 95% of a given pixel is inside the polygon
-# the idea being edge pixels may negatively impact performance
+# it uses the median value taken as the fraction of 
+# pixel covered by each polygon
 
 # load packages
 library(terra)
@@ -44,13 +44,7 @@ poly_ras <- project(poly, lidar_ras)
 poly_ras <- st_as_sf(poly_ras)
 
 #extract median values
-vec <- exact_extract(lidar_ras, poly_ras, function(values, coverage_fraction){
-  values <- values[coverage_fraction >= .5,]
-  apply(values, 2, function(x) median(x, na.rm = T))
-})
-
-# transpose matrix and make data.frame
-vec <- t(vec) %>% as.data.frame
+vec <- exact_extract(lidar_ras, poly_ras, 'median')
 
 # change column names
 colnames(vec) <- names(lidar)
@@ -58,17 +52,11 @@ colnames(vec) <- names(lidar)
 # add new column into dat
 dat <- cbind(dat, vec)
 
-# save extracted dataframe for fast rebooting
-save(dat, file = 'D:/ontario_inventory/dat/dat_fri_50.RData')
-
 ################################
 ### ADD SENTINAL REFLECTANCE ###
 ################################
 
-# load photo interpreted polygons
-poly <- vect('D:/ontario_inventory/romeo/RMF_EFI_layers/Polygons Inventory/RMF_PolygonForest.shp')
-
-# load sentinal BOA mosaic
+# load sentinel BOA mosaic
 sent_ras <- rast('D:/ontario_inventory/romeo/Sentinel/Mosaic/BOA/S2_BOA_20_Mosaic.tif')
 
 # project poly to crs of raster
@@ -77,52 +65,18 @@ poly_ras <- project(poly, sent_ras)
 # convert to sf
 poly_ras <- st_as_sf(poly_ras)
 
-#extract median values for 50% and 100% coverage
-vec_05 <- exact_extract(sent_ras, poly_ras, function(values, coverage_fraction){
-  values <- values[coverage_fraction >= .5,]
-  apply(values, 2, function(x) median(x, na.rm = T))
-})
-
-vec_1 <- exact_extract(sent_ras, poly_ras, function(values, coverage_fraction){
-  values <- values[coverage_fraction == 1,]
-  apply(values, 2, function(x) median(x, na.rm = T))
-})
-
-# transpose matrix and make data.frame
-vec_05 <- t(vec_05) %>% as.data.frame
-vec_1 <- t(vec_1) %>% as.data.frame
+#extract median values
+vec <- exact_extract(sent_ras, poly_ras, 'median')
 
 # change column names
-colnames(vec_05) <- names(sent_ras)
-colnames(vec_1) <- names(sent_ras)
-
-# load previously extracted dfs
-# 50% first
-load('D:/ontario_inventory/dat/dat_fri_50.RData')
-dat_05 <- dat
-
-# 100%
-load('D:/ontario_inventory/dat/dat_fri_100.RData')
-dat_1 <- dat
-rm(dat)
+colnames(vec) <- names(sent_ras)
 
 # add new columns into dat
-dat_05 <- cbind(dat_05, vec_05)
-dat_1 <- cbind(dat_1, vec_1)
-
-# save extracted dataframe for fast rebooting
-dat <- dat_05
-save(dat, file = 'D:/ontario_inventory/dat/dat_fri_50.RData')
-
-dat <- dat_1
-save(dat, file = 'D:/ontario_inventory/dat/dat_fri_100.RData')
+dat <- cbind(dat, vec)
 
 ####################################
 ### ADD ADDITIONAL LIDAR METRICS ###
 ####################################
-
-# load photo interpreted polygons
-poly <- vect('D:/ontario_inventory/romeo/RMF_EFI_layers/Polygons Inventory/RMF_PolygonForest.shp')
 
 # load PZABOVE data
 ras <- rast('D:/ontario_inventory/romeo/SPL metrics/PZABOVE_MOSAIC/RMF_PZABOVE_MOSAIC.tif')
@@ -136,108 +90,57 @@ poly_ras <- project(poly, ras)
 # convert to sf
 poly_ras <- st_as_sf(poly_ras)
 
-#extract median values for 50% and 100% coverage
-vec_05 <- exact_extract(ras, poly_ras, function(values, coverage_fraction){
-  values <- values[coverage_fraction >= .5,]
-  apply(values, 2, function(x) median(x, na.rm = T))
-})
+#extract median values
+vec <- exact_extract(ras, poly_ras, 'median')
 
-vec_1 <- exact_extract(ras, poly_ras, function(values, coverage_fraction){
-  values <- values[coverage_fraction == 1,]
-  apply(values, 2, function(x) median(x, na.rm = T))
-})
-
-# transpose matrix and make data.frame
-vec_05 <- t(vec_05) %>% as.data.frame
-vec_1 <- t(vec_1) %>% as.data.frame
-
-# load previously extracted dfs
-# 50% first
-load('D:/ontario_inventory/dat/dat_fri_50.RData')
-dat_05 <- dat
-
-# 100%
-load('D:/ontario_inventory/dat/dat_fri_100.RData')
-dat_1 <- dat
-rm(dat)
+# change column names
+colnames(vec) <- names(ras)
 
 # add new columns into dat
-dat_05 <- cbind(dat_05, vec_05)
-dat_1 <- cbind(dat_1, vec_1)
-rm(vec_05, vec_1)
+dat <- cbind(dat, vec)
 
-# load RUMPLE data
-ras <- rast('D:/ontario_inventory/romeo/SPL metrics/RUMPLE_MOSAIC/RMF_RUMPLE_MOSAIC.tif')
+# I already extracted the rumple and depth_q25 into the individual metrics
+# folder so we can skip these two and move directly to individual
 
-# set band names
-names(ras) <- 'RUMPLE'
-
-# project poly to crs of raster
-poly_ras <- project(poly, ras)
-
-# convert to sf
-poly_ras <- st_as_sf(poly_ras)
-
-vec_05 <- exact_extract(ras, poly_ras, function(values, coverage_fraction){
-  values <- values[coverage_fraction >= .5,]
-  apply(values, 2, function(x) median(x, na.rm = T))
-})
-
-#extract median values for 50% and 100% coverage
-vec_05 <- exact_extract(ras, poly_ras, function(values, coverage_fraction){
-  values <- values[coverage_fraction >= .5,]
-  apply(values, 2, function(x) median(x, na.rm = T))
-})
-
-vec_1 <- exact_extract(ras, poly_ras, function(values, coverage_fraction){
-  values <- values[coverage_fraction == 1,]
-  apply(values, 2, function(x) median(x, na.rm = T))
-})
-
-# transpose matrix and make data.frame
-vec_05 <- t(vec_05) %>% as.data.frame
-vec_1 <- t(vec_1) %>% as.data.frame
-
-# add new columns into dat
-dat_05 <- cbind(dat_05, vec_05)
-dat_1 <- cbind(dat_1, vec_1)
-rm(vec_05, vec_1)
-
-# load SAD data
-ras <- rast('D:/ontario_inventory/romeo/SPL metrics/SAD_MOSAIC/RMF_SAD_MOSAIC.tif')
-
-# set band names
-names(ras) <- c("depth_mean", "depth_max", 
-                "depth_min", "depth_sd", 
-                "depth_q10", "depth_q25", 
-                "depth_q50", "depth_q75", 
-                "depth_q95", "depth_q99")
-
-# project poly to crs of raster
-poly_ras <- project(poly, ras)
-
-# convert to sf
-poly_ras <- st_as_sf(poly_ras)
-
-#extract median values for 50% and 100% coverage
-vec_05 <- exact_extract(ras, poly_ras, function(values, coverage_fraction){
-  values <- values[coverage_fraction >= .5,]
-  apply(values, 2, function(x) median(x, na.rm = T))
-})
-
-vec_1 <- exact_extract(ras, poly_ras, function(values, coverage_fraction){
-  values <- values[coverage_fraction == 1,]
-  apply(values, 2, function(x) median(x, na.rm = T))
-})
-
-# transpose matrix and make data.frame
-vec_05 <- t(vec_05) %>% as.data.frame
-vec_1 <- t(vec_1) %>% as.data.frame
-
-# add new columns into dat
-dat_05 <- cbind(dat_05, vec_05)
-dat_1 <- cbind(dat_1, vec_1)
-rm(vec_05, vec_1)
+# # load RUMPLE data
+# ras <- rast('D:/ontario_inventory/romeo/SPL metrics/RUMPLE_MOSAIC/RMF_RUMPLE_MOSAIC.tif')
+# 
+# # set band names
+# names(ras) <- 'RUMPLE'
+# 
+# # project poly to crs of raster
+# poly_ras <- project(poly, ras)
+# 
+# # convert to sf
+# poly_ras <- st_as_sf(poly_ras)
+# 
+# #extract median values
+# vec <- exact_extract(ras, poly_ras, 'median')
+# 
+# # add new columns into dat
+# dat <- cbind(dat, vec)
+# 
+# # load SAD data
+# ras <- rast('D:/ontario_inventory/romeo/SPL metrics/SAD_MOSAIC/RMF_SAD_MOSAIC.tif')
+# 
+# # set band names
+# names(ras) <- c("depth_mean", "depth_max", 
+#                 "depth_min", "depth_sd", 
+#                 "depth_q10", "depth_q25", 
+#                 "depth_q50", "depth_q75", 
+#                 "depth_q95", "depth_q99")
+# 
+# # project poly to crs of raster
+# poly_ras <- project(poly, ras)
+# 
+# # convert to sf
+# poly_ras <- st_as_sf(poly_ras)
+# 
+# #extract median values
+# vec <- exact_extract(ras, poly_ras, 'median')
+# 
+# # add new columns into dat
+# dat <- cbind(dat, vec)
 
 # load additional Z metrics data
 ras_files <- list.files('D:/ontario_inventory/romeo/SPL metrics/Z_METRICS_MOSAIC/individual',
@@ -260,32 +163,16 @@ poly_ras <- project(poly, ras)
 # convert to sf
 poly_ras <- st_as_sf(poly_ras)
 
-#extract median values for 50% and 100% coverage
-vec_05 <- exact_extract(ras, poly_ras, function(values, coverage_fraction){
-  values <- values[coverage_fraction >= .5,]
-  apply(values, 2, function(x) median(x, na.rm = T))
-})
+#extract median values
+vec <- exact_extract(ras, poly_ras, 'median')
 
-vec_1 <- exact_extract(ras, poly_ras, function(values, coverage_fraction){
-  values <- values[coverage_fraction == 1,]
-  apply(values, 2, function(x) median(x, na.rm = T))
-})
-
-# transpose matrix and make data.frame
-vec_05 <- t(vec_05) %>% as.data.frame
-vec_1 <- t(vec_1) %>% as.data.frame
+# change column names
+colnames(vec) <- names(ras)
 
 # add new columns into dat
-dat_05 <- cbind(dat_05, vec_05)
-dat_1 <- cbind(dat_1, vec_1)
-rm(vec_05, vec_1)
+dat <- cbind(dat, vec)
 
-# save extracted dataframe for fast rebooting
-dat <- dat_05
-save(dat, file = 'D:/ontario_inventory/dat/dat_fri_50.RData')
-
-dat <- dat_1
-save(dat, file = 'D:/ontario_inventory/dat/dat_fri_100.RData')
-
+# save extracted dataframe
+save(dat, file = 'D:/ontario_inventory/dat/dat_fri_extr.RData')
 
 

@@ -61,7 +61,6 @@ poly_dat <- poly[poly$POLYTYPE == 'FOR']
 
 # load loreys height, canopy cover, and p95 from LiDAR
 lidar <- c('cc' ='D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_2m_cov.tif',
-               'lor' = 'D:/ontario_inventory/romeo/RMF_EFI_layers/ABA layers SPL 2018/RMF_20m_T130cm_lor.tif',
                'p95' = 'D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_p95.tif')
 
 # load rasters
@@ -73,7 +72,7 @@ poly_ras <- project(poly_dat, lidar_ras)
 # convert to sf
 poly_ras <- st_as_sf(poly_ras)
 
-# extract coeff of variation -- no edge pixels
+# extract coeff of variation
 #extract median values
 vec <- exact_extract(lidar_ras, poly_ras, function(values, coverage_fraction){
   values <- values[coverage_fraction >= 0.5,]
@@ -84,7 +83,7 @@ vec <- exact_extract(lidar_ras, poly_ras, function(values, coverage_fraction){
 vec <- t(vec) %>% as.data.frame
 
 # change column names
-colnames(vec) <- c('cc_cv', 'lor_cv', 'p95_cv')
+colnames(vec) <- c('cc_cv', 'p95_cv')
 
 # add new column into dat
 dat <- cbind(dat, vec)
@@ -92,7 +91,6 @@ dat <- cbind(dat, vec)
 # check number of polygons with cv < 0.5
 # 0.5 is likely too high. let's try 0.1
 NROW(dat[dat$cc_cv < 0.1,])
-NROW(dat[dat$lor_cv < 0.1,])
 NROW(dat[dat$p95_cv < 0.1,])
 
 # subset dat based on cv
@@ -194,9 +192,7 @@ dat_1d <- dat[dat$dom_for == 'Yes',]
 
 # first load all data, take median values, and enter into dat
 # Load Lorey's Height, cc, and ba from LiDAR
-lidar <- c('lor' = 'D:/ontario_inventory/romeo/RMF_EFI_layers/ABA layers SPL 2018/RMF_20m_T130cm_lor.tif',
-           'cc' = 'D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_2m_cov.tif',
-           'ba' = 'D:/ontario_inventory/romeo/RMF_EFI_layers/ABA layers SPL 2018/RMF_20m_T130cm_ba_ha.tif',
+lidar <- c('cc' = 'D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_2m_cov.tif',
            'p95' = 'D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_p95.tif')
 
 # load LiDAR rasters as raster stack
@@ -209,13 +205,14 @@ poly_ras <- project(poly_dat, lidar_ras)
 poly_ras <- st_as_sf(poly_ras)
 
 #extract median values
-vec <- exact_extract(lidar_ras, poly_ras, function(values, coverage_fraction){
-  values <- values[coverage_fraction == 1,]
-  apply(values, 2, function(x) median(x, na.rm = T))
-})
+vec <- exact_extract(lidar_ras, poly_ras, 'median')
+# vec <- exact_extract(lidar_ras, poly_ras, function(values, coverage_fraction){
+#   values <- values[coverage_fraction == 1,]
+#   apply(values, 2, function(x) median(x, na.rm = T))
+# })
 
 # transpose matrix and make data.frame
-vec <- t(vec) %>% as.data.frame
+# vec <- t(vec) %>% as.data.frame
 
 # change column names
 colnames(vec) <- names(lidar)
@@ -227,7 +224,13 @@ dat <- cbind(dat, vec)
 NROW(dat[dat$p95 >= 5,])
 
 # require p95 > 5
-dat_2_pc <- dat[dat$p95 >= 5,]
+dat_2_p95 <- dat[dat$p95 >= 5,]
+
+# How many rows have cc > 50
+NROW(dat[dat$cc >= 50,])
+
+# require cc > 50
+dat_2_cc <- dat[dat$cc >= 50,]
 
 # A. Linear regression of Height vs. P95
 # we want to exclude using EFI variables so more applicable anywhere
@@ -263,62 +266,6 @@ plot(dat_2a$p95, dat_2a$HT, xlab = 'p95', ylab = 'HT',
 lm_ht2 <- lm(HT ~ p95, data = dat_2a)
 summary(lm_ht2)
 
-# B. Linear regression of Canopy Closure vs. LiDAR Canopy Cover
-
-# remove rows with missing values
-dat_2b <- dat[is.na(dat$CC) == F & is.na(dat$cc) == F,]
-
-# plot variables against each other
-plot(dat_2b$cc, dat_2b$CC)
-
-# run simple linear model
-lm_cc <- lm(CC ~ cc, data = dat_2b)
-summary(lm_cc)
-
-# bind residuals to data
-dat_2b <- dat_2b %>% add_column(lm_cc_resid = resid(lm_cc))
-
-# find 10th and 90th percentile
-lm_cc_perc <- quantile(dat_2b$lm_cc_resid, probs = perc_resid)
-
-# remove lower 10 and upper 10 from dat
-dat_2b <- dat_2b[dat_2b$lm_cc_resid > lm_cc_perc[1] & dat_2b$lm_cc_resid < lm_cc_perc[2],]
-
-# re plot relationship
-plot(dat_2b$cc, dat_2b$CC)
-
-# run simple linear model on remaining data
-lm_cc2 <- lm(CC ~ cc, data = dat_2b)
-summary(lm_cc2)
-
-# C. Linear regression of Basal Area vs. LiDAR Basal Area
-
-# remove rows with missing values
-dat_2c <- dat[is.na(dat$BA) == F & is.na(dat$ba) == F,]
-
-# plot variables against each other
-plot(dat_2c$ba, dat_2c$BA)
-
-# run simple linear model
-lm_ba <- lm(BA ~ ba, data = dat_2c)
-summary(lm_ba)
-
-# bind residuals to data
-dat_2c <- dat_2c %>% add_column(lm_ba_resid = resid(lm_ba))
-
-# find 10th and 10th percentile
-lm_ba_perc <- quantile(dat_2c$lm_ba_resid, probs = perc_resid)
-
-# remove lower 10 and upper 10 from dat
-dat_2c <- dat_2c[dat_2c$lm_ba_resid > lm_ba_perc[1] & dat_2c$lm_ba_resid < lm_ba_perc[2],]
-
-# re plot relationship
-plot(dat_2c$ba, dat_2c$BA)
-
-# run simple linear model on remaining data
-lm_ba2 <- lm(BA ~ ba, data = dat_2c)
-summary(lm_ba2)
-
 ####################################
 ### COMBINE INTERSECTION OF DATA ###
 ####################################
@@ -340,8 +287,8 @@ dat_1 <- dat_1d %>% subset(select = POLYID)
 # # only use results from part 2a since the other models suck
 # dat_2 <- intersect(dat_2_pc %>% subset(select = POLYID), dat_2a %>% subset(select = POLYID))
 
-# only use dat_2_pc we don't want the linear models
-dat_2 <- dat_2_pc %>% subset(select = POLYID)
+# only use dat_2_p95 and dat_2_cc we don't want the linear models
+dat_2 <- intersect(dat_2_p95 %>% subset(select = POLYID), dat_2_cc %>% subset(select = POLYID))
 
 # combine all
 dat_screen <- intersect(dat_1, dat_2)
@@ -350,7 +297,7 @@ dat_screen <- intersect(dat_1, dat_2)
 dat_screen <- dat[dat$POLYID %in% dat_screen$POLYID,]
 
 # write to disk
-write.csv(dat_screen, file = 'D:/ontario_inventory/imputation/dat_screen_1d_2pc_for.csv', row.names = F)
+write.csv(dat_screen, file = 'D:/ontario_inventory/imputation/dat_screen_domfor_p95_cc.csv', row.names = F)
 
 # save working image to speed up future changes
 # save.image('D:/ontario_inventory/imputation/photo_data_screening_wat_ucl.RData')

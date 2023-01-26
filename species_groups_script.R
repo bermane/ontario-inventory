@@ -39,6 +39,7 @@ assign_type <- function(sp_common) {
   ifelse(stringr::str_detect(sp_common, pattern = "pine|spruce|fir|cedar|larch"), "Coniferous", "Deciduous")
 }
 
+# Romeo
 VRI <- st_read('D:/ontario_inventory/romeo/RMF_EFI_layers/Polygons Inventory/RMF_PolygonForest.shp')
 
 VRI_FOR <- VRI %>%
@@ -49,9 +50,26 @@ VRI_FOR <- VRI %>%
   unnest(new_SP) %>%
   mutate(new_SP = as.character(new_SP)) %>%
   separate(new_SP, into = c("SP", "PROP")) %>%
-  mutate(PROP = as.numeric(PROP), 
-         Common = assign_common_name(SP), 
+  mutate(PROP = as.numeric(PROP),
+         Common = assign_common_name(SP),
          sp_type = assign_type(Common))
+
+# Nipissing
+VRI <- st_read('D:/ontario_inventory/nipissing/nipissing_fri.shp')
+
+VRI_FOR <- VRI %>%
+  st_drop_geometry() %>%
+  filter(POLYTYPE == "FOR") %>%
+  select(POLYID, POLYTYPE, DEVSTAGE, OLEADSPC, OSPCOMP, OYRORG, YRDEP, OAGE) %>%
+  mutate(new_SP = str_match_all(OSPCOMP, "[A-Z]{2}[ ]+[0-9]+")) %>%
+  unnest(new_SP) %>%
+  mutate(new_SP = as.character(new_SP)) %>%
+  separate(new_SP, into = c("SP", "PROP")) %>%
+  mutate(PROP = as.numeric(PROP),
+         Common = assign_common_name(SP),
+         sp_type = assign_type(Common))
+
+
 
 # Polygon-level species groups ---- 
 

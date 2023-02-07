@@ -1,0 +1,1284 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Imputation | Integration of Photo Interpreted and LIDAR Attributes Into a Polygonal Forest Inventory Framework</title>
+  <meta name="description" content="A place to find background information and follow updates related to the project." />
+  <meta name="generator" content="bookdown 0.27 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Imputation | Integration of Photo Interpreted and LIDAR Attributes Into a Polygonal Forest Inventory Framework" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="A place to find background information and follow updates related to the project." />
+  <meta name="github-repo" content="bermane/ontario-inventory" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Imputation | Integration of Photo Interpreted and LIDAR Attributes Into a Polygonal Forest Inventory Framework" />
+  
+  <meta name="twitter:description" content="A place to find background information and follow updates related to the project." />
+  
+
+<meta name="author" content="Ethan Berman" />
+
+
+<meta name="date" content="2022-07-03" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="segmentation-update.html"/>
+
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Integration of Photo Interpreted and LiDAR Attributes Into a Polygonal Forest Inventory Framework</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Overview</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#summary"><i class="fa fa-check"></i>Project Summary</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#partners"><i class="fa fa-check"></i>Project Partners</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="people.html"><a href="people.html"><i class="fa fa-check"></i>People</a>
+<ul>
+<li class="chapter" data-level="" data-path="people.html"><a href="people.html#ubc"><i class="fa fa-check"></i>University of British Columbia</a>
+<ul>
+<li class="chapter" data-level="" data-path="people.html"><a href="people.html#ncc"><i class="fa fa-check"></i>Prof. Nicholas Coops, <em>project lead</em></a></li>
+<li class="chapter" data-level="" data-path="people.html"><a href="people.html#eb"><i class="fa fa-check"></i>Ethan Berman, <em>research scientist</em></a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="people.html"><a href="people.html#greenfirst"><i class="fa fa-check"></i>GreenFirst Forest Products</a>
+<ul>
+<li class="chapter" data-level="" data-path="people.html"><a href="people.html#cm"><i class="fa fa-check"></i>Chris McDonell, <em>partner</em></a></li>
+<li class="chapter" data-level="" data-path="people.html"><a href="people.html#gm"><i class="fa fa-check"></i>Grant McCartney, <em>partner</em></a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="people.html"><a href="people.html#ministry"><i class="fa fa-check"></i>Ontario Ministry of Northern Development, Mines, Natural Resources and Forestry</a>
+<ul>
+<li class="chapter" data-level="" data-path="people.html"><a href="people.html#is"><i class="fa fa-check"></i>Ian Sinclair, <em>partner</em></a></li>
+<li class="chapter" data-level="" data-path="people.html"><a href="people.html#dl"><i class="fa fa-check"></i>Derek Landry, <em>partner</em></a></li>
+<li class="chapter" data-level="" data-path="people.html"><a href="people.html#grm"><i class="fa fa-check"></i>Geordie Robere-McGugan, <em>partner</em></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="project-details.html"><a href="project-details.html"><i class="fa fa-check"></i>Project Details</a>
+<ul>
+<li class="chapter" data-level="" data-path="project-details.html"><a href="project-details.html#objective"><i class="fa fa-check"></i>Objective</a></li>
+<li class="chapter" data-level="" data-path="project-details.html"><a href="project-details.html#themes"><i class="fa fa-check"></i>Themes</a></li>
+<li class="chapter" data-level="" data-path="project-details.html"><a href="project-details.html#description"><i class="fa fa-check"></i>Description</a></li>
+<li class="chapter" data-level="" data-path="project-details.html"><a href="project-details.html#design"><i class="fa fa-check"></i>Design</a></li>
+<li class="chapter" data-level="" data-path="project-details.html"><a href="project-details.html#methodology"><i class="fa fa-check"></i>Methodology</a></li>
+<li class="chapter" data-level="" data-path="project-details.html"><a href="project-details.html#schedule"><i class="fa fa-check"></i>Schedule</a>
+<ul>
+<li class="chapter" data-level="" data-path="project-details.html"><a href="project-details.html#project-dates"><i class="fa fa-check"></i>Project Dates</a></li>
+<li class="chapter" data-level="" data-path="project-details.html"><a href="project-details.html#deliverables"><i class="fa fa-check"></i>Deliverables</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="project-details.html"><a href="project-details.html#knowledge-transfer"><i class="fa fa-check"></i>Knowledge &amp; Technology Transfer</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="segmentation-example.html"><a href="segmentation-example.html"><i class="fa fa-check"></i>Segmentation Example</a>
+<ul>
+<li class="chapter" data-level="" data-path="segmentation-example.html"><a href="segmentation-example.html#intro"><i class="fa fa-check"></i>Intro</a></li>
+<li class="chapter" data-level="" data-path="segmentation-example.html"><a href="segmentation-example.html#create-raster"><i class="fa fa-check"></i>Create Multi-band Raster</a></li>
+<li class="chapter" data-level="" data-path="segmentation-example.html"><a href="segmentation-example.html#run-segmentation"><i class="fa fa-check"></i>Run Mean Shift Segmentation</a></li>
+<li class="chapter" data-level="" data-path="segmentation-example.html"><a href="segmentation-example.html#compare-datasets"><i class="fa fa-check"></i>Compare Datasets</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="segmentation-update.html"><a href="segmentation-update.html"><i class="fa fa-check"></i>Segmentation Update</a>
+<ul>
+<li class="chapter" data-level="" data-path="segmentation-example.html"><a href="segmentation-example.html#intro"><i class="fa fa-check"></i>Intro</a></li>
+<li class="chapter" data-level="" data-path="segmentation-update.html"><a href="segmentation-update.html#updatep1"><i class="fa fa-check"></i>1. Create Multi-band Raster</a></li>
+<li class="chapter" data-level="" data-path="segmentation-update.html"><a href="segmentation-update.html#updatep2"><i class="fa fa-check"></i>2. Run GRM Segmentation</a></li>
+<li class="chapter" data-level="" data-path="segmentation-update.html"><a href="segmentation-update.html#updatep3a"><i class="fa fa-check"></i>3a. Calculate Summary Statistics</a></li>
+<li class="chapter" data-level="" data-path="segmentation-update.html"><a href="segmentation-update.html#updatep3b"><i class="fa fa-check"></i>3b. Compare GRM Segmentation Output to FRI</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html"><i class="fa fa-check"></i>Imputation</a>
+<ul>
+<li class="chapter" data-level="" data-path="segmentation-example.html"><a href="segmentation-example.html#intro"><i class="fa fa-check"></i>Intro</a></li>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputationp1"><i class="fa fa-check"></i>1. Extract LiDAR attributes in FRI polygons and newly derived polygons</a></li>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputationp1a"><i class="fa fa-check"></i>1a. Extract attributes in FRI polygons</a></li>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputationp1b"><i class="fa fa-check"></i>1b. Extract attributes in newly segmented polygons</a></li>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputationp2"><i class="fa fa-check"></i>2. Screen FRI polygons to curate an optimal dataset to use for imputation</a></li>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputationp3"><i class="fa fa-check"></i>3. Run imputation on FRI polygons ONLY to assess imputation performance</a></li>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputationp3a"><i class="fa fa-check"></i>3a. Create functions needed</a></li>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputationp3b"><i class="fa fa-check"></i>3b. Run the imputation and assess performance</a></li>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputationp4"><i class="fa fa-check"></i>4. Run imputation on GRM polygon dataset to derive estimates of age and species composition</a></li>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputationp4a"><i class="fa fa-check"></i>4a. Figures of Forest Stand Age</a></li>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputationp4b"><i class="fa fa-check"></i>4b. Figures of Forest Stand 3-Species Classification</a></li>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputationp4c"><i class="fa fa-check"></i>4c. Figures of Forest Stand 5-Species Classification</a></li>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputationp4d"><i class="fa fa-check"></i>4d. Density Plots of Forest Stand Age</a></li>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputationp4e"><i class="fa fa-check"></i>4e. Distribution of 3-Species Classification</a></li>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputationp4f"><i class="fa fa-check"></i>4f. Distribution of 5-Species Classification</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Integration of Photo Interpreted and LIDAR Attributes Into a Polygonal Forest Inventory Framework</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="imputation" class="section level1 unnumbered hasAnchor">
+<h1>Imputation<a href="imputation.html#imputation" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="intro" class="section level2 unnumbered hasAnchor">
+<h2>Intro<a href="segmentation-example.html#intro" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>This page provides an example of the imputation approach used to estimate age and species composition in newly-generated forest stands. The imputation is based on a k-nearest neighbor algorithm. “Link” variables between the photo-interpreted FRI and Generic Region Merging (GRM) generated forest stands are identified and for each GRM forest polygon, the k-nearest neighbor FRI polygons that minimize the Euclidean distance of the link variables are identified and are used to impute age and species composition for the new polygon. If k = 1 the age and species variables are imputed directly from the best matching polygon. If k &gt; 1 age is imputed as the mean age of k-matching polygons and species variables are imputed as the mode of k-matching polygons. The basic workflow is as follows:</p>
+<ol start="0" style="list-style-type: decimal">
+<li>Run GRM Segmentation to derive new polygon dataset (see previous posts)</li>
+<li>Extract LiDAR attributes in FRI polygons and GRM segmented polygons</li>
+<li>Screen FRI polygons to curate an optimal dataset to use for imputation</li>
+<li>Run imputation on FRI polygons ONLY to assess imputation performance</li>
+<li>Run imputation on GRM polygon dataset to derive estimates of age and species composition</li>
+</ol>
+</div>
+<div id="imputationp1" class="section level2 unnumbered hasAnchor">
+<h2>1. Extract LiDAR attributes in FRI polygons and newly derived polygons<a href="imputation.html#imputationp1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Before running imputation we need to extract LiDAR attributes in all FRI polygons and GRM segmented polygons. For this example, we only extract the attributes we will use in the imputation (listed below) as well as the attributes needed for FRI polygon data screening in section 2 of this walk-through. The value extracted for each polygon is the median cell value, weighted by the fraction of each cell that is covered by the polygon.</p>
+<p>The variables used in the imputation algorithm are as follows, and were selected with guidance from previous works as well as a sensitivity analysis:</p>
+<ul>
+<li><p>avg: Average height of returns (&gt; 1.3 m classified as vegetation ??)</p></li>
+<li><p>zsd: Standard deviation of returns height (&gt; 1.3 m classified as vegetation ??)</p></li>
+<li><p>rumple: Ratio of canopy outer surface area to ground surface area</p></li>
+<li><p>zpcum8: Cumulative percentage of LiDAR returns found in 80% percentile of LiDAR height</p></li>
+<li><p>x and y: Coordinates of polygon centroid</p></li>
+<li><p>red_edge_2: Sentinel 2 surface reflectance band (740 nm)</p></li>
+<li><p>p95: 95th percentile of LiDAR height returns &gt; 1.3 m classified as vegetation</p></li>
+<li><p>depth_q25: 25th percentile of signal attenuation depth of all returns</p></li>
+</ul>
+</div>
+<div id="imputationp1a" class="section level2 unnumbered hasAnchor">
+<h2>1a. Extract attributes in FRI polygons<a href="imputation.html#imputationp1a" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="imputation.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load packages</span></span>
+<span id="cb1-2"><a href="imputation.html#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra)</span>
+<span id="cb1-3"><a href="imputation.html#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-4"><a href="imputation.html#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(exactextractr)</span>
+<span id="cb1-5"><a href="imputation.html#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb1-6"><a href="imputation.html#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(magrittr)</span>
+<span id="cb1-7"><a href="imputation.html#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gridExtra)</span>
+<span id="cb1-8"><a href="imputation.html#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="imputation.html#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># load FRI polygons</span></span>
+<span id="cb1-10"><a href="imputation.html#cb1-10" aria-hidden="true" tabindex="-1"></a>poly <span class="ot">&lt;-</span> <span class="fu">vect</span>(<span class="st">&#39;D:/ontario_inventory/romeo/RMF_EFI_layers/Polygons Inventory/RMF_PolygonForest.shp&#39;</span>)</span>
+<span id="cb1-11"><a href="imputation.html#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="imputation.html#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># convert to df</span></span>
+<span id="cb1-13"><a href="imputation.html#cb1-13" aria-hidden="true" tabindex="-1"></a>dat_fri <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(poly)</span>
+<span id="cb1-14"><a href="imputation.html#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="imputation.html#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># cbind centroids to dat</span></span>
+<span id="cb1-16"><a href="imputation.html#cb1-16" aria-hidden="true" tabindex="-1"></a>dat_fri <span class="ot">&lt;-</span> <span class="fu">cbind</span>(dat_fri, <span class="fu">centroids</span>(poly) <span class="sc">%&gt;%</span> crds)</span>
+<span id="cb1-17"><a href="imputation.html#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="imputation.html#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># load LiDAR datasets we need to extract over polygons</span></span>
+<span id="cb1-19"><a href="imputation.html#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># create named vector with variable names and data links</span></span>
+<span id="cb1-20"><a href="imputation.html#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="imputation.html#cb1-21" aria-hidden="true" tabindex="-1"></a>lidar <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;p95&#39;</span> <span class="ot">=</span> <span class="st">&#39;D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_p95.tif&#39;</span>,</span>
+<span id="cb1-22"><a href="imputation.html#cb1-22" aria-hidden="true" tabindex="-1"></a>           <span class="st">&#39;avg&#39;</span> <span class="ot">=</span> <span class="st">&#39;D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_avg.tif&#39;</span>,</span>
+<span id="cb1-23"><a href="imputation.html#cb1-23" aria-hidden="true" tabindex="-1"></a>           <span class="st">&#39;zsd&#39;</span> <span class="ot">=</span> <span class="st">&#39;D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_std.tif&#39;</span>,</span>
+<span id="cb1-24"><a href="imputation.html#cb1-24" aria-hidden="true" tabindex="-1"></a>           <span class="st">&#39;rumple&#39;</span> <span class="ot">=</span> <span class="st">&#39;D:/ontario_inventory/romeo/SPL metrics/Z_METRICS_MOSAIC/individual/RMF_RUMPLE_MOSAIC_r_rumple.tif&#39;</span>,</span>
+<span id="cb1-25"><a href="imputation.html#cb1-25" aria-hidden="true" tabindex="-1"></a>           <span class="st">&#39;zpcum8&#39;</span> <span class="ot">=</span> <span class="st">&#39;D:/ontario_inventory/romeo/SPL metrics/Z_METRICS_MOSAIC/individual/RMF_Z_METRICS_MOSAIC_zpcum8.tif&#39;</span>,</span>
+<span id="cb1-26"><a href="imputation.html#cb1-26" aria-hidden="true" tabindex="-1"></a>           <span class="co">#&#39;depth_q25&#39; = &#39;D:/ontario_inventory/romeo/SPL metrics/Z_METRICS_MOSAIC/individual/RMF_SAD_METRICS_MOSAIC_depth_q25.tif&#39;,</span></span>
+<span id="cb1-27"><a href="imputation.html#cb1-27" aria-hidden="true" tabindex="-1"></a>           <span class="st">&#39;red_edge_2&#39;</span> <span class="ot">=</span> <span class="st">&#39;D:/ontario_inventory/romeo/Sentinel/red_edge_2.tif&#39;</span>,</span>
+<span id="cb1-28"><a href="imputation.html#cb1-28" aria-hidden="true" tabindex="-1"></a>           <span class="st">&#39;cc&#39;</span> <span class="ot">=</span> <span class="st">&#39;D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_2m_cov.tif&#39;</span>)</span>
+<span id="cb1-29"><a href="imputation.html#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-30"><a href="imputation.html#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="co"># loop through LiDAR attributes to extract values</span></span>
+<span id="cb1-31"><a href="imputation.html#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(lidar)) {</span>
+<span id="cb1-32"><a href="imputation.html#cb1-32" aria-hidden="true" tabindex="-1"></a>  <span class="co"># load LiDAR rasters as raster stack</span></span>
+<span id="cb1-33"><a href="imputation.html#cb1-33" aria-hidden="true" tabindex="-1"></a>  lidar_ras <span class="ot">&lt;-</span> <span class="fu">rast</span>(lidar[i])</span>
+<span id="cb1-34"><a href="imputation.html#cb1-34" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-35"><a href="imputation.html#cb1-35" aria-hidden="true" tabindex="-1"></a>  <span class="co"># project poly to crs of raster</span></span>
+<span id="cb1-36"><a href="imputation.html#cb1-36" aria-hidden="true" tabindex="-1"></a>  poly_ras <span class="ot">&lt;-</span> <span class="fu">project</span>(poly, lidar_ras)</span>
+<span id="cb1-37"><a href="imputation.html#cb1-37" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-38"><a href="imputation.html#cb1-38" aria-hidden="true" tabindex="-1"></a>  <span class="co"># convert to sf</span></span>
+<span id="cb1-39"><a href="imputation.html#cb1-39" aria-hidden="true" tabindex="-1"></a>  poly_ras <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(poly_ras)</span>
+<span id="cb1-40"><a href="imputation.html#cb1-40" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-41"><a href="imputation.html#cb1-41" aria-hidden="true" tabindex="-1"></a>  <span class="co">#extract median values</span></span>
+<span id="cb1-42"><a href="imputation.html#cb1-42" aria-hidden="true" tabindex="-1"></a>  vec <span class="ot">&lt;-</span></span>
+<span id="cb1-43"><a href="imputation.html#cb1-43" aria-hidden="true" tabindex="-1"></a>    <span class="fu">exact_extract</span>(lidar_ras, poly_ras, <span class="st">&#39;median&#39;</span>)</span>
+<span id="cb1-44"><a href="imputation.html#cb1-44" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-45"><a href="imputation.html#cb1-45" aria-hidden="true" tabindex="-1"></a>  <span class="co"># aggregate into data frame</span></span>
+<span id="cb1-46"><a href="imputation.html#cb1-46" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(i <span class="sc">==</span> <span class="dv">1</span>){</span>
+<span id="cb1-47"><a href="imputation.html#cb1-47" aria-hidden="true" tabindex="-1"></a>    vec_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(vec)</span>
+<span id="cb1-48"><a href="imputation.html#cb1-48" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span>{</span>
+<span id="cb1-49"><a href="imputation.html#cb1-49" aria-hidden="true" tabindex="-1"></a>    vec_df <span class="ot">&lt;-</span> <span class="fu">cbind</span>(vec_df, <span class="fu">as.data.frame</span>(vec))</span>
+<span id="cb1-50"><a href="imputation.html#cb1-50" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-51"><a href="imputation.html#cb1-51" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-52"><a href="imputation.html#cb1-52" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-53"><a href="imputation.html#cb1-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-54"><a href="imputation.html#cb1-54" aria-hidden="true" tabindex="-1"></a><span class="co"># change column names of extracted attribute data frame</span></span>
+<span id="cb1-55"><a href="imputation.html#cb1-55" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(vec_df) <span class="ot">&lt;-</span> <span class="fu">names</span>(lidar)</span>
+<span id="cb1-56"><a href="imputation.html#cb1-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-57"><a href="imputation.html#cb1-57" aria-hidden="true" tabindex="-1"></a><span class="co"># add LiDAR attributes to FRI polygon data frame</span></span>
+<span id="cb1-58"><a href="imputation.html#cb1-58" aria-hidden="true" tabindex="-1"></a>dat_fri <span class="ot">&lt;-</span> <span class="fu">cbind</span>(dat_fri, vec_df)</span>
+<span id="cb1-59"><a href="imputation.html#cb1-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-60"><a href="imputation.html#cb1-60" aria-hidden="true" tabindex="-1"></a><span class="co"># add 2018 age values</span></span>
+<span id="cb1-61"><a href="imputation.html#cb1-61" aria-hidden="true" tabindex="-1"></a>dat_fri<span class="sc">$</span>AGE2018 <span class="ot">&lt;-</span> <span class="dv">2018</span> <span class="sc">-</span> dat_fri<span class="sc">$</span>YRORG</span>
+<span id="cb1-62"><a href="imputation.html#cb1-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-63"><a href="imputation.html#cb1-63" aria-hidden="true" tabindex="-1"></a><span class="co"># save extracted dataframe for fast rebooting</span></span>
+<span id="cb1-64"><a href="imputation.html#cb1-64" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(dat_fri, <span class="at">file =</span> <span class="st">&#39;D:/ontario_inventory/imputation/example/dat_fri_extr.RData&#39;</span>)</span></code></pre></div>
+</div>
+<div id="imputationp1b" class="section level2 unnumbered hasAnchor">
+<h2>1b. Extract attributes in newly segmented polygons<a href="imputation.html#imputationp1b" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="imputation.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load GRM segmented polygons</span></span>
+<span id="cb2-2"><a href="imputation.html#cb2-2" aria-hidden="true" tabindex="-1"></a>poly <span class="ot">&lt;-</span> <span class="fu">vect</span>(<span class="st">&#39;D:/ontario_inventory/segmentation/grm/shp/grm_10_01_05.shp&#39;</span>)</span>
+<span id="cb2-3"><a href="imputation.html#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="imputation.html#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># convert to df</span></span>
+<span id="cb2-5"><a href="imputation.html#cb2-5" aria-hidden="true" tabindex="-1"></a>dat_grm <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(poly)</span>
+<span id="cb2-6"><a href="imputation.html#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="imputation.html#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># cbind centroids to dat</span></span>
+<span id="cb2-8"><a href="imputation.html#cb2-8" aria-hidden="true" tabindex="-1"></a>dat_grm <span class="ot">&lt;-</span> <span class="fu">cbind</span>(dat_grm, <span class="fu">centroids</span>(poly) <span class="sc">%&gt;%</span> crds)</span>
+<span id="cb2-9"><a href="imputation.html#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="imputation.html#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># remove p95 and cc as we&#39;ll re calculate here for consistency</span></span>
+<span id="cb2-11"><a href="imputation.html#cb2-11" aria-hidden="true" tabindex="-1"></a>dat_grm <span class="sc">%&lt;&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(p95, cc))</span>
+<span id="cb2-12"><a href="imputation.html#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="imputation.html#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co"># load LiDAR datasets we need to extract over polygons</span></span>
+<span id="cb2-14"><a href="imputation.html#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co"># create named vector with variable names and data links</span></span>
+<span id="cb2-15"><a href="imputation.html#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="imputation.html#cb2-16" aria-hidden="true" tabindex="-1"></a>lidar <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;p95&#39;</span> <span class="ot">=</span> <span class="st">&#39;D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_p95.tif&#39;</span>,</span>
+<span id="cb2-17"><a href="imputation.html#cb2-17" aria-hidden="true" tabindex="-1"></a>           <span class="st">&#39;avg&#39;</span> <span class="ot">=</span> <span class="st">&#39;D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_avg.tif&#39;</span>,</span>
+<span id="cb2-18"><a href="imputation.html#cb2-18" aria-hidden="true" tabindex="-1"></a>           <span class="st">&#39;zsd&#39;</span> <span class="ot">=</span> <span class="st">&#39;D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_std.tif&#39;</span>,</span>
+<span id="cb2-19"><a href="imputation.html#cb2-19" aria-hidden="true" tabindex="-1"></a>           <span class="st">&#39;rumple&#39;</span> <span class="ot">=</span> <span class="st">&#39;D:/ontario_inventory/romeo/SPL metrics/Z_METRICS_MOSAIC/individual/RMF_RUMPLE_MOSAIC_r_rumple.tif&#39;</span>,</span>
+<span id="cb2-20"><a href="imputation.html#cb2-20" aria-hidden="true" tabindex="-1"></a>           <span class="st">&#39;zpcum8&#39;</span> <span class="ot">=</span> <span class="st">&#39;D:/ontario_inventory/romeo/SPL metrics/Z_METRICS_MOSAIC/individual/RMF_Z_METRICS_MOSAIC_zpcum8.tif&#39;</span>,</span>
+<span id="cb2-21"><a href="imputation.html#cb2-21" aria-hidden="true" tabindex="-1"></a>           <span class="co">#&#39;depth_q25&#39; = &#39;D:/ontario_inventory/romeo/SPL metrics/Z_METRICS_MOSAIC/individual/RMF_SAD_METRICS_MOSAIC_depth_q25.tif&#39;,</span></span>
+<span id="cb2-22"><a href="imputation.html#cb2-22" aria-hidden="true" tabindex="-1"></a>           <span class="st">&#39;red_edge_2&#39;</span> <span class="ot">=</span> <span class="st">&#39;D:/ontario_inventory/romeo/Sentinel/red_edge_2.tif&#39;</span>,</span>
+<span id="cb2-23"><a href="imputation.html#cb2-23" aria-hidden="true" tabindex="-1"></a>           <span class="st">&#39;cc&#39;</span> <span class="ot">=</span> <span class="st">&#39;D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_2m_cov.tif&#39;</span>)</span>
+<span id="cb2-24"><a href="imputation.html#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-25"><a href="imputation.html#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="co"># loop through LiDAR attributes to extract values</span></span>
+<span id="cb2-26"><a href="imputation.html#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(lidar)) {</span>
+<span id="cb2-27"><a href="imputation.html#cb2-27" aria-hidden="true" tabindex="-1"></a>  <span class="co"># load LiDAR rasters as raster stack</span></span>
+<span id="cb2-28"><a href="imputation.html#cb2-28" aria-hidden="true" tabindex="-1"></a>  lidar_ras <span class="ot">&lt;-</span> <span class="fu">rast</span>(lidar[i])</span>
+<span id="cb2-29"><a href="imputation.html#cb2-29" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-30"><a href="imputation.html#cb2-30" aria-hidden="true" tabindex="-1"></a>  <span class="co"># project poly to crs of raster</span></span>
+<span id="cb2-31"><a href="imputation.html#cb2-31" aria-hidden="true" tabindex="-1"></a>  poly_ras <span class="ot">&lt;-</span> <span class="fu">project</span>(poly, lidar_ras)</span>
+<span id="cb2-32"><a href="imputation.html#cb2-32" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-33"><a href="imputation.html#cb2-33" aria-hidden="true" tabindex="-1"></a>  <span class="co"># convert to sf</span></span>
+<span id="cb2-34"><a href="imputation.html#cb2-34" aria-hidden="true" tabindex="-1"></a>  poly_ras <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(poly_ras)</span>
+<span id="cb2-35"><a href="imputation.html#cb2-35" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-36"><a href="imputation.html#cb2-36" aria-hidden="true" tabindex="-1"></a>  <span class="co">#extract median values</span></span>
+<span id="cb2-37"><a href="imputation.html#cb2-37" aria-hidden="true" tabindex="-1"></a>  vec <span class="ot">&lt;-</span></span>
+<span id="cb2-38"><a href="imputation.html#cb2-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">exact_extract</span>(lidar_ras, poly_ras, <span class="st">&#39;median&#39;</span>)</span>
+<span id="cb2-39"><a href="imputation.html#cb2-39" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-40"><a href="imputation.html#cb2-40" aria-hidden="true" tabindex="-1"></a>  <span class="co"># aggregate into data frame</span></span>
+<span id="cb2-41"><a href="imputation.html#cb2-41" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(i <span class="sc">==</span> <span class="dv">1</span>){</span>
+<span id="cb2-42"><a href="imputation.html#cb2-42" aria-hidden="true" tabindex="-1"></a>    vec_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(vec)</span>
+<span id="cb2-43"><a href="imputation.html#cb2-43" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span>{</span>
+<span id="cb2-44"><a href="imputation.html#cb2-44" aria-hidden="true" tabindex="-1"></a>    vec_df <span class="ot">&lt;-</span> <span class="fu">cbind</span>(vec_df, <span class="fu">as.data.frame</span>(vec))</span>
+<span id="cb2-45"><a href="imputation.html#cb2-45" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-46"><a href="imputation.html#cb2-46" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-47"><a href="imputation.html#cb2-47" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-48"><a href="imputation.html#cb2-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-49"><a href="imputation.html#cb2-49" aria-hidden="true" tabindex="-1"></a><span class="co"># change column names of extracted attribute data frame</span></span>
+<span id="cb2-50"><a href="imputation.html#cb2-50" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(vec_df) <span class="ot">&lt;-</span> <span class="fu">names</span>(lidar)</span>
+<span id="cb2-51"><a href="imputation.html#cb2-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-52"><a href="imputation.html#cb2-52" aria-hidden="true" tabindex="-1"></a><span class="co"># add LiDAR attributes to FRI polygon data frame</span></span>
+<span id="cb2-53"><a href="imputation.html#cb2-53" aria-hidden="true" tabindex="-1"></a>dat_grm <span class="ot">&lt;-</span> <span class="fu">cbind</span>(dat_grm, vec_df)</span>
+<span id="cb2-54"><a href="imputation.html#cb2-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-55"><a href="imputation.html#cb2-55" aria-hidden="true" tabindex="-1"></a><span class="co"># save extracted data frame for fast rebooting</span></span>
+<span id="cb2-56"><a href="imputation.html#cb2-56" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(dat_grm, <span class="at">file =</span> <span class="st">&#39;D:/ontario_inventory/imputation/example/grm_10_01_05_extr.RData&#39;</span>)</span>
+<span id="cb2-57"><a href="imputation.html#cb2-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-58"><a href="imputation.html#cb2-58" aria-hidden="true" tabindex="-1"></a><span class="co"># clear workspace</span></span>
+<span id="cb2-59"><a href="imputation.html#cb2-59" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(<span class="at">list=</span><span class="fu">ls</span>())</span></code></pre></div>
+</div>
+<div id="imputationp2" class="section level2 unnumbered hasAnchor">
+<h2>2. Screen FRI polygons to curate an optimal dataset to use for imputation<a href="imputation.html#imputationp2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In order to ensure the best possible imputation results, it is important to screen the FRI dataset and remove polygons that do not fit certain data quality criteria, or are not representative of forest stands.</p>
+<p>The current criteria being used are:
+a) POLYTYPE == ‘FOR’
+b) polygon &gt;= 50% forested landcover
+c) p95 (95th percentile of LiDAR height returns) &gt;= 5 meters (definition of ‘forest’)
+d) Canopy cover (% of returns &gt; 2 m) &gt;= 50%</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="imputation.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load FRI polygons</span></span>
+<span id="cb3-2"><a href="imputation.html#cb3-2" aria-hidden="true" tabindex="-1"></a>poly <span class="ot">&lt;-</span> <span class="fu">vect</span>(<span class="st">&#39;D:/ontario_inventory/romeo/RMF_EFI_layers/Polygons Inventory/RMF_PolygonForest.shp&#39;</span>)</span>
+<span id="cb3-3"><a href="imputation.html#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="imputation.html#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># load FRI polygon data frame</span></span>
+<span id="cb3-5"><a href="imputation.html#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&#39;D:/ontario_inventory/imputation/example/dat_fri_extr.RData&#39;</span>)</span>
+<span id="cb3-6"><a href="imputation.html#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="imputation.html#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb3-8"><a href="imputation.html#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="do">### SCREEN FOR POLYTYPE == FOR </span><span class="al">###</span></span>
+<span id="cb3-9"><a href="imputation.html#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb3-10"><a href="imputation.html#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="imputation.html#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co"># filter POLYTYPE == &#39;FOR&#39;</span></span>
+<span id="cb3-12"><a href="imputation.html#cb3-12" aria-hidden="true" tabindex="-1"></a>dat_fri <span class="ot">&lt;-</span> <span class="fu">filter</span>(dat_fri, POLYTYPE <span class="sc">==</span> <span class="st">&#39;FOR&#39;</span>)</span>
+<span id="cb3-13"><a href="imputation.html#cb3-13" aria-hidden="true" tabindex="-1"></a>poly_fri <span class="ot">&lt;-</span> poly[poly<span class="sc">$</span>POLYTYPE <span class="sc">==</span> <span class="st">&#39;FOR&#39;</span>]</span>
+<span id="cb3-14"><a href="imputation.html#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="imputation.html#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="do">####################################################</span></span>
+<span id="cb3-16"><a href="imputation.html#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="do">### SCREEN FOR POLYGON &gt;= 50% FORESTED LANDCOVER </span><span class="al">###</span></span>
+<span id="cb3-17"><a href="imputation.html#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="do">####################################################</span></span>
+<span id="cb3-18"><a href="imputation.html#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-19"><a href="imputation.html#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co"># load VLCE 2.0 landcover dataset from 2018</span></span>
+<span id="cb3-20"><a href="imputation.html#cb3-20" aria-hidden="true" tabindex="-1"></a>lc <span class="ot">&lt;-</span> <span class="fu">rast</span>(<span class="st">&#39;D:/ontario_inventory/VLCE/CA_forest_VLCE2_2018_CLIPPED.tif&#39;</span>)</span>
+<span id="cb3-21"><a href="imputation.html#cb3-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-22"><a href="imputation.html#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="co"># project poly to crs of raster</span></span>
+<span id="cb3-23"><a href="imputation.html#cb3-23" aria-hidden="true" tabindex="-1"></a>poly_lc <span class="ot">&lt;-</span> <span class="fu">project</span>(poly_fri, lc)</span>
+<span id="cb3-24"><a href="imputation.html#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-25"><a href="imputation.html#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="co"># convert to sf</span></span>
+<span id="cb3-26"><a href="imputation.html#cb3-26" aria-hidden="true" tabindex="-1"></a>poly_lcsf <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(poly_lc)</span>
+<span id="cb3-27"><a href="imputation.html#cb3-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-28"><a href="imputation.html#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="co"># extract landcover values</span></span>
+<span id="cb3-29"><a href="imputation.html#cb3-29" aria-hidden="true" tabindex="-1"></a>lc_poly <span class="ot">&lt;-</span> <span class="fu">exact_extract</span>(lc, poly_lcsf)</span>
+<span id="cb3-30"><a href="imputation.html#cb3-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-31"><a href="imputation.html#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="co"># set landcover class key</span></span>
+<span id="cb3-32"><a href="imputation.html#cb3-32" aria-hidden="true" tabindex="-1"></a>lc_key <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">`</span><span class="at">20</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;Water&#39;</span>,</span>
+<span id="cb3-33"><a href="imputation.html#cb3-33" aria-hidden="true" tabindex="-1"></a>            <span class="st">`</span><span class="at">31</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;Snow/Ice&#39;</span>,</span>
+<span id="cb3-34"><a href="imputation.html#cb3-34" aria-hidden="true" tabindex="-1"></a>            <span class="st">`</span><span class="at">32</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;Rock/Rubble&#39;</span>,</span>
+<span id="cb3-35"><a href="imputation.html#cb3-35" aria-hidden="true" tabindex="-1"></a>            <span class="st">`</span><span class="at">33</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;Exposed/Barren Land&#39;</span>,</span>
+<span id="cb3-36"><a href="imputation.html#cb3-36" aria-hidden="true" tabindex="-1"></a>            <span class="st">`</span><span class="at">40</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;Bryoids&#39;</span>,</span>
+<span id="cb3-37"><a href="imputation.html#cb3-37" aria-hidden="true" tabindex="-1"></a>            <span class="st">`</span><span class="at">50</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;Shrubland&#39;</span>,</span>
+<span id="cb3-38"><a href="imputation.html#cb3-38" aria-hidden="true" tabindex="-1"></a>            <span class="st">`</span><span class="at">80</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;Wetland&#39;</span>,</span>
+<span id="cb3-39"><a href="imputation.html#cb3-39" aria-hidden="true" tabindex="-1"></a>            <span class="st">`</span><span class="at">81</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;Wetland-Treed&#39;</span>,</span>
+<span id="cb3-40"><a href="imputation.html#cb3-40" aria-hidden="true" tabindex="-1"></a>            <span class="st">`</span><span class="at">100</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;Herbs&#39;</span>,</span>
+<span id="cb3-41"><a href="imputation.html#cb3-41" aria-hidden="true" tabindex="-1"></a>            <span class="st">`</span><span class="at">210</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;Coniferous&#39;</span>,</span>
+<span id="cb3-42"><a href="imputation.html#cb3-42" aria-hidden="true" tabindex="-1"></a>            <span class="st">`</span><span class="at">220</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;Broadleaf&#39;</span>,</span>
+<span id="cb3-43"><a href="imputation.html#cb3-43" aria-hidden="true" tabindex="-1"></a>            <span class="st">`</span><span class="at">230</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;Mixed Wood&#39;</span>)</span>
+<span id="cb3-44"><a href="imputation.html#cb3-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-45"><a href="imputation.html#cb3-45" aria-hidden="true" tabindex="-1"></a><span class="co"># # find number of unique lc types in each polygon</span></span>
+<span id="cb3-46"><a href="imputation.html#cb3-46" aria-hidden="true" tabindex="-1"></a><span class="co"># # apply over list</span></span>
+<span id="cb3-47"><a href="imputation.html#cb3-47" aria-hidden="true" tabindex="-1"></a><span class="co"># lc_uni &lt;- sapply(lc_poly, function(x){</span></span>
+<span id="cb3-48"><a href="imputation.html#cb3-48" aria-hidden="true" tabindex="-1"></a><span class="co">#   x$value &lt;- recode(x$value, !!!lc_key)</span></span>
+<span id="cb3-49"><a href="imputation.html#cb3-49" aria-hidden="true" tabindex="-1"></a><span class="co">#   x %&lt;&gt;% filter(coverage_fraction &gt;= 0.5)</span></span>
+<span id="cb3-50"><a href="imputation.html#cb3-50" aria-hidden="true" tabindex="-1"></a><span class="co">#   return(length(unique(x$value)))</span></span>
+<span id="cb3-51"><a href="imputation.html#cb3-51" aria-hidden="true" tabindex="-1"></a><span class="co"># })</span></span>
+<span id="cb3-52"><a href="imputation.html#cb3-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-53"><a href="imputation.html#cb3-53" aria-hidden="true" tabindex="-1"></a><span class="co"># set landcover class key with single forested class</span></span>
+<span id="cb3-54"><a href="imputation.html#cb3-54" aria-hidden="true" tabindex="-1"></a>lc_key_for <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">`</span><span class="at">20</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;Water&#39;</span>,</span>
+<span id="cb3-55"><a href="imputation.html#cb3-55" aria-hidden="true" tabindex="-1"></a>                <span class="st">`</span><span class="at">31</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;Snow/Ice&#39;</span>,</span>
+<span id="cb3-56"><a href="imputation.html#cb3-56" aria-hidden="true" tabindex="-1"></a>                <span class="st">`</span><span class="at">32</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;Rock/Rubble&#39;</span>,</span>
+<span id="cb3-57"><a href="imputation.html#cb3-57" aria-hidden="true" tabindex="-1"></a>                <span class="st">`</span><span class="at">33</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;Exposed/Barren Land&#39;</span>,</span>
+<span id="cb3-58"><a href="imputation.html#cb3-58" aria-hidden="true" tabindex="-1"></a>                <span class="st">`</span><span class="at">40</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;Bryoids&#39;</span>,</span>
+<span id="cb3-59"><a href="imputation.html#cb3-59" aria-hidden="true" tabindex="-1"></a>                <span class="st">`</span><span class="at">50</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;Shrubland&#39;</span>,</span>
+<span id="cb3-60"><a href="imputation.html#cb3-60" aria-hidden="true" tabindex="-1"></a>                <span class="st">`</span><span class="at">80</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;Wetland&#39;</span>,</span>
+<span id="cb3-61"><a href="imputation.html#cb3-61" aria-hidden="true" tabindex="-1"></a>                <span class="st">`</span><span class="at">81</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;Forest&#39;</span>,</span>
+<span id="cb3-62"><a href="imputation.html#cb3-62" aria-hidden="true" tabindex="-1"></a>                <span class="st">`</span><span class="at">100</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;Herbs&#39;</span>,</span>
+<span id="cb3-63"><a href="imputation.html#cb3-63" aria-hidden="true" tabindex="-1"></a>                <span class="st">`</span><span class="at">210</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;Forest&#39;</span>,</span>
+<span id="cb3-64"><a href="imputation.html#cb3-64" aria-hidden="true" tabindex="-1"></a>                <span class="st">`</span><span class="at">220</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;Forest&#39;</span>,</span>
+<span id="cb3-65"><a href="imputation.html#cb3-65" aria-hidden="true" tabindex="-1"></a>                <span class="st">`</span><span class="at">230</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;Forest&#39;</span>)</span>
+<span id="cb3-66"><a href="imputation.html#cb3-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-67"><a href="imputation.html#cb3-67" aria-hidden="true" tabindex="-1"></a><span class="co"># find pixels with forest at least 50% of pixel</span></span>
+<span id="cb3-68"><a href="imputation.html#cb3-68" aria-hidden="true" tabindex="-1"></a><span class="co"># apply over list</span></span>
+<span id="cb3-69"><a href="imputation.html#cb3-69" aria-hidden="true" tabindex="-1"></a>lc_dom_for <span class="ot">&lt;-</span> <span class="fu">sapply</span>(lc_poly, <span class="cf">function</span>(x){</span>
+<span id="cb3-70"><a href="imputation.html#cb3-70" aria-hidden="true" tabindex="-1"></a>  x<span class="sc">$</span>value <span class="ot">&lt;-</span> <span class="fu">recode</span>(x<span class="sc">$</span>value, <span class="sc">!!!</span>lc_key_for)</span>
+<span id="cb3-71"><a href="imputation.html#cb3-71" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> x <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(value) <span class="sc">%&gt;%</span> <span class="fu">summarize</span>(<span class="at">sum =</span> <span class="fu">sum</span>(coverage_fraction))</span>
+<span id="cb3-72"><a href="imputation.html#cb3-72" aria-hidden="true" tabindex="-1"></a>  m <span class="ot">&lt;-</span> x<span class="sc">$</span>value[<span class="fu">which</span>(x<span class="sc">$</span>sum <span class="sc">==</span> <span class="fu">max</span>(x<span class="sc">$</span>sum))]</span>
+<span id="cb3-73"><a href="imputation.html#cb3-73" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>((<span class="fu">length</span>(m) <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">&amp;</span> (m <span class="sc">==</span> <span class="st">&#39;Forest&#39;</span>)[<span class="dv">1</span>]){</span>
+<span id="cb3-74"><a href="imputation.html#cb3-74" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(x<span class="sc">$</span>sum[x<span class="sc">$</span>value <span class="sc">==</span> m]<span class="sc">/</span><span class="fu">sum</span>(x<span class="sc">$</span>sum) <span class="sc">&gt;=</span> <span class="fl">0.5</span>){</span>
+<span id="cb3-75"><a href="imputation.html#cb3-75" aria-hidden="true" tabindex="-1"></a>      <span class="fu">return</span>(<span class="st">&#39;Yes&#39;</span>)</span>
+<span id="cb3-76"><a href="imputation.html#cb3-76" aria-hidden="true" tabindex="-1"></a>    }<span class="cf">else</span>{<span class="fu">return</span>(<span class="st">&#39;No&#39;</span>)}</span>
+<span id="cb3-77"><a href="imputation.html#cb3-77" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span>{<span class="fu">return</span>(<span class="st">&#39;No&#39;</span>)}</span>
+<span id="cb3-78"><a href="imputation.html#cb3-78" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb3-79"><a href="imputation.html#cb3-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-80"><a href="imputation.html#cb3-80" aria-hidden="true" tabindex="-1"></a><span class="co"># add into FRI data frame</span></span>
+<span id="cb3-81"><a href="imputation.html#cb3-81" aria-hidden="true" tabindex="-1"></a>dat_fri <span class="ot">&lt;-</span> dat_fri <span class="sc">%&gt;%</span> <span class="fu">add_column</span>(<span class="at">dom_for =</span> lc_dom_for)</span>
+<span id="cb3-82"><a href="imputation.html#cb3-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-83"><a href="imputation.html#cb3-83" aria-hidden="true" tabindex="-1"></a><span class="co"># subset FRI data frame based on whether polygon dominated by forest</span></span>
+<span id="cb3-84"><a href="imputation.html#cb3-84" aria-hidden="true" tabindex="-1"></a>dat_dom_for <span class="ot">&lt;-</span> dat_fri[dat_fri<span class="sc">$</span>dom_for <span class="sc">==</span> <span class="st">&#39;Yes&#39;</span>,]</span>
+<span id="cb3-85"><a href="imputation.html#cb3-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-86"><a href="imputation.html#cb3-86" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb3-87"><a href="imputation.html#cb3-87" aria-hidden="true" tabindex="-1"></a><span class="do">### SCREEN FOR P95 &gt;= 5 METERS </span><span class="al">###</span></span>
+<span id="cb3-88"><a href="imputation.html#cb3-88" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb3-89"><a href="imputation.html#cb3-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-90"><a href="imputation.html#cb3-90" aria-hidden="true" tabindex="-1"></a><span class="co"># subset FRI data frame</span></span>
+<span id="cb3-91"><a href="imputation.html#cb3-91" aria-hidden="true" tabindex="-1"></a>dat_p95 <span class="ot">&lt;-</span> dat_fri[dat_fri<span class="sc">$</span>p95 <span class="sc">&gt;=</span> <span class="dv">5</span>,]</span>
+<span id="cb3-92"><a href="imputation.html#cb3-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-93"><a href="imputation.html#cb3-93" aria-hidden="true" tabindex="-1"></a><span class="do">############################</span></span>
+<span id="cb3-94"><a href="imputation.html#cb3-94" aria-hidden="true" tabindex="-1"></a><span class="do">### SCREEN FOR CC &gt;= 50% </span><span class="al">###</span></span>
+<span id="cb3-95"><a href="imputation.html#cb3-95" aria-hidden="true" tabindex="-1"></a><span class="do">############################</span></span>
+<span id="cb3-96"><a href="imputation.html#cb3-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-97"><a href="imputation.html#cb3-97" aria-hidden="true" tabindex="-1"></a><span class="co"># subset FRI data frame</span></span>
+<span id="cb3-98"><a href="imputation.html#cb3-98" aria-hidden="true" tabindex="-1"></a>dat_cc <span class="ot">&lt;-</span> dat_fri[dat_fri<span class="sc">$</span>cc <span class="sc">&gt;=</span> <span class="dv">50</span>,]</span>
+<span id="cb3-99"><a href="imputation.html#cb3-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-100"><a href="imputation.html#cb3-100" aria-hidden="true" tabindex="-1"></a><span class="do">############################################</span></span>
+<span id="cb3-101"><a href="imputation.html#cb3-101" aria-hidden="true" tabindex="-1"></a><span class="do">### COMBINE INTERSECTION OF DATA SCREENS </span><span class="al">###</span></span>
+<span id="cb3-102"><a href="imputation.html#cb3-102" aria-hidden="true" tabindex="-1"></a><span class="do">############################################</span></span>
+<span id="cb3-103"><a href="imputation.html#cb3-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-104"><a href="imputation.html#cb3-104" aria-hidden="true" tabindex="-1"></a><span class="co"># first combine only by POLYID</span></span>
+<span id="cb3-105"><a href="imputation.html#cb3-105" aria-hidden="true" tabindex="-1"></a>dat_fri_scr <span class="ot">&lt;-</span> <span class="fu">intersect</span>(dat_dom_for <span class="sc">%&gt;%</span> <span class="fu">subset</span>(<span class="at">select =</span> POLYID),</span>
+<span id="cb3-106"><a href="imputation.html#cb3-106" aria-hidden="true" tabindex="-1"></a>                        dat_p95 <span class="sc">%&gt;%</span> <span class="fu">subset</span>(<span class="at">select =</span> POLYID)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-107"><a href="imputation.html#cb3-107" aria-hidden="true" tabindex="-1"></a>  <span class="fu">intersect</span>(., dat_cc <span class="sc">%&gt;%</span> <span class="fu">subset</span>(<span class="at">select =</span> POLYID))</span>
+<span id="cb3-108"><a href="imputation.html#cb3-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-109"><a href="imputation.html#cb3-109" aria-hidden="true" tabindex="-1"></a><span class="co"># load full data frame attributes</span></span>
+<span id="cb3-110"><a href="imputation.html#cb3-110" aria-hidden="true" tabindex="-1"></a>dat_fri_scr <span class="ot">&lt;-</span> dat_fri[dat_fri<span class="sc">$</span>POLYID <span class="sc">%in%</span> dat_fri_scr<span class="sc">$</span>POLYID,]</span>
+<span id="cb3-111"><a href="imputation.html#cb3-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-112"><a href="imputation.html#cb3-112" aria-hidden="true" tabindex="-1"></a><span class="co"># save extracted data frame for fast rebooting</span></span>
+<span id="cb3-113"><a href="imputation.html#cb3-113" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(dat_fri_scr, <span class="at">file =</span> <span class="st">&#39;D:/ontario_inventory/imputation/example/dat_fri_scr.RData&#39;</span>)</span>
+<span id="cb3-114"><a href="imputation.html#cb3-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-115"><a href="imputation.html#cb3-115" aria-hidden="true" tabindex="-1"></a><span class="co"># clear workspace</span></span>
+<span id="cb3-116"><a href="imputation.html#cb3-116" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(<span class="at">list=</span><span class="fu">ls</span>())</span></code></pre></div>
+</div>
+<div id="imputationp3" class="section level2 unnumbered hasAnchor">
+<h2>3. Run imputation on FRI polygons ONLY to assess imputation performance<a href="imputation.html#imputationp3" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The goal of this imputation procedure is to estimate age and species composition in newly segmented forest polygons. But it is also important to assess the performance of the algorithm. To do this, we can conduct the imputation over the FRI dataset ONLY. For each FRI polygon, we find the k-nearest neighbor matches, and calculate the age and species composition to impute. We can then compare the observed age and species composition of the polygon to the imputed values. Note we have to do this calculation on the FRI dataset alone because we do not have observed age and species composition values for the GRM segmented polygons. Also note that ALL attributes are imputed from the same k-nearest neighbors. The algorithm is not run for individual attributes.</p>
+<p>We present the performance of numeric attributes (age as well as the variables used to conduct the imputation algorithm) as Mean Absolute Error (MAE) and Mean Absolute Percentage Error (MAPE). MAE gives an indication of performance in the units of each attribute (such as Age) while MAPE gives a percentage error that can be compared across variables.</p>
+<p>For species composition, we report the percent of observed and imputed values that match (Accuracy). Species composition is broken down into several distinct attributes:</p>
+<ol style="list-style-type: lower-alpha">
+<li>Working group</li>
+<li>First dominant species (from FRI SPCOMP attribute)</li>
+<li>Second dominant species (from FRI SPCOMP attribute)</li>
+<li>3-Group species classification (softwood, mixedwood, hardwood)</li>
+<li>5-Group species classification (jack pine dominated, black spruce dominated, mixed conifer, mixedwood, hardwood)</li>
+</ol>
+</div>
+<div id="imputationp3a" class="section level2 unnumbered hasAnchor">
+<h2>3a. Create functions needed<a href="imputation.html#imputationp3a" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="imputation.html#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="do">####################################################</span></span>
+<span id="cb4-2"><a href="imputation.html#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="do">###FUNCTIONS TO RUN K NEAREST NEIGHBOR IMPUTATION###</span></span>
+<span id="cb4-3"><a href="imputation.html#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="do">####################################################</span></span>
+<span id="cb4-4"><a href="imputation.html#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="imputation.html#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># load packages</span></span>
+<span id="cb4-6"><a href="imputation.html#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RANN)</span>
+<span id="cb4-7"><a href="imputation.html#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reshape2)</span>
+<span id="cb4-8"><a href="imputation.html#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="imputation.html#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co"># create mode function</span></span>
+<span id="cb4-10"><a href="imputation.html#cb4-10" aria-hidden="true" tabindex="-1"></a>getmode <span class="ot">&lt;-</span> <span class="cf">function</span>(v) {</span>
+<span id="cb4-11"><a href="imputation.html#cb4-11" aria-hidden="true" tabindex="-1"></a>  uniqv <span class="ot">&lt;-</span> <span class="fu">unique</span>(v)</span>
+<span id="cb4-12"><a href="imputation.html#cb4-12" aria-hidden="true" tabindex="-1"></a>  uniqv[<span class="fu">which.max</span>(<span class="fu">tabulate</span>(<span class="fu">match</span>(v, uniqv)))]</span>
+<span id="cb4-13"><a href="imputation.html#cb4-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-14"><a href="imputation.html#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-15"><a href="imputation.html#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co"># create mae function</span></span>
+<span id="cb4-16"><a href="imputation.html#cb4-16" aria-hidden="true" tabindex="-1"></a>mae <span class="ot">&lt;-</span> <span class="cf">function</span>(obs, est){</span>
+<span id="cb4-17"><a href="imputation.html#cb4-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sum</span>(<span class="fu">abs</span>(obs <span class="sc">-</span> est)) <span class="sc">/</span> <span class="fu">length</span>(obs)</span>
+<span id="cb4-18"><a href="imputation.html#cb4-18" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-19"><a href="imputation.html#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-20"><a href="imputation.html#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co"># create mape function</span></span>
+<span id="cb4-21"><a href="imputation.html#cb4-21" aria-hidden="true" tabindex="-1"></a>mape <span class="ot">&lt;-</span> <span class="cf">function</span>(obs, est){</span>
+<span id="cb4-22"><a href="imputation.html#cb4-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sum</span>(<span class="fu">abs</span>((obs <span class="sc">-</span> est) <span class="sc">/</span> obs)) <span class="sc">/</span> <span class="fu">length</span>(obs) <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb4-23"><a href="imputation.html#cb4-23" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-24"><a href="imputation.html#cb4-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-25"><a href="imputation.html#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="co"># create knn function</span></span>
+<span id="cb4-26"><a href="imputation.html#cb4-26" aria-hidden="true" tabindex="-1"></a>run_knn_fri <span class="ot">&lt;-</span> <span class="cf">function</span>(dat, vars, k) {</span>
+<span id="cb4-27"><a href="imputation.html#cb4-27" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-28"><a href="imputation.html#cb4-28" aria-hidden="true" tabindex="-1"></a>  <span class="co"># subset data</span></span>
+<span id="cb4-29"><a href="imputation.html#cb4-29" aria-hidden="true" tabindex="-1"></a>  dat_nn <span class="ot">&lt;-</span> dat <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">all_of</span>(vars))</span>
+<span id="cb4-30"><a href="imputation.html#cb4-30" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-31"><a href="imputation.html#cb4-31" aria-hidden="true" tabindex="-1"></a>  <span class="co"># scale for nn computation</span></span>
+<span id="cb4-32"><a href="imputation.html#cb4-32" aria-hidden="true" tabindex="-1"></a>  dat_nn_scaled <span class="ot">&lt;-</span> dat_nn <span class="sc">%&gt;%</span> scale</span>
+<span id="cb4-33"><a href="imputation.html#cb4-33" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-34"><a href="imputation.html#cb4-34" aria-hidden="true" tabindex="-1"></a>  <span class="co"># run nearest neighbor</span></span>
+<span id="cb4-35"><a href="imputation.html#cb4-35" aria-hidden="true" tabindex="-1"></a>  nn <span class="ot">&lt;-</span> <span class="fu">nn2</span>(dat_nn_scaled, dat_nn_scaled, <span class="at">k =</span> k <span class="sc">+</span> <span class="dv">1</span>)</span>
+<span id="cb4-36"><a href="imputation.html#cb4-36" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-37"><a href="imputation.html#cb4-37" aria-hidden="true" tabindex="-1"></a>  <span class="co"># get nn indices</span></span>
+<span id="cb4-38"><a href="imputation.html#cb4-38" aria-hidden="true" tabindex="-1"></a>  nni <span class="ot">&lt;-</span> nn[[<span class="dv">1</span>]][, <span class="dv">2</span><span class="sc">:</span>(k <span class="sc">+</span> <span class="dv">1</span>)]</span>
+<span id="cb4-39"><a href="imputation.html#cb4-39" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-40"><a href="imputation.html#cb4-40" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add vars to tibble</span></span>
+<span id="cb4-41"><a href="imputation.html#cb4-41" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-42"><a href="imputation.html#cb4-42" aria-hidden="true" tabindex="-1"></a>  <span class="co"># take mean/mode if k &gt; 1</span></span>
+<span id="cb4-43"><a href="imputation.html#cb4-43" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(k <span class="sc">&gt;</span> <span class="dv">1</span>){</span>
+<span id="cb4-44"><a href="imputation.html#cb4-44" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(i <span class="cf">in</span> <span class="fu">seq_along</span>(vars)){</span>
+<span id="cb4-45"><a href="imputation.html#cb4-45" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span>(i <span class="sc">==</span> <span class="dv">1</span>){</span>
+<span id="cb4-46"><a href="imputation.html#cb4-46" aria-hidden="true" tabindex="-1"></a>        nn_tab <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="sc">!!</span>vars[i] <span class="sc">:</span><span class="er">=</span> dat_nn[,i],</span>
+<span id="cb4-47"><a href="imputation.html#cb4-47" aria-hidden="true" tabindex="-1"></a>                         <span class="sc">!!</span><span class="fu">str_c</span>(vars[i], <span class="st">&#39;_nn&#39;</span>) <span class="sc">:</span><span class="er">=</span> <span class="fu">apply</span>(nni, <span class="at">MARGIN =</span> <span class="dv">1</span>, <span class="at">FUN =</span> <span class="cf">function</span>(x){</span>
+<span id="cb4-48"><a href="imputation.html#cb4-48" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">mean</span>(dat_nn[x, i])</span>
+<span id="cb4-49"><a href="imputation.html#cb4-49" aria-hidden="true" tabindex="-1"></a>                         }))</span>
+<span id="cb4-50"><a href="imputation.html#cb4-50" aria-hidden="true" tabindex="-1"></a>      }<span class="cf">else</span>{</span>
+<span id="cb4-51"><a href="imputation.html#cb4-51" aria-hidden="true" tabindex="-1"></a>        nn_tab <span class="sc">%&lt;&gt;%</span> <span class="fu">mutate</span>(<span class="sc">!!</span>vars[i] <span class="sc">:</span><span class="er">=</span> dat_nn[,i],</span>
+<span id="cb4-52"><a href="imputation.html#cb4-52" aria-hidden="true" tabindex="-1"></a>                           <span class="sc">!!</span><span class="fu">str_c</span>(vars[i], <span class="st">&#39;_nn&#39;</span>) <span class="sc">:</span><span class="er">=</span> <span class="fu">apply</span>(nni, <span class="at">MARGIN =</span> <span class="dv">1</span>, <span class="at">FUN =</span> <span class="cf">function</span>(x){</span>
+<span id="cb4-53"><a href="imputation.html#cb4-53" aria-hidden="true" tabindex="-1"></a>                             <span class="fu">mean</span>(dat_nn[x, i])</span>
+<span id="cb4-54"><a href="imputation.html#cb4-54" aria-hidden="true" tabindex="-1"></a>                           }))</span>
+<span id="cb4-55"><a href="imputation.html#cb4-55" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb4-56"><a href="imputation.html#cb4-56" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb4-57"><a href="imputation.html#cb4-57" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-58"><a href="imputation.html#cb4-58" aria-hidden="true" tabindex="-1"></a>    <span class="co"># add aux vars to tibble</span></span>
+<span id="cb4-59"><a href="imputation.html#cb4-59" aria-hidden="true" tabindex="-1"></a>    nn_tab <span class="sc">%&lt;&gt;%</span> <span class="fu">mutate</span>(<span class="at">age =</span> dat<span class="sc">$</span>AGE2018,</span>
+<span id="cb4-60"><a href="imputation.html#cb4-60" aria-hidden="true" tabindex="-1"></a>                       <span class="at">wg =</span> dat<span class="sc">$</span>WG,</span>
+<span id="cb4-61"><a href="imputation.html#cb4-61" aria-hidden="true" tabindex="-1"></a>                       <span class="at">sp1 =</span> dat<span class="sc">$</span>SP1,</span>
+<span id="cb4-62"><a href="imputation.html#cb4-62" aria-hidden="true" tabindex="-1"></a>                       <span class="at">sp2 =</span> dat<span class="sc">$</span>SP2,</span>
+<span id="cb4-63"><a href="imputation.html#cb4-63" aria-hidden="true" tabindex="-1"></a>                       <span class="at">group5 =</span> dat<span class="sc">$</span>SpeciesGroup2,</span>
+<span id="cb4-64"><a href="imputation.html#cb4-64" aria-hidden="true" tabindex="-1"></a>                       <span class="at">group3 =</span> dat<span class="sc">$</span>SpeciesGroup3,</span>
+<span id="cb4-65"><a href="imputation.html#cb4-65" aria-hidden="true" tabindex="-1"></a>                       <span class="at">age_nn =</span> <span class="fu">apply</span>(nni, <span class="at">MARGIN =</span> <span class="dv">1</span>, <span class="at">FUN =</span> <span class="cf">function</span>(x){</span>
+<span id="cb4-66"><a href="imputation.html#cb4-66" aria-hidden="true" tabindex="-1"></a>                         <span class="fu">mean</span>(dat<span class="sc">$</span>AGE2018[x])</span>
+<span id="cb4-67"><a href="imputation.html#cb4-67" aria-hidden="true" tabindex="-1"></a>                       }),</span>
+<span id="cb4-68"><a href="imputation.html#cb4-68" aria-hidden="true" tabindex="-1"></a>                       <span class="at">wg_nn =</span> <span class="fu">apply</span>(nni, <span class="at">MARGIN =</span> <span class="dv">1</span>, <span class="at">FUN =</span> <span class="cf">function</span>(x){</span>
+<span id="cb4-69"><a href="imputation.html#cb4-69" aria-hidden="true" tabindex="-1"></a>                         <span class="fu">getmode</span>(dat<span class="sc">$</span>WG[x])</span>
+<span id="cb4-70"><a href="imputation.html#cb4-70" aria-hidden="true" tabindex="-1"></a>                       }),</span>
+<span id="cb4-71"><a href="imputation.html#cb4-71" aria-hidden="true" tabindex="-1"></a>                       <span class="at">sp1_nn =</span> <span class="fu">apply</span>(nni, <span class="at">MARGIN =</span> <span class="dv">1</span>, <span class="at">FUN =</span> <span class="cf">function</span>(x){</span>
+<span id="cb4-72"><a href="imputation.html#cb4-72" aria-hidden="true" tabindex="-1"></a>                         <span class="fu">getmode</span>(dat<span class="sc">$</span>SP1[x])</span>
+<span id="cb4-73"><a href="imputation.html#cb4-73" aria-hidden="true" tabindex="-1"></a>                       }),</span>
+<span id="cb4-74"><a href="imputation.html#cb4-74" aria-hidden="true" tabindex="-1"></a>                       <span class="at">sp2_nn =</span> <span class="fu">apply</span>(nni, <span class="at">MARGIN =</span> <span class="dv">1</span>, <span class="at">FUN =</span> <span class="cf">function</span>(x){</span>
+<span id="cb4-75"><a href="imputation.html#cb4-75" aria-hidden="true" tabindex="-1"></a>                         <span class="fu">getmode</span>(dat<span class="sc">$</span>SP2[x])</span>
+<span id="cb4-76"><a href="imputation.html#cb4-76" aria-hidden="true" tabindex="-1"></a>                       }),</span>
+<span id="cb4-77"><a href="imputation.html#cb4-77" aria-hidden="true" tabindex="-1"></a>                       <span class="at">group5_nn =</span> <span class="fu">apply</span>(nni, <span class="at">MARGIN =</span> <span class="dv">1</span>, <span class="at">FUN =</span> <span class="cf">function</span>(x){</span>
+<span id="cb4-78"><a href="imputation.html#cb4-78" aria-hidden="true" tabindex="-1"></a>                         <span class="fu">getmode</span>(dat<span class="sc">$</span>SpeciesGroup2[x])</span>
+<span id="cb4-79"><a href="imputation.html#cb4-79" aria-hidden="true" tabindex="-1"></a>                       }),</span>
+<span id="cb4-80"><a href="imputation.html#cb4-80" aria-hidden="true" tabindex="-1"></a>                       <span class="at">group3_nn =</span> <span class="fu">apply</span>(nni, <span class="at">MARGIN =</span> <span class="dv">1</span>, <span class="at">FUN =</span> <span class="cf">function</span>(x){</span>
+<span id="cb4-81"><a href="imputation.html#cb4-81" aria-hidden="true" tabindex="-1"></a>                         <span class="fu">getmode</span>(dat<span class="sc">$</span>SpeciesGroup3[x])</span>
+<span id="cb4-82"><a href="imputation.html#cb4-82" aria-hidden="true" tabindex="-1"></a>                       }))</span>
+<span id="cb4-83"><a href="imputation.html#cb4-83" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-84"><a href="imputation.html#cb4-84" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-85"><a href="imputation.html#cb4-85" aria-hidden="true" tabindex="-1"></a>  <span class="co"># take direct nn if k == 1</span></span>
+<span id="cb4-86"><a href="imputation.html#cb4-86" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(k <span class="sc">==</span> <span class="dv">1</span>){</span>
+<span id="cb4-87"><a href="imputation.html#cb4-87" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(i <span class="cf">in</span> <span class="fu">seq_along</span>(vars)){</span>
+<span id="cb4-88"><a href="imputation.html#cb4-88" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span>(i <span class="sc">==</span> <span class="dv">1</span>){</span>
+<span id="cb4-89"><a href="imputation.html#cb4-89" aria-hidden="true" tabindex="-1"></a>        nn_tab <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="sc">!!</span>vars[i] <span class="sc">:</span><span class="er">=</span> dat_nn[,i],</span>
+<span id="cb4-90"><a href="imputation.html#cb4-90" aria-hidden="true" tabindex="-1"></a>                         <span class="sc">!!</span><span class="fu">str_c</span>(vars[i], <span class="st">&#39;_nn&#39;</span>) <span class="sc">:</span><span class="er">=</span> dat_nn[nn[[<span class="dv">1</span>]][,<span class="dv">2</span>],i])</span>
+<span id="cb4-91"><a href="imputation.html#cb4-91" aria-hidden="true" tabindex="-1"></a>      }<span class="cf">else</span>{</span>
+<span id="cb4-92"><a href="imputation.html#cb4-92" aria-hidden="true" tabindex="-1"></a>        nn_tab <span class="sc">%&lt;&gt;%</span> <span class="fu">mutate</span>(<span class="sc">!!</span>vars[i] <span class="sc">:</span><span class="er">=</span> dat_nn[,i],</span>
+<span id="cb4-93"><a href="imputation.html#cb4-93" aria-hidden="true" tabindex="-1"></a>                           <span class="sc">!!</span><span class="fu">str_c</span>(vars[i], <span class="st">&#39;_nn&#39;</span>) <span class="sc">:</span><span class="er">=</span> dat_nn[nn[[<span class="dv">1</span>]][,<span class="dv">2</span>],i])</span>
+<span id="cb4-94"><a href="imputation.html#cb4-94" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb4-95"><a href="imputation.html#cb4-95" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb4-96"><a href="imputation.html#cb4-96" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-97"><a href="imputation.html#cb4-97" aria-hidden="true" tabindex="-1"></a>    <span class="co"># add aux vars to tibble</span></span>
+<span id="cb4-98"><a href="imputation.html#cb4-98" aria-hidden="true" tabindex="-1"></a>    nn_tab <span class="sc">%&lt;&gt;%</span> <span class="fu">mutate</span>(<span class="at">age =</span> dat<span class="sc">$</span>AGE2018,</span>
+<span id="cb4-99"><a href="imputation.html#cb4-99" aria-hidden="true" tabindex="-1"></a>                       <span class="at">wg =</span> dat<span class="sc">$</span>WG,</span>
+<span id="cb4-100"><a href="imputation.html#cb4-100" aria-hidden="true" tabindex="-1"></a>                       <span class="at">sp1 =</span> dat<span class="sc">$</span>SP1,</span>
+<span id="cb4-101"><a href="imputation.html#cb4-101" aria-hidden="true" tabindex="-1"></a>                       <span class="at">sp2 =</span> dat<span class="sc">$</span>SP2,</span>
+<span id="cb4-102"><a href="imputation.html#cb4-102" aria-hidden="true" tabindex="-1"></a>                       <span class="at">group5 =</span> dat<span class="sc">$</span>SpeciesGroup2,</span>
+<span id="cb4-103"><a href="imputation.html#cb4-103" aria-hidden="true" tabindex="-1"></a>                       <span class="at">group3 =</span> dat<span class="sc">$</span>SpeciesGroup3,</span>
+<span id="cb4-104"><a href="imputation.html#cb4-104" aria-hidden="true" tabindex="-1"></a>                       <span class="at">age_nn =</span> dat<span class="sc">$</span>AGE2018[nn[[<span class="dv">1</span>]][,<span class="dv">2</span>]],</span>
+<span id="cb4-105"><a href="imputation.html#cb4-105" aria-hidden="true" tabindex="-1"></a>                       <span class="at">wg_nn =</span> dat<span class="sc">$</span>WG[nn[[<span class="dv">1</span>]][,<span class="dv">2</span>]],</span>
+<span id="cb4-106"><a href="imputation.html#cb4-106" aria-hidden="true" tabindex="-1"></a>                       <span class="at">sp1_nn =</span> dat<span class="sc">$</span>SP1[nn[[<span class="dv">1</span>]][,<span class="dv">2</span>]],</span>
+<span id="cb4-107"><a href="imputation.html#cb4-107" aria-hidden="true" tabindex="-1"></a>                       <span class="at">sp2_nn =</span> dat<span class="sc">$</span>SP2[nn[[<span class="dv">1</span>]][,<span class="dv">2</span>]],</span>
+<span id="cb4-108"><a href="imputation.html#cb4-108" aria-hidden="true" tabindex="-1"></a>                       <span class="at">group5_nn =</span> dat<span class="sc">$</span>SpeciesGroup2[nn[[<span class="dv">1</span>]][,<span class="dv">2</span>]],</span>
+<span id="cb4-109"><a href="imputation.html#cb4-109" aria-hidden="true" tabindex="-1"></a>                       <span class="at">group3_nn =</span> dat<span class="sc">$</span>SpeciesGroup3[nn[[<span class="dv">1</span>]][,<span class="dv">2</span>]])</span>
+<span id="cb4-110"><a href="imputation.html#cb4-110" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-111"><a href="imputation.html#cb4-111" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-112"><a href="imputation.html#cb4-112" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-113"><a href="imputation.html#cb4-113" aria-hidden="true" tabindex="-1"></a>  <span class="co"># calculate fit metrics for vars</span></span>
+<span id="cb4-114"><a href="imputation.html#cb4-114" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="fu">seq_along</span>(vars)){</span>
+<span id="cb4-115"><a href="imputation.html#cb4-115" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(i <span class="sc">==</span> <span class="dv">1</span>){</span>
+<span id="cb4-116"><a href="imputation.html#cb4-116" aria-hidden="true" tabindex="-1"></a>      perform_df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="sc">!!</span><span class="fu">str_c</span>(vars[i], <span class="st">&#39;_mae&#39;</span>) <span class="sc">:</span><span class="er">=</span> </span>
+<span id="cb4-117"><a href="imputation.html#cb4-117" aria-hidden="true" tabindex="-1"></a>                             <span class="fu">mae</span>(<span class="fu">pull</span>(nn_tab, vars[i]),</span>
+<span id="cb4-118"><a href="imputation.html#cb4-118" aria-hidden="true" tabindex="-1"></a>                                  <span class="fu">pull</span>(nn_tab, <span class="fu">str_c</span>(vars[i], <span class="st">&#39;_nn&#39;</span>))),</span>
+<span id="cb4-119"><a href="imputation.html#cb4-119" aria-hidden="true" tabindex="-1"></a>                           <span class="sc">!!</span><span class="fu">str_c</span>(vars[i], <span class="st">&#39;_mape&#39;</span>) <span class="sc">:</span><span class="er">=</span> </span>
+<span id="cb4-120"><a href="imputation.html#cb4-120" aria-hidden="true" tabindex="-1"></a>                             <span class="fu">mape</span>(<span class="fu">pull</span>(nn_tab, vars[i]),</span>
+<span id="cb4-121"><a href="imputation.html#cb4-121" aria-hidden="true" tabindex="-1"></a>                                  <span class="fu">pull</span>(nn_tab, <span class="fu">str_c</span>(vars[i], <span class="st">&#39;_nn&#39;</span>))))</span>
+<span id="cb4-122"><a href="imputation.html#cb4-122" aria-hidden="true" tabindex="-1"></a>    }<span class="cf">else</span>{</span>
+<span id="cb4-123"><a href="imputation.html#cb4-123" aria-hidden="true" tabindex="-1"></a>      perform_df <span class="sc">%&lt;&gt;%</span> <span class="fu">mutate</span>(<span class="sc">!!</span><span class="fu">str_c</span>(vars[i], <span class="st">&#39;_mae&#39;</span>) <span class="sc">:</span><span class="er">=</span> </span>
+<span id="cb4-124"><a href="imputation.html#cb4-124" aria-hidden="true" tabindex="-1"></a>                             <span class="fu">mae</span>(<span class="fu">pull</span>(nn_tab, vars[i]),</span>
+<span id="cb4-125"><a href="imputation.html#cb4-125" aria-hidden="true" tabindex="-1"></a>                                  <span class="fu">pull</span>(nn_tab, <span class="fu">str_c</span>(vars[i], <span class="st">&#39;_nn&#39;</span>))),</span>
+<span id="cb4-126"><a href="imputation.html#cb4-126" aria-hidden="true" tabindex="-1"></a>                           <span class="sc">!!</span><span class="fu">str_c</span>(vars[i], <span class="st">&#39;_mape&#39;</span>) <span class="sc">:</span><span class="er">=</span> </span>
+<span id="cb4-127"><a href="imputation.html#cb4-127" aria-hidden="true" tabindex="-1"></a>                             <span class="fu">mape</span>(<span class="fu">pull</span>(nn_tab, vars[i]),</span>
+<span id="cb4-128"><a href="imputation.html#cb4-128" aria-hidden="true" tabindex="-1"></a>                                  <span class="fu">pull</span>(nn_tab, <span class="fu">str_c</span>(vars[i], <span class="st">&#39;_nn&#39;</span>))))</span>
+<span id="cb4-129"><a href="imputation.html#cb4-129" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb4-130"><a href="imputation.html#cb4-130" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-131"><a href="imputation.html#cb4-131" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-132"><a href="imputation.html#cb4-132" aria-hidden="true" tabindex="-1"></a>  <span class="co"># calculate rmse for aux vars</span></span>
+<span id="cb4-133"><a href="imputation.html#cb4-133" aria-hidden="true" tabindex="-1"></a>  perform_df <span class="sc">%&lt;&gt;%</span> <span class="fu">mutate</span>(<span class="at">age_mae =</span> <span class="fu">mae</span>(nn_tab<span class="sc">$</span>age, nn_tab<span class="sc">$</span>age_nn),</span>
+<span id="cb4-134"><a href="imputation.html#cb4-134" aria-hidden="true" tabindex="-1"></a>                         <span class="at">age_mape =</span> <span class="fu">mape</span>(nn_tab<span class="sc">$</span>age, nn_tab<span class="sc">$</span>age_nn))</span>
+<span id="cb4-135"><a href="imputation.html#cb4-135" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-136"><a href="imputation.html#cb4-136" aria-hidden="true" tabindex="-1"></a>  <span class="co"># calculate wg accuracy</span></span>
+<span id="cb4-137"><a href="imputation.html#cb4-137" aria-hidden="true" tabindex="-1"></a>  <span class="co"># create df of WG</span></span>
+<span id="cb4-138"><a href="imputation.html#cb4-138" aria-hidden="true" tabindex="-1"></a>  wg <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">obs =</span> nn_tab<span class="sc">$</span>wg,</span>
+<span id="cb4-139"><a href="imputation.html#cb4-139" aria-hidden="true" tabindex="-1"></a>                   <span class="at">est =</span> nn_tab<span class="sc">$</span>wg_nn)</span>
+<span id="cb4-140"><a href="imputation.html#cb4-140" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-141"><a href="imputation.html#cb4-141" aria-hidden="true" tabindex="-1"></a>  <span class="co"># create column of match or not</span></span>
+<span id="cb4-142"><a href="imputation.html#cb4-142" aria-hidden="true" tabindex="-1"></a>  wg<span class="sc">$</span>match <span class="ot">&lt;-</span> wg<span class="sc">$</span>obs <span class="sc">==</span> wg<span class="sc">$</span>est</span>
+<span id="cb4-143"><a href="imputation.html#cb4-143" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-144"><a href="imputation.html#cb4-144" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add total percent of matching WG to perform_df</span></span>
+<span id="cb4-145"><a href="imputation.html#cb4-145" aria-hidden="true" tabindex="-1"></a>  perform_df <span class="ot">&lt;-</span> <span class="fu">cbind</span>(perform_df,</span>
+<span id="cb4-146"><a href="imputation.html#cb4-146" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">data.frame</span>(<span class="at">wg_accuracy =</span> <span class="fu">NROW</span>(wg[wg<span class="sc">$</span>match <span class="sc">==</span> T,]) <span class="sc">/</span></span>
+<span id="cb4-147"><a href="imputation.html#cb4-147" aria-hidden="true" tabindex="-1"></a>                                   <span class="fu">NROW</span>(wg)))</span>
+<span id="cb4-148"><a href="imputation.html#cb4-148" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-149"><a href="imputation.html#cb4-149" aria-hidden="true" tabindex="-1"></a>  <span class="co"># calculate SP1 accuracy</span></span>
+<span id="cb4-150"><a href="imputation.html#cb4-150" aria-hidden="true" tabindex="-1"></a>  <span class="co"># create df of SP1</span></span>
+<span id="cb4-151"><a href="imputation.html#cb4-151" aria-hidden="true" tabindex="-1"></a>  sp1 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">obs =</span> nn_tab<span class="sc">$</span>sp1,</span>
+<span id="cb4-152"><a href="imputation.html#cb4-152" aria-hidden="true" tabindex="-1"></a>                    <span class="at">est =</span> nn_tab<span class="sc">$</span>sp1_nn)</span>
+<span id="cb4-153"><a href="imputation.html#cb4-153" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-154"><a href="imputation.html#cb4-154" aria-hidden="true" tabindex="-1"></a>  <span class="co"># create column of match or not</span></span>
+<span id="cb4-155"><a href="imputation.html#cb4-155" aria-hidden="true" tabindex="-1"></a>  sp1<span class="sc">$</span>match <span class="ot">&lt;-</span> sp1<span class="sc">$</span>obs <span class="sc">==</span> sp1<span class="sc">$</span>est</span>
+<span id="cb4-156"><a href="imputation.html#cb4-156" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-157"><a href="imputation.html#cb4-157" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add total percent of matching SP1 to perform_df</span></span>
+<span id="cb4-158"><a href="imputation.html#cb4-158" aria-hidden="true" tabindex="-1"></a>  perform_df <span class="ot">&lt;-</span> <span class="fu">cbind</span>(perform_df,</span>
+<span id="cb4-159"><a href="imputation.html#cb4-159" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">data.frame</span>(<span class="at">sp1_accuracy =</span> <span class="fu">NROW</span>(sp1[sp1<span class="sc">$</span>match <span class="sc">==</span> T,]) <span class="sc">/</span></span>
+<span id="cb4-160"><a href="imputation.html#cb4-160" aria-hidden="true" tabindex="-1"></a>                                   <span class="fu">NROW</span>(sp1)))</span>
+<span id="cb4-161"><a href="imputation.html#cb4-161" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-162"><a href="imputation.html#cb4-162" aria-hidden="true" tabindex="-1"></a>  <span class="co"># calculate SP2 accuracy</span></span>
+<span id="cb4-163"><a href="imputation.html#cb4-163" aria-hidden="true" tabindex="-1"></a>  <span class="co"># create df of SP2</span></span>
+<span id="cb4-164"><a href="imputation.html#cb4-164" aria-hidden="true" tabindex="-1"></a>  sp2 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">obs =</span> nn_tab<span class="sc">$</span>sp2,</span>
+<span id="cb4-165"><a href="imputation.html#cb4-165" aria-hidden="true" tabindex="-1"></a>                    <span class="at">est =</span> nn_tab<span class="sc">$</span>sp2_nn)</span>
+<span id="cb4-166"><a href="imputation.html#cb4-166" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-167"><a href="imputation.html#cb4-167" aria-hidden="true" tabindex="-1"></a>  <span class="co"># create column of match or not</span></span>
+<span id="cb4-168"><a href="imputation.html#cb4-168" aria-hidden="true" tabindex="-1"></a>  sp2<span class="sc">$</span>match <span class="ot">&lt;-</span> sp2<span class="sc">$</span>obs <span class="sc">==</span> sp2<span class="sc">$</span>est</span>
+<span id="cb4-169"><a href="imputation.html#cb4-169" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-170"><a href="imputation.html#cb4-170" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add total percent of matching SP2 to perform_df</span></span>
+<span id="cb4-171"><a href="imputation.html#cb4-171" aria-hidden="true" tabindex="-1"></a>  perform_df <span class="ot">&lt;-</span> <span class="fu">cbind</span>(perform_df,</span>
+<span id="cb4-172"><a href="imputation.html#cb4-172" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">data.frame</span>(<span class="at">sp2_accuracy =</span> <span class="fu">NROW</span>(sp2[sp2<span class="sc">$</span>match <span class="sc">==</span> T,]) <span class="sc">/</span></span>
+<span id="cb4-173"><a href="imputation.html#cb4-173" aria-hidden="true" tabindex="-1"></a>                                   <span class="fu">NROW</span>(sp2)))</span>
+<span id="cb4-174"><a href="imputation.html#cb4-174" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-175"><a href="imputation.html#cb4-175" aria-hidden="true" tabindex="-1"></a>  <span class="co"># calculate GROUP3 accuracy</span></span>
+<span id="cb4-176"><a href="imputation.html#cb4-176" aria-hidden="true" tabindex="-1"></a>  <span class="co"># create df of GROUP3</span></span>
+<span id="cb4-177"><a href="imputation.html#cb4-177" aria-hidden="true" tabindex="-1"></a>  group3 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">obs =</span> nn_tab<span class="sc">$</span>group3,</span>
+<span id="cb4-178"><a href="imputation.html#cb4-178" aria-hidden="true" tabindex="-1"></a>                       <span class="at">est =</span> nn_tab<span class="sc">$</span>group3_nn)</span>
+<span id="cb4-179"><a href="imputation.html#cb4-179" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-180"><a href="imputation.html#cb4-180" aria-hidden="true" tabindex="-1"></a>  <span class="co"># create column of match or not</span></span>
+<span id="cb4-181"><a href="imputation.html#cb4-181" aria-hidden="true" tabindex="-1"></a>  group3<span class="sc">$</span>match <span class="ot">&lt;-</span> group3<span class="sc">$</span>obs <span class="sc">==</span> group3<span class="sc">$</span>est</span>
+<span id="cb4-182"><a href="imputation.html#cb4-182" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-183"><a href="imputation.html#cb4-183" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add total percent of matching SP2 to perform_df</span></span>
+<span id="cb4-184"><a href="imputation.html#cb4-184" aria-hidden="true" tabindex="-1"></a>  perform_df <span class="ot">&lt;-</span> <span class="fu">cbind</span>(perform_df,</span>
+<span id="cb4-185"><a href="imputation.html#cb4-185" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">data.frame</span>(<span class="at">group3_accuracy =</span> <span class="fu">NROW</span>(group3[group3<span class="sc">$</span>match <span class="sc">==</span> T,]) <span class="sc">/</span></span>
+<span id="cb4-186"><a href="imputation.html#cb4-186" aria-hidden="true" tabindex="-1"></a>                                   <span class="fu">NROW</span>(group3)))</span>
+<span id="cb4-187"><a href="imputation.html#cb4-187" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-188"><a href="imputation.html#cb4-188" aria-hidden="true" tabindex="-1"></a>  <span class="co"># calculate GROUP5 accuracy</span></span>
+<span id="cb4-189"><a href="imputation.html#cb4-189" aria-hidden="true" tabindex="-1"></a>  <span class="co"># create df of GROUP5</span></span>
+<span id="cb4-190"><a href="imputation.html#cb4-190" aria-hidden="true" tabindex="-1"></a>  group5 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">obs =</span> nn_tab<span class="sc">$</span>group5,</span>
+<span id="cb4-191"><a href="imputation.html#cb4-191" aria-hidden="true" tabindex="-1"></a>                       <span class="at">est =</span> nn_tab<span class="sc">$</span>group5_nn)</span>
+<span id="cb4-192"><a href="imputation.html#cb4-192" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-193"><a href="imputation.html#cb4-193" aria-hidden="true" tabindex="-1"></a>  <span class="co"># create column of match or not</span></span>
+<span id="cb4-194"><a href="imputation.html#cb4-194" aria-hidden="true" tabindex="-1"></a>  group5<span class="sc">$</span>match <span class="ot">&lt;-</span> group5<span class="sc">$</span>obs <span class="sc">==</span> group5<span class="sc">$</span>est</span>
+<span id="cb4-195"><a href="imputation.html#cb4-195" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-196"><a href="imputation.html#cb4-196" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add total percent of matching SP2 to perform_df</span></span>
+<span id="cb4-197"><a href="imputation.html#cb4-197" aria-hidden="true" tabindex="-1"></a>  perform_df <span class="ot">&lt;-</span> <span class="fu">cbind</span>(perform_df,</span>
+<span id="cb4-198"><a href="imputation.html#cb4-198" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">data.frame</span>(<span class="at">group5_accuracy =</span> <span class="fu">NROW</span>(group5[group5<span class="sc">$</span>match <span class="sc">==</span> T,]) <span class="sc">/</span></span>
+<span id="cb4-199"><a href="imputation.html#cb4-199" aria-hidden="true" tabindex="-1"></a>                                   <span class="fu">NROW</span>(group5)))</span>
+<span id="cb4-200"><a href="imputation.html#cb4-200" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-201"><a href="imputation.html#cb4-201" aria-hidden="true" tabindex="-1"></a>  <span class="co"># melt df</span></span>
+<span id="cb4-202"><a href="imputation.html#cb4-202" aria-hidden="true" tabindex="-1"></a>  perform_df <span class="ot">&lt;-</span> <span class="fu">melt</span>(perform_df)</span>
+<span id="cb4-203"><a href="imputation.html#cb4-203" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-204"><a href="imputation.html#cb4-204" aria-hidden="true" tabindex="-1"></a>  <span class="co"># return df</span></span>
+<span id="cb4-205"><a href="imputation.html#cb4-205" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(perform_df)</span>
+<span id="cb4-206"><a href="imputation.html#cb4-206" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+<div id="imputationp3b" class="section level2 unnumbered hasAnchor">
+<h2>3b. Run the imputation and assess performance<a href="imputation.html#imputationp3b" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="imputation.html#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="do">###########################</span></span>
+<span id="cb5-2"><a href="imputation.html#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="do">### LOAD FRI DATA FRAME </span><span class="al">###</span></span>
+<span id="cb5-3"><a href="imputation.html#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="do">###########################</span></span>
+<span id="cb5-4"><a href="imputation.html#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="imputation.html#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># load from part 2 above</span></span>
+<span id="cb5-6"><a href="imputation.html#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&#39;D:/ontario_inventory/imputation/example/dat_fri_scr.RData&#39;</span>)</span>
+<span id="cb5-7"><a href="imputation.html#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="imputation.html#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># subset only the attributes we need</span></span>
+<span id="cb5-9"><a href="imputation.html#cb5-9" aria-hidden="true" tabindex="-1"></a>dat_fri_scr <span class="sc">%&lt;&gt;%</span> <span class="fu">select</span>(POLYID, AGE2018, SPCOMP, WG, </span>
+<span id="cb5-10"><a href="imputation.html#cb5-10" aria-hidden="true" tabindex="-1"></a>                        avg, zsd,</span>
+<span id="cb5-11"><a href="imputation.html#cb5-11" aria-hidden="true" tabindex="-1"></a>                        rumple, zpcum8,</span>
+<span id="cb5-12"><a href="imputation.html#cb5-12" aria-hidden="true" tabindex="-1"></a>                        x, y, red_edge_2)</span>
+<span id="cb5-13"><a href="imputation.html#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-14"><a href="imputation.html#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co"># remove any polygons with missing values</span></span>
+<span id="cb5-15"><a href="imputation.html#cb5-15" aria-hidden="true" tabindex="-1"></a>dat_fri_scr <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(dat_fri_scr)</span>
+<span id="cb5-16"><a href="imputation.html#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-17"><a href="imputation.html#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="do">###########################################</span></span>
+<span id="cb5-18"><a href="imputation.html#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="do">### CALCULATE AND ADD SPCOMP ATTRIBUTES </span><span class="al">###</span></span>
+<span id="cb5-19"><a href="imputation.html#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="do">###########################################</span></span>
+<span id="cb5-20"><a href="imputation.html#cb5-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-21"><a href="imputation.html#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="co"># parse SPCOMP strings</span></span>
+<span id="cb5-22"><a href="imputation.html#cb5-22" aria-hidden="true" tabindex="-1"></a>sp <span class="ot">&lt;-</span> <span class="fu">str_split</span>(dat_fri_scr<span class="sc">$</span>SPCOMP, <span class="at">pattern =</span> <span class="st">&quot;</span><span class="sc">\\</span><span class="st">s{2}&quot;</span>)</span>
+<span id="cb5-23"><a href="imputation.html#cb5-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-24"><a href="imputation.html#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="co"># add first species to dat</span></span>
+<span id="cb5-25"><a href="imputation.html#cb5-25" aria-hidden="true" tabindex="-1"></a>dat_fri_scr<span class="sc">$</span>SP1 <span class="ot">&lt;-</span> <span class="fu">sapply</span>(sp, <span class="at">FUN =</span> <span class="cf">function</span>(x){</span>
+<span id="cb5-26"><a href="imputation.html#cb5-26" aria-hidden="true" tabindex="-1"></a>  str <span class="ot">&lt;-</span> x[<span class="dv">1</span>]</span>
+<span id="cb5-27"><a href="imputation.html#cb5-27" aria-hidden="true" tabindex="-1"></a>  str <span class="ot">&lt;-</span> <span class="fu">str_sub</span>(str, <span class="at">start =</span> <span class="dv">1</span>, <span class="at">end =</span> <span class="dv">2</span>)</span>
+<span id="cb5-28"><a href="imputation.html#cb5-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(str)</span>
+<span id="cb5-29"><a href="imputation.html#cb5-29" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb5-30"><a href="imputation.html#cb5-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-31"><a href="imputation.html#cb5-31" aria-hidden="true" tabindex="-1"></a><span class="co"># add first species percent to dat</span></span>
+<span id="cb5-32"><a href="imputation.html#cb5-32" aria-hidden="true" tabindex="-1"></a>dat_fri_scr<span class="sc">$</span>SP1P <span class="ot">&lt;-</span> <span class="fu">sapply</span>(sp, <span class="at">FUN =</span> <span class="cf">function</span>(x){</span>
+<span id="cb5-33"><a href="imputation.html#cb5-33" aria-hidden="true" tabindex="-1"></a>  str <span class="ot">&lt;-</span> x[<span class="dv">2</span>]</span>
+<span id="cb5-34"><a href="imputation.html#cb5-34" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">is.na</span>(str)){</span>
+<span id="cb5-35"><a href="imputation.html#cb5-35" aria-hidden="true" tabindex="-1"></a>    str <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb5-36"><a href="imputation.html#cb5-36" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span>{</span>
+<span id="cb5-37"><a href="imputation.html#cb5-37" aria-hidden="true" tabindex="-1"></a>    str <span class="ot">&lt;-</span> <span class="fu">str_sub</span>(str, <span class="at">start =</span> <span class="dv">1</span>, <span class="at">end =</span> <span class="dv">2</span>)</span>
+<span id="cb5-38"><a href="imputation.html#cb5-38" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-39"><a href="imputation.html#cb5-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(str)</span>
+<span id="cb5-40"><a href="imputation.html#cb5-40" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb5-41"><a href="imputation.html#cb5-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-42"><a href="imputation.html#cb5-42" aria-hidden="true" tabindex="-1"></a><span class="co"># add second species to dat</span></span>
+<span id="cb5-43"><a href="imputation.html#cb5-43" aria-hidden="true" tabindex="-1"></a>dat_fri_scr<span class="sc">$</span>SP2 <span class="ot">&lt;-</span> <span class="fu">sapply</span>(sp, <span class="at">FUN =</span> <span class="cf">function</span>(x){</span>
+<span id="cb5-44"><a href="imputation.html#cb5-44" aria-hidden="true" tabindex="-1"></a>  str <span class="ot">&lt;-</span> x[<span class="dv">2</span>]</span>
+<span id="cb5-45"><a href="imputation.html#cb5-45" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">is.na</span>(str) <span class="sc">==</span> F){</span>
+<span id="cb5-46"><a href="imputation.html#cb5-46" aria-hidden="true" tabindex="-1"></a>    str <span class="ot">&lt;-</span> <span class="fu">str_sub</span>(str, <span class="at">start =</span> <span class="dv">3</span>, <span class="at">end =</span> <span class="dv">4</span>)</span>
+<span id="cb5-47"><a href="imputation.html#cb5-47" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-48"><a href="imputation.html#cb5-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(str)</span>
+<span id="cb5-49"><a href="imputation.html#cb5-49" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb5-50"><a href="imputation.html#cb5-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-51"><a href="imputation.html#cb5-51" aria-hidden="true" tabindex="-1"></a><span class="co"># add second species percent to dat</span></span>
+<span id="cb5-52"><a href="imputation.html#cb5-52" aria-hidden="true" tabindex="-1"></a>dat_fri_scr<span class="sc">$</span>SP2P <span class="ot">&lt;-</span> <span class="fu">sapply</span>(sp, <span class="at">FUN =</span> <span class="cf">function</span>(x){</span>
+<span id="cb5-53"><a href="imputation.html#cb5-53" aria-hidden="true" tabindex="-1"></a>  str <span class="ot">&lt;-</span> x[<span class="dv">3</span>]</span>
+<span id="cb5-54"><a href="imputation.html#cb5-54" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">is.na</span>(str) <span class="sc">==</span> F){</span>
+<span id="cb5-55"><a href="imputation.html#cb5-55" aria-hidden="true" tabindex="-1"></a>    str <span class="ot">&lt;-</span> <span class="fu">str_sub</span>(str, <span class="at">start =</span> <span class="dv">1</span>, <span class="at">end =</span> <span class="dv">2</span>)</span>
+<span id="cb5-56"><a href="imputation.html#cb5-56" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-57"><a href="imputation.html#cb5-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(str)</span>
+<span id="cb5-58"><a href="imputation.html#cb5-58" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb5-59"><a href="imputation.html#cb5-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-60"><a href="imputation.html#cb5-60" aria-hidden="true" tabindex="-1"></a><span class="co"># change second species missing values</span></span>
+<span id="cb5-61"><a href="imputation.html#cb5-61" aria-hidden="true" tabindex="-1"></a>dat_fri_scr<span class="sc">$</span>SP2[<span class="fu">is.na</span>(dat_fri_scr<span class="sc">$</span>SP2)] <span class="ot">&lt;-</span> <span class="st">&#39;MIS&#39;</span></span>
+<span id="cb5-62"><a href="imputation.html#cb5-62" aria-hidden="true" tabindex="-1"></a>dat_fri_scr<span class="sc">$</span>SP2P[<span class="fu">is.na</span>(dat_fri_scr<span class="sc">$</span>SP2P)] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb5-63"><a href="imputation.html#cb5-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-64"><a href="imputation.html#cb5-64" aria-hidden="true" tabindex="-1"></a><span class="co"># load species group data -- calculated in separate code (can provide details)</span></span>
+<span id="cb5-65"><a href="imputation.html#cb5-65" aria-hidden="true" tabindex="-1"></a>sp_group <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(</span>
+<span id="cb5-66"><a href="imputation.html#cb5-66" aria-hidden="true" tabindex="-1"></a>  <span class="st">&#39;D:/ontario_inventory/romeo/RMF_EFI_layers/Polygons Inventory/RMF_PolygonForest_SPGROUP.shp&#39;</span></span>
+<span id="cb5-67"><a href="imputation.html#cb5-67" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-68"><a href="imputation.html#cb5-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-69"><a href="imputation.html#cb5-69" aria-hidden="true" tabindex="-1"></a><span class="co"># change POLYID to numeric</span></span>
+<span id="cb5-70"><a href="imputation.html#cb5-70" aria-hidden="true" tabindex="-1"></a>dat_fri_scr <span class="sc">%&lt;&gt;%</span> <span class="fu">mutate</span>(<span class="at">POLYID =</span> <span class="fu">as.numeric</span>(POLYID))</span>
+<span id="cb5-71"><a href="imputation.html#cb5-71" aria-hidden="true" tabindex="-1"></a>sp_group <span class="sc">%&lt;&gt;%</span> <span class="fu">mutate</span>(<span class="at">POLYID =</span> <span class="fu">as.numeric</span>(POLYID))</span>
+<span id="cb5-72"><a href="imputation.html#cb5-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-73"><a href="imputation.html#cb5-73" aria-hidden="true" tabindex="-1"></a><span class="co"># join to dat</span></span>
+<span id="cb5-74"><a href="imputation.html#cb5-74" aria-hidden="true" tabindex="-1"></a>dat_fri_scr <span class="ot">&lt;-</span> <span class="fu">left_join</span>(dat_fri_scr, </span>
+<span id="cb5-75"><a href="imputation.html#cb5-75" aria-hidden="true" tabindex="-1"></a>                 sp_group <span class="sc">%&gt;%</span> <span class="fu">select</span>(POLYID, SpeciesGroup2, SpeciesGroup3), </span>
+<span id="cb5-76"><a href="imputation.html#cb5-76" aria-hidden="true" tabindex="-1"></a>                 <span class="at">by =</span> <span class="st">&#39;POLYID&#39;</span>)</span>
+<span id="cb5-77"><a href="imputation.html#cb5-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-78"><a href="imputation.html#cb5-78" aria-hidden="true" tabindex="-1"></a><span class="do">##############################################</span></span>
+<span id="cb5-79"><a href="imputation.html#cb5-79" aria-hidden="true" tabindex="-1"></a><span class="do">### RUN NEAREST NEIGHBOR IMPUTATION K = 5 </span><span class="al">###</span></span>
+<span id="cb5-80"><a href="imputation.html#cb5-80" aria-hidden="true" tabindex="-1"></a><span class="do">##############################################</span></span>
+<span id="cb5-81"><a href="imputation.html#cb5-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-82"><a href="imputation.html#cb5-82" aria-hidden="true" tabindex="-1"></a><span class="co"># run_knn function already created</span></span>
+<span id="cb5-83"><a href="imputation.html#cb5-83" aria-hidden="true" tabindex="-1"></a><span class="co"># we use top_height, cc, red_edge_2 in the algorithm</span></span>
+<span id="cb5-84"><a href="imputation.html#cb5-84" aria-hidden="true" tabindex="-1"></a>perf <span class="ot">&lt;-</span> <span class="fu">run_knn_fri</span>(dat_fri_scr, <span class="fu">c</span>(<span class="st">&#39;avg&#39;</span>, <span class="st">&#39;zsd&#39;</span>, <span class="st">&#39;rumple&#39;</span>, </span>
+<span id="cb5-85"><a href="imputation.html#cb5-85" aria-hidden="true" tabindex="-1"></a>                                   <span class="st">&#39;zpcum8&#39;</span>, <span class="st">&#39;x&#39;</span>, </span>
+<span id="cb5-86"><a href="imputation.html#cb5-86" aria-hidden="true" tabindex="-1"></a>                                   <span class="st">&#39;y&#39;</span>, <span class="st">&#39;red_edge_2&#39;</span>), <span class="at">k =</span> <span class="dv">5</span>)</span>
+<span id="cb5-87"><a href="imputation.html#cb5-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-88"><a href="imputation.html#cb5-88" aria-hidden="true" tabindex="-1"></a><span class="co"># round values</span></span>
+<span id="cb5-89"><a href="imputation.html#cb5-89" aria-hidden="true" tabindex="-1"></a>perf <span class="sc">%&lt;&gt;%</span> <span class="fu">mutate</span>(<span class="at">value =</span> <span class="fu">round</span>(value, <span class="dv">2</span>))</span>
+<span id="cb5-90"><a href="imputation.html#cb5-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-91"><a href="imputation.html#cb5-91" aria-hidden="true" tabindex="-1"></a><span class="co"># display results</span></span>
+<span id="cb5-92"><a href="imputation.html#cb5-92" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(perf, <span class="at">caption =</span> <span class="st">&quot;Imputation Performance of FRI Forest Stand Polygons&quot;</span>, <span class="at">label =</span> <span class="cn">NA</span>)</span></code></pre></div>
+<p>EDIT!</p>
+<p>*** Mean Absolute Percent Error (MAPE) of the imputation attributes (p95, rumple, zpcum8, depth_q25, x, y, red_edge_2) is below 5% for all attributes. These are low values, which demonstrate that the imputation algorithm is finding optimal matches within the database of available FRI polygons. The Mean Absolute Error of Age is 16.27, and the MAPE is 38.71 percent. Accuracy of first species classification (sp1) is 67%, and a much lower 36% for second species. Species classification with 3 and 5 classes have respective accuracies of 74% and 63%. ***</p>
+</div>
+<div id="imputationp4" class="section level2 unnumbered hasAnchor">
+<h2>4. Run imputation on GRM polygon dataset to derive estimates of age and species composition<a href="imputation.html#imputationp4" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The last step is to run the imputation between the screened FRI data frame and the GRM segmented polygons. For each GRM segmented polygon, the k-nearest neighbors in the FRI data are found and used to impute age and species composition. Note we do not conduct imputation on all the GRM segmented polygons, but only the polygons that have &gt;= 50% forested landcover, p95 &gt;= 5 meters, and canopy cover &gt;= 50% (same criteria as FRI data screening conducted above in step 2).</p>
+<p>Although we cannot assess performance of age and species composition when imputing into the GRM segmented polygons, we can still assess the fit of the variables used in the imputation: avg, zsd, rumple, zpcum8, x, y, and Sentinel red_edge_2.</p>
+<p>We can also review maps and distributions comparing FRI age/species composition against the same attributes imputed into GRM segmented polygons.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="imputation.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load additional packages</span></span>
+<span id="cb6-2"><a href="imputation.html#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(viridis)</span>
+<span id="cb6-3"><a href="imputation.html#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
+<span id="cb6-4"><a href="imputation.html#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
+<span id="cb6-5"><a href="imputation.html#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="imputation.html#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co"># load GRM polygon data frame</span></span>
+<span id="cb6-7"><a href="imputation.html#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&#39;D:/ontario_inventory/imputation/example/grm_10_01_05_extr.RData&#39;</span>)</span>
+<span id="cb6-8"><a href="imputation.html#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="imputation.html#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co"># screen for forested polygons</span></span>
+<span id="cb6-10"><a href="imputation.html#cb6-10" aria-hidden="true" tabindex="-1"></a>dat_grm_scr <span class="ot">&lt;-</span> dat_grm <span class="sc">%&gt;%</span> <span class="fu">filter</span>(dom_for <span class="sc">==</span> <span class="st">&#39;Yes&#39;</span>,</span>
+<span id="cb6-11"><a href="imputation.html#cb6-11" aria-hidden="true" tabindex="-1"></a>                                  p95 <span class="sc">&gt;=</span> <span class="dv">5</span>,</span>
+<span id="cb6-12"><a href="imputation.html#cb6-12" aria-hidden="true" tabindex="-1"></a>                                  cc <span class="sc">&gt;=</span> <span class="dv">50</span>)</span>
+<span id="cb6-13"><a href="imputation.html#cb6-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-14"><a href="imputation.html#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co"># create data frame for grm and fri metrics used in imputation</span></span>
+<span id="cb6-15"><a href="imputation.html#cb6-15" aria-hidden="true" tabindex="-1"></a>dat_grm_imp <span class="ot">&lt;-</span> dat_grm_scr <span class="sc">%&gt;%</span> <span class="fu">select</span>(id, avg, zsd, </span>
+<span id="cb6-16"><a href="imputation.html#cb6-16" aria-hidden="true" tabindex="-1"></a>                                      rumple, zpcum8,</span>
+<span id="cb6-17"><a href="imputation.html#cb6-17" aria-hidden="true" tabindex="-1"></a>                                      x, y, red_edge_2) <span class="sc">%&gt;%</span> na.omit</span>
+<span id="cb6-18"><a href="imputation.html#cb6-18" aria-hidden="true" tabindex="-1"></a>dat_fri_imp <span class="ot">&lt;-</span> dat_fri_scr <span class="sc">%&gt;%</span> <span class="fu">select</span>(avg, zsd, </span>
+<span id="cb6-19"><a href="imputation.html#cb6-19" aria-hidden="true" tabindex="-1"></a>                                      rumple, zpcum8,</span>
+<span id="cb6-20"><a href="imputation.html#cb6-20" aria-hidden="true" tabindex="-1"></a>                                      x, y, red_edge_2) <span class="sc">%&gt;%</span> na.omit</span>
+<span id="cb6-21"><a href="imputation.html#cb6-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-22"><a href="imputation.html#cb6-22" aria-hidden="true" tabindex="-1"></a><span class="co"># need to combine and scale all values together then separate again</span></span>
+<span id="cb6-23"><a href="imputation.html#cb6-23" aria-hidden="true" tabindex="-1"></a>dat_comb_scaled <span class="ot">&lt;-</span> <span class="fu">rbind</span>(dat_grm_imp <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>id), </span>
+<span id="cb6-24"><a href="imputation.html#cb6-24" aria-hidden="true" tabindex="-1"></a>                         dat_fri_imp) <span class="sc">%&gt;%</span> scale</span>
+<span id="cb6-25"><a href="imputation.html#cb6-25" aria-hidden="true" tabindex="-1"></a>dat_grm_scaled <span class="ot">&lt;-</span> dat_comb_scaled[<span class="dv">1</span><span class="sc">:</span><span class="fu">NROW</span>(dat_grm_imp),]</span>
+<span id="cb6-26"><a href="imputation.html#cb6-26" aria-hidden="true" tabindex="-1"></a>dat_fri_scaled <span class="ot">&lt;-</span> dat_comb_scaled[(<span class="fu">NROW</span>(dat_grm_imp)<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>(<span class="fu">NROW</span>(dat_grm_imp)<span class="sc">+</span><span class="fu">NROW</span>(dat_fri_imp)),]</span>
+<span id="cb6-27"><a href="imputation.html#cb6-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-28"><a href="imputation.html#cb6-28" aria-hidden="true" tabindex="-1"></a><span class="co"># run nearest neighbor imputation k = 5</span></span>
+<span id="cb6-29"><a href="imputation.html#cb6-29" aria-hidden="true" tabindex="-1"></a>nn <span class="ot">&lt;-</span> <span class="fu">nn2</span>(dat_fri_scaled, dat_grm_scaled, <span class="at">k =</span> <span class="dv">5</span>)</span>
+<span id="cb6-30"><a href="imputation.html#cb6-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-31"><a href="imputation.html#cb6-31" aria-hidden="true" tabindex="-1"></a><span class="co"># get nn indices</span></span>
+<span id="cb6-32"><a href="imputation.html#cb6-32" aria-hidden="true" tabindex="-1"></a>nni <span class="ot">&lt;-</span> nn[[<span class="dv">1</span>]]</span>
+<span id="cb6-33"><a href="imputation.html#cb6-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-34"><a href="imputation.html#cb6-34" aria-hidden="true" tabindex="-1"></a><span class="co"># add imputed attributes into GRM imputation data frame</span></span>
+<span id="cb6-35"><a href="imputation.html#cb6-35" aria-hidden="true" tabindex="-1"></a>dat_grm_imp <span class="sc">%&lt;&gt;%</span> <span class="fu">add_column</span>(</span>
+<span id="cb6-36"><a href="imputation.html#cb6-36" aria-hidden="true" tabindex="-1"></a>  <span class="at">avg_imp =</span> <span class="fu">apply</span>(</span>
+<span id="cb6-37"><a href="imputation.html#cb6-37" aria-hidden="true" tabindex="-1"></a>    nni,</span>
+<span id="cb6-38"><a href="imputation.html#cb6-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">MARGIN =</span> <span class="dv">1</span>,</span>
+<span id="cb6-39"><a href="imputation.html#cb6-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">FUN =</span> <span class="cf">function</span>(x) {</span>
+<span id="cb6-40"><a href="imputation.html#cb6-40" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mean</span>(dat_fri_imp[x, <span class="st">&#39;avg&#39;</span>])</span>
+<span id="cb6-41"><a href="imputation.html#cb6-41" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb6-42"><a href="imputation.html#cb6-42" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb6-43"><a href="imputation.html#cb6-43" aria-hidden="true" tabindex="-1"></a>  <span class="at">zsd_imp =</span> <span class="fu">apply</span>(</span>
+<span id="cb6-44"><a href="imputation.html#cb6-44" aria-hidden="true" tabindex="-1"></a>    nni,</span>
+<span id="cb6-45"><a href="imputation.html#cb6-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">MARGIN =</span> <span class="dv">1</span>,</span>
+<span id="cb6-46"><a href="imputation.html#cb6-46" aria-hidden="true" tabindex="-1"></a>    <span class="at">FUN =</span> <span class="cf">function</span>(x) {</span>
+<span id="cb6-47"><a href="imputation.html#cb6-47" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mean</span>(dat_fri_imp[x, <span class="st">&#39;zsd&#39;</span>])</span>
+<span id="cb6-48"><a href="imputation.html#cb6-48" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb6-49"><a href="imputation.html#cb6-49" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb6-50"><a href="imputation.html#cb6-50" aria-hidden="true" tabindex="-1"></a>  <span class="at">rumple_imp =</span> <span class="fu">apply</span>(</span>
+<span id="cb6-51"><a href="imputation.html#cb6-51" aria-hidden="true" tabindex="-1"></a>    nni,</span>
+<span id="cb6-52"><a href="imputation.html#cb6-52" aria-hidden="true" tabindex="-1"></a>    <span class="at">MARGIN =</span> <span class="dv">1</span>,</span>
+<span id="cb6-53"><a href="imputation.html#cb6-53" aria-hidden="true" tabindex="-1"></a>    <span class="at">FUN =</span> <span class="cf">function</span>(x) {</span>
+<span id="cb6-54"><a href="imputation.html#cb6-54" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mean</span>(dat_fri_imp[x, <span class="st">&#39;rumple&#39;</span>])</span>
+<span id="cb6-55"><a href="imputation.html#cb6-55" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb6-56"><a href="imputation.html#cb6-56" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb6-57"><a href="imputation.html#cb6-57" aria-hidden="true" tabindex="-1"></a>  <span class="at">zpcum8_imp =</span> <span class="fu">apply</span>(</span>
+<span id="cb6-58"><a href="imputation.html#cb6-58" aria-hidden="true" tabindex="-1"></a>    nni,</span>
+<span id="cb6-59"><a href="imputation.html#cb6-59" aria-hidden="true" tabindex="-1"></a>    <span class="at">MARGIN =</span> <span class="dv">1</span>,</span>
+<span id="cb6-60"><a href="imputation.html#cb6-60" aria-hidden="true" tabindex="-1"></a>    <span class="at">FUN =</span> <span class="cf">function</span>(x) {</span>
+<span id="cb6-61"><a href="imputation.html#cb6-61" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mean</span>(dat_fri_imp[x, <span class="st">&#39;zpcum8&#39;</span>])</span>
+<span id="cb6-62"><a href="imputation.html#cb6-62" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb6-63"><a href="imputation.html#cb6-63" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb6-64"><a href="imputation.html#cb6-64" aria-hidden="true" tabindex="-1"></a>  <span class="at">x_imp =</span> <span class="fu">apply</span>(</span>
+<span id="cb6-65"><a href="imputation.html#cb6-65" aria-hidden="true" tabindex="-1"></a>    nni,</span>
+<span id="cb6-66"><a href="imputation.html#cb6-66" aria-hidden="true" tabindex="-1"></a>    <span class="at">MARGIN =</span> <span class="dv">1</span>,</span>
+<span id="cb6-67"><a href="imputation.html#cb6-67" aria-hidden="true" tabindex="-1"></a>    <span class="at">FUN =</span> <span class="cf">function</span>(x) {</span>
+<span id="cb6-68"><a href="imputation.html#cb6-68" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mean</span>(dat_fri_imp[x, <span class="st">&#39;x&#39;</span>])</span>
+<span id="cb6-69"><a href="imputation.html#cb6-69" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb6-70"><a href="imputation.html#cb6-70" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb6-71"><a href="imputation.html#cb6-71" aria-hidden="true" tabindex="-1"></a>  <span class="at">y_imp =</span> <span class="fu">apply</span>(</span>
+<span id="cb6-72"><a href="imputation.html#cb6-72" aria-hidden="true" tabindex="-1"></a>    nni,</span>
+<span id="cb6-73"><a href="imputation.html#cb6-73" aria-hidden="true" tabindex="-1"></a>    <span class="at">MARGIN =</span> <span class="dv">1</span>,</span>
+<span id="cb6-74"><a href="imputation.html#cb6-74" aria-hidden="true" tabindex="-1"></a>    <span class="at">FUN =</span> <span class="cf">function</span>(x) {</span>
+<span id="cb6-75"><a href="imputation.html#cb6-75" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mean</span>(dat_fri_imp[x, <span class="st">&#39;y&#39;</span>])</span>
+<span id="cb6-76"><a href="imputation.html#cb6-76" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb6-77"><a href="imputation.html#cb6-77" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb6-78"><a href="imputation.html#cb6-78" aria-hidden="true" tabindex="-1"></a>  <span class="at">red_edge_2_imp =</span> <span class="fu">apply</span>(</span>
+<span id="cb6-79"><a href="imputation.html#cb6-79" aria-hidden="true" tabindex="-1"></a>    nni,</span>
+<span id="cb6-80"><a href="imputation.html#cb6-80" aria-hidden="true" tabindex="-1"></a>    <span class="at">MARGIN =</span> <span class="dv">1</span>,</span>
+<span id="cb6-81"><a href="imputation.html#cb6-81" aria-hidden="true" tabindex="-1"></a>    <span class="at">FUN =</span> <span class="cf">function</span>(x) {</span>
+<span id="cb6-82"><a href="imputation.html#cb6-82" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mean</span>(dat_fri_imp[x, <span class="st">&#39;red_edge_2&#39;</span>])</span>
+<span id="cb6-83"><a href="imputation.html#cb6-83" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb6-84"><a href="imputation.html#cb6-84" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb6-85"><a href="imputation.html#cb6-85" aria-hidden="true" tabindex="-1"></a>  <span class="at">age =</span> <span class="fu">apply</span>(</span>
+<span id="cb6-86"><a href="imputation.html#cb6-86" aria-hidden="true" tabindex="-1"></a>    nni,</span>
+<span id="cb6-87"><a href="imputation.html#cb6-87" aria-hidden="true" tabindex="-1"></a>    <span class="at">MARGIN =</span> <span class="dv">1</span>,</span>
+<span id="cb6-88"><a href="imputation.html#cb6-88" aria-hidden="true" tabindex="-1"></a>    <span class="at">FUN =</span> <span class="cf">function</span>(x) {</span>
+<span id="cb6-89"><a href="imputation.html#cb6-89" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mean</span>(dat_fri_scr[x, <span class="st">&#39;AGE2018&#39;</span>])</span>
+<span id="cb6-90"><a href="imputation.html#cb6-90" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb6-91"><a href="imputation.html#cb6-91" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb6-92"><a href="imputation.html#cb6-92" aria-hidden="true" tabindex="-1"></a>  <span class="at">wg =</span> <span class="fu">apply</span>(</span>
+<span id="cb6-93"><a href="imputation.html#cb6-93" aria-hidden="true" tabindex="-1"></a>    nni,</span>
+<span id="cb6-94"><a href="imputation.html#cb6-94" aria-hidden="true" tabindex="-1"></a>    <span class="at">MARGIN =</span> <span class="dv">1</span>,</span>
+<span id="cb6-95"><a href="imputation.html#cb6-95" aria-hidden="true" tabindex="-1"></a>    <span class="at">FUN =</span> <span class="cf">function</span>(x) {</span>
+<span id="cb6-96"><a href="imputation.html#cb6-96" aria-hidden="true" tabindex="-1"></a>      <span class="fu">getmode</span>(dat_fri_scr[x, <span class="st">&#39;WG&#39;</span>])</span>
+<span id="cb6-97"><a href="imputation.html#cb6-97" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb6-98"><a href="imputation.html#cb6-98" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb6-99"><a href="imputation.html#cb6-99" aria-hidden="true" tabindex="-1"></a>  <span class="at">sp1 =</span> <span class="fu">apply</span>(</span>
+<span id="cb6-100"><a href="imputation.html#cb6-100" aria-hidden="true" tabindex="-1"></a>    nni,</span>
+<span id="cb6-101"><a href="imputation.html#cb6-101" aria-hidden="true" tabindex="-1"></a>    <span class="at">MARGIN =</span> <span class="dv">1</span>,</span>
+<span id="cb6-102"><a href="imputation.html#cb6-102" aria-hidden="true" tabindex="-1"></a>    <span class="at">FUN =</span> <span class="cf">function</span>(x) {</span>
+<span id="cb6-103"><a href="imputation.html#cb6-103" aria-hidden="true" tabindex="-1"></a>      <span class="fu">getmode</span>(dat_fri_scr[x, <span class="st">&#39;SP1&#39;</span>])</span>
+<span id="cb6-104"><a href="imputation.html#cb6-104" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb6-105"><a href="imputation.html#cb6-105" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb6-106"><a href="imputation.html#cb6-106" aria-hidden="true" tabindex="-1"></a>  <span class="at">sp2 =</span> <span class="fu">apply</span>(</span>
+<span id="cb6-107"><a href="imputation.html#cb6-107" aria-hidden="true" tabindex="-1"></a>    nni,</span>
+<span id="cb6-108"><a href="imputation.html#cb6-108" aria-hidden="true" tabindex="-1"></a>    <span class="at">MARGIN =</span> <span class="dv">1</span>,</span>
+<span id="cb6-109"><a href="imputation.html#cb6-109" aria-hidden="true" tabindex="-1"></a>    <span class="at">FUN =</span> <span class="cf">function</span>(x) {</span>
+<span id="cb6-110"><a href="imputation.html#cb6-110" aria-hidden="true" tabindex="-1"></a>      <span class="fu">getmode</span>(dat_fri_scr[x, <span class="st">&#39;SP2&#39;</span>])</span>
+<span id="cb6-111"><a href="imputation.html#cb6-111" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb6-112"><a href="imputation.html#cb6-112" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb6-113"><a href="imputation.html#cb6-113" aria-hidden="true" tabindex="-1"></a>  <span class="at">class3 =</span> <span class="fu">apply</span>(</span>
+<span id="cb6-114"><a href="imputation.html#cb6-114" aria-hidden="true" tabindex="-1"></a>    nni,</span>
+<span id="cb6-115"><a href="imputation.html#cb6-115" aria-hidden="true" tabindex="-1"></a>    <span class="at">MARGIN =</span> <span class="dv">1</span>,</span>
+<span id="cb6-116"><a href="imputation.html#cb6-116" aria-hidden="true" tabindex="-1"></a>    <span class="at">FUN =</span> <span class="cf">function</span>(x) {</span>
+<span id="cb6-117"><a href="imputation.html#cb6-117" aria-hidden="true" tabindex="-1"></a>      <span class="fu">getmode</span>(dat_fri_scr[x, <span class="st">&#39;SpeciesGroup3&#39;</span>])</span>
+<span id="cb6-118"><a href="imputation.html#cb6-118" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb6-119"><a href="imputation.html#cb6-119" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb6-120"><a href="imputation.html#cb6-120" aria-hidden="true" tabindex="-1"></a>  <span class="at">class5 =</span> <span class="fu">apply</span>(</span>
+<span id="cb6-121"><a href="imputation.html#cb6-121" aria-hidden="true" tabindex="-1"></a>    nni,</span>
+<span id="cb6-122"><a href="imputation.html#cb6-122" aria-hidden="true" tabindex="-1"></a>    <span class="at">MARGIN =</span> <span class="dv">1</span>,</span>
+<span id="cb6-123"><a href="imputation.html#cb6-123" aria-hidden="true" tabindex="-1"></a>    <span class="at">FUN =</span> <span class="cf">function</span>(x) {</span>
+<span id="cb6-124"><a href="imputation.html#cb6-124" aria-hidden="true" tabindex="-1"></a>      <span class="fu">getmode</span>(dat_fri_scr[x, <span class="st">&#39;SpeciesGroup2&#39;</span>])</span>
+<span id="cb6-125"><a href="imputation.html#cb6-125" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb6-126"><a href="imputation.html#cb6-126" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb6-127"><a href="imputation.html#cb6-127" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-128"><a href="imputation.html#cb6-128" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-129"><a href="imputation.html#cb6-129" aria-hidden="true" tabindex="-1"></a><span class="co"># add values back into main GRM data frame (missing values for polygons not</span></span>
+<span id="cb6-130"><a href="imputation.html#cb6-130" aria-hidden="true" tabindex="-1"></a><span class="co"># included in the imputation)</span></span>
+<span id="cb6-131"><a href="imputation.html#cb6-131" aria-hidden="true" tabindex="-1"></a>dat_grm <span class="ot">&lt;-</span> <span class="fu">left_join</span>(dat_grm, dat_grm_imp)</span>
+<span id="cb6-132"><a href="imputation.html#cb6-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-133"><a href="imputation.html#cb6-133" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate performance across imputation attributes</span></span>
+<span id="cb6-134"><a href="imputation.html#cb6-134" aria-hidden="true" tabindex="-1"></a>perf <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">avg_mae =</span> <span class="fu">mae</span>(dat_grm_imp<span class="sc">$</span>avg, dat_grm_imp<span class="sc">$</span>avg_imp),</span>
+<span id="cb6-135"><a href="imputation.html#cb6-135" aria-hidden="true" tabindex="-1"></a>               <span class="at">avg_mape =</span> <span class="fu">mape</span>(dat_grm_imp<span class="sc">$</span>avg, dat_grm_imp<span class="sc">$</span>avg_imp),</span>
+<span id="cb6-136"><a href="imputation.html#cb6-136" aria-hidden="true" tabindex="-1"></a>               <span class="at">zsd_mae =</span> <span class="fu">mae</span>(dat_grm_imp<span class="sc">$</span>zsd, dat_grm_imp<span class="sc">$</span>zsd_imp),</span>
+<span id="cb6-137"><a href="imputation.html#cb6-137" aria-hidden="true" tabindex="-1"></a>               <span class="at">zsd_mape =</span> <span class="fu">mape</span>(dat_grm_imp<span class="sc">$</span>zsd, dat_grm_imp<span class="sc">$</span>zsd_imp),</span>
+<span id="cb6-138"><a href="imputation.html#cb6-138" aria-hidden="true" tabindex="-1"></a>               <span class="at">rumple_mae =</span> <span class="fu">mae</span>(dat_grm_imp<span class="sc">$</span>rumple, dat_grm_imp<span class="sc">$</span>rumple_imp),</span>
+<span id="cb6-139"><a href="imputation.html#cb6-139" aria-hidden="true" tabindex="-1"></a>               <span class="at">rumple_mape =</span> <span class="fu">mape</span>(dat_grm_imp<span class="sc">$</span>rumple, dat_grm_imp<span class="sc">$</span>rumple_imp),</span>
+<span id="cb6-140"><a href="imputation.html#cb6-140" aria-hidden="true" tabindex="-1"></a>               <span class="at">zpcum8_mae =</span> <span class="fu">mae</span>(dat_grm_imp<span class="sc">$</span>zpcum8, dat_grm_imp<span class="sc">$</span>zpcum8_imp),</span>
+<span id="cb6-141"><a href="imputation.html#cb6-141" aria-hidden="true" tabindex="-1"></a>               <span class="at">zpcum8_mape =</span> <span class="fu">mape</span>(dat_grm_imp<span class="sc">$</span>zpcum8, dat_grm_imp<span class="sc">$</span>zpcum8_imp),</span>
+<span id="cb6-142"><a href="imputation.html#cb6-142" aria-hidden="true" tabindex="-1"></a>               <span class="at">x_mae =</span> <span class="fu">mae</span>(dat_grm_imp<span class="sc">$</span>x, dat_grm_imp<span class="sc">$</span>x_imp),</span>
+<span id="cb6-143"><a href="imputation.html#cb6-143" aria-hidden="true" tabindex="-1"></a>               <span class="at">x_mape =</span> <span class="fu">mape</span>(dat_grm_imp<span class="sc">$</span>x, dat_grm_imp<span class="sc">$</span>x_imp),</span>
+<span id="cb6-144"><a href="imputation.html#cb6-144" aria-hidden="true" tabindex="-1"></a>               <span class="at">y_mae =</span> <span class="fu">mae</span>(dat_grm_imp<span class="sc">$</span>y, dat_grm_imp<span class="sc">$</span>y_imp),</span>
+<span id="cb6-145"><a href="imputation.html#cb6-145" aria-hidden="true" tabindex="-1"></a>               <span class="at">y_mape =</span> <span class="fu">mape</span>(dat_grm_imp<span class="sc">$</span>y, dat_grm_imp<span class="sc">$</span>y_imp),</span>
+<span id="cb6-146"><a href="imputation.html#cb6-146" aria-hidden="true" tabindex="-1"></a>               <span class="at">red_edge_2_mae =</span> <span class="fu">mae</span>(dat_grm_imp<span class="sc">$</span>red_edge_2, dat_grm_imp<span class="sc">$</span>red_edge_2_imp),</span>
+<span id="cb6-147"><a href="imputation.html#cb6-147" aria-hidden="true" tabindex="-1"></a>               <span class="at">red_edge_2_mape =</span> <span class="fu">mape</span>(dat_grm_imp<span class="sc">$</span>red_edge_2, dat_grm_imp<span class="sc">$</span>red_edge_2_imp)</span>
+<span id="cb6-148"><a href="imputation.html#cb6-148" aria-hidden="true" tabindex="-1"></a>               ) <span class="sc">%&gt;%</span> melt</span>
+<span id="cb6-149"><a href="imputation.html#cb6-149" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-150"><a href="imputation.html#cb6-150" aria-hidden="true" tabindex="-1"></a><span class="co"># round to two decimal places</span></span>
+<span id="cb6-151"><a href="imputation.html#cb6-151" aria-hidden="true" tabindex="-1"></a>perf <span class="sc">%&lt;&gt;%</span> <span class="fu">mutate</span>(<span class="at">value =</span> <span class="fu">round</span>(value, <span class="dv">2</span>))</span>
+<span id="cb6-152"><a href="imputation.html#cb6-152" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-153"><a href="imputation.html#cb6-153" aria-hidden="true" tabindex="-1"></a><span class="co"># display results of imputation rmsd</span></span>
+<span id="cb6-154"><a href="imputation.html#cb6-154" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(perf, <span class="at">caption =</span> <span class="st">&quot;Imputation Performance between FRI and GRM Forest Stand Polygons&quot;</span>, <span class="at">label =</span> <span class="cn">NA</span>)</span></code></pre></div>
+</div>
+<div id="imputationp4a" class="section level2 unnumbered hasAnchor">
+<h2>4a. Figures of Forest Stand Age<a href="imputation.html#imputationp4a" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="imputation.html#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load GRM polygons</span></span>
+<span id="cb7-2"><a href="imputation.html#cb7-2" aria-hidden="true" tabindex="-1"></a>poly_grm <span class="ot">&lt;-</span> <span class="fu">vect</span>(<span class="st">&#39;D:/ontario_inventory/segmentation/grm/shp/grm_10_01_05.shp&#39;</span>)</span>
+<span id="cb7-3"><a href="imputation.html#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="imputation.html#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># add new data frame to polygons</span></span>
+<span id="cb7-5"><a href="imputation.html#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">values</span>(poly_grm) <span class="ot">&lt;-</span> dat_grm</span>
+<span id="cb7-6"><a href="imputation.html#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="imputation.html#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># save grm polygon output</span></span>
+<span id="cb7-8"><a href="imputation.html#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="fu">writeVector</span>(poly_grm, <span class="st">&#39;D:/ontario_inventory/imputation/example/grm_10_01_05_imp.shp&#39;</span>, <span class="at">overwrite =</span> T)</span>
+<span id="cb7-9"><a href="imputation.html#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="imputation.html#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co"># load FRI polygons</span></span>
+<span id="cb7-11"><a href="imputation.html#cb7-11" aria-hidden="true" tabindex="-1"></a>poly_fri <span class="ot">&lt;-</span> <span class="fu">vect</span>(<span class="st">&#39;D:/ontario_inventory/romeo/RMF_EFI_layers/Polygons Inventory/RMF_PolygonForest.shp&#39;</span>)</span>
+<span id="cb7-12"><a href="imputation.html#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="imputation.html#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co"># set age == 0 to NA</span></span>
+<span id="cb7-14"><a href="imputation.html#cb7-14" aria-hidden="true" tabindex="-1"></a>poly_fri<span class="sc">$</span>AGE[poly_fri<span class="sc">$</span>AGE <span class="sc">==</span> <span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb7-15"><a href="imputation.html#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-16"><a href="imputation.html#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co"># load species group data -- calculated in separate code (can provide details)</span></span>
+<span id="cb7-17"><a href="imputation.html#cb7-17" aria-hidden="true" tabindex="-1"></a>sp_group <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(</span>
+<span id="cb7-18"><a href="imputation.html#cb7-18" aria-hidden="true" tabindex="-1"></a>  <span class="st">&#39;D:/ontario_inventory/romeo/RMF_EFI_layers/Polygons Inventory/RMF_PolygonForest_SPGROUP.shp&#39;</span></span>
+<span id="cb7-19"><a href="imputation.html#cb7-19" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-20"><a href="imputation.html#cb7-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-21"><a href="imputation.html#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="co"># load poly_Fri dataframe</span></span>
+<span id="cb7-22"><a href="imputation.html#cb7-22" aria-hidden="true" tabindex="-1"></a>dat_fri <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(poly_fri)</span>
+<span id="cb7-23"><a href="imputation.html#cb7-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-24"><a href="imputation.html#cb7-24" aria-hidden="true" tabindex="-1"></a><span class="co"># change POLYID to numeric</span></span>
+<span id="cb7-25"><a href="imputation.html#cb7-25" aria-hidden="true" tabindex="-1"></a>dat_fri <span class="sc">%&lt;&gt;%</span> <span class="fu">mutate</span>(<span class="at">POLYID =</span> <span class="fu">as.numeric</span>(POLYID))</span>
+<span id="cb7-26"><a href="imputation.html#cb7-26" aria-hidden="true" tabindex="-1"></a>sp_group <span class="sc">%&lt;&gt;%</span> <span class="fu">mutate</span>(<span class="at">POLYID =</span> <span class="fu">as.numeric</span>(POLYID))</span>
+<span id="cb7-27"><a href="imputation.html#cb7-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-28"><a href="imputation.html#cb7-28" aria-hidden="true" tabindex="-1"></a><span class="co"># rename species groups</span></span>
+<span id="cb7-29"><a href="imputation.html#cb7-29" aria-hidden="true" tabindex="-1"></a>sp_group <span class="sc">%&lt;&gt;%</span> <span class="fu">rename</span>(<span class="at">class3 =</span> SpeciesGroup3, <span class="at">class5 =</span> SpeciesGroup2)</span>
+<span id="cb7-30"><a href="imputation.html#cb7-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-31"><a href="imputation.html#cb7-31" aria-hidden="true" tabindex="-1"></a><span class="co"># join to dat</span></span>
+<span id="cb7-32"><a href="imputation.html#cb7-32" aria-hidden="true" tabindex="-1"></a>dat_fri <span class="ot">&lt;-</span> <span class="fu">left_join</span>(dat_fri, </span>
+<span id="cb7-33"><a href="imputation.html#cb7-33" aria-hidden="true" tabindex="-1"></a>                 sp_group <span class="sc">%&gt;%</span> <span class="fu">select</span>(POLYID, class3, class5), </span>
+<span id="cb7-34"><a href="imputation.html#cb7-34" aria-hidden="true" tabindex="-1"></a>                 <span class="at">by =</span> <span class="st">&#39;POLYID&#39;</span>)</span>
+<span id="cb7-35"><a href="imputation.html#cb7-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-36"><a href="imputation.html#cb7-36" aria-hidden="true" tabindex="-1"></a><span class="co"># update age to 2018</span></span>
+<span id="cb7-37"><a href="imputation.html#cb7-37" aria-hidden="true" tabindex="-1"></a>dat_fri<span class="sc">$</span>AGE2018 <span class="ot">&lt;-</span> <span class="dv">2018</span> <span class="sc">-</span> dat_fri<span class="sc">$</span>YRORG</span>
+<span id="cb7-38"><a href="imputation.html#cb7-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-39"><a href="imputation.html#cb7-39" aria-hidden="true" tabindex="-1"></a><span class="co"># re-input attributes into FRI polygons</span></span>
+<span id="cb7-40"><a href="imputation.html#cb7-40" aria-hidden="true" tabindex="-1"></a><span class="fu">values</span>(poly_fri) <span class="ot">&lt;-</span> dat_fri</span>
+<span id="cb7-41"><a href="imputation.html#cb7-41" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(dat_fri)</span>
+<span id="cb7-42"><a href="imputation.html#cb7-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-43"><a href="imputation.html#cb7-43" aria-hidden="true" tabindex="-1"></a><span class="co"># since we only have values of age and species comp for dom_fom == yes</span></span>
+<span id="cb7-44"><a href="imputation.html#cb7-44" aria-hidden="true" tabindex="-1"></a><span class="co"># and p95 &gt;= 5 m we should only compare the screened FRI polygons that </span></span>
+<span id="cb7-45"><a href="imputation.html#cb7-45" aria-hidden="true" tabindex="-1"></a><span class="co"># contain those same attributes</span></span>
+<span id="cb7-46"><a href="imputation.html#cb7-46" aria-hidden="true" tabindex="-1"></a>poly_fri<span class="sc">$</span>AGE2018[<span class="sc">!</span>(poly_fri<span class="sc">$</span>POLYID <span class="sc">%in%</span> dat_fri_scr<span class="sc">$</span>POLYID)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb7-47"><a href="imputation.html#cb7-47" aria-hidden="true" tabindex="-1"></a>poly_fri<span class="sc">$</span>class3[<span class="sc">!</span>(poly_fri<span class="sc">$</span>POLYID <span class="sc">%in%</span> dat_fri_scr<span class="sc">$</span>POLYID)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb7-48"><a href="imputation.html#cb7-48" aria-hidden="true" tabindex="-1"></a>poly_fri<span class="sc">$</span>class5[<span class="sc">!</span>(poly_fri<span class="sc">$</span>POLYID <span class="sc">%in%</span> dat_fri_scr<span class="sc">$</span>POLYID)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb7-49"><a href="imputation.html#cb7-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-50"><a href="imputation.html#cb7-50" aria-hidden="true" tabindex="-1"></a><span class="co"># plot age</span></span>
+<span id="cb7-51"><a href="imputation.html#cb7-51" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>))</span>
+<span id="cb7-52"><a href="imputation.html#cb7-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-53"><a href="imputation.html#cb7-53" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(poly_grm, <span class="st">&#39;age&#39;</span>, <span class="at">col =</span> <span class="fu">viridis</span>(<span class="dv">14</span>), <span class="at">type =</span> <span class="st">&#39;interval&#39;</span>, <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">140</span>, <span class="dv">10</span>),</span>
+<span id="cb7-54"><a href="imputation.html#cb7-54" aria-hidden="true" tabindex="-1"></a>     <span class="at">plg =</span> <span class="fu">list</span>(<span class="at">x =</span> <span class="st">&#39;topright&#39;</span>, <span class="at">cex =</span> <span class="dv">2</span>, <span class="at">title =</span> <span class="st">&#39;Age&#39;</span>),</span>
+<span id="cb7-55"><a href="imputation.html#cb7-55" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&#39;&#39;</span>)</span>
+<span id="cb7-56"><a href="imputation.html#cb7-56" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="at">main =</span> <span class="st">&#39;Imputed Age of GRM Segmented Forest Stands&#39;</span>, <span class="at">cex.main =</span> <span class="dv">3</span>)</span>
+<span id="cb7-57"><a href="imputation.html#cb7-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-58"><a href="imputation.html#cb7-58" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(poly_fri, <span class="st">&#39;AGE2018&#39;</span>, <span class="at">col =</span> <span class="fu">viridis</span>(<span class="dv">14</span>), <span class="at">type =</span> <span class="st">&#39;interval&#39;</span>, <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">140</span>, <span class="dv">10</span>),</span>
+<span id="cb7-59"><a href="imputation.html#cb7-59" aria-hidden="true" tabindex="-1"></a>     <span class="at">plg =</span> <span class="fu">list</span>(<span class="at">x =</span> <span class="st">&#39;topright&#39;</span>, <span class="at">cex =</span> <span class="dv">2</span>, <span class="at">title =</span> <span class="st">&#39;Age&#39;</span>),</span>
+<span id="cb7-60"><a href="imputation.html#cb7-60" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&#39;&#39;</span>)</span>
+<span id="cb7-61"><a href="imputation.html#cb7-61" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="at">main =</span> <span class="st">&#39;Age of FRI Forest Stands&#39;</span>, <span class="at">cex.main =</span> <span class="dv">3</span>)</span></code></pre></div>
+<p><img src="05-Imputation_files/figure-html/imputationp4a-1.png" width="1728" /></p>
+</div>
+<div id="imputationp4b" class="section level2 unnumbered hasAnchor">
+<h2>4b. Figures of Forest Stand 3-Species Classification<a href="imputation.html#imputationp4b" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="imputation.html#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># plot group of 3 species</span></span>
+<span id="cb8-2"><a href="imputation.html#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>))</span>
+<span id="cb8-3"><a href="imputation.html#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="imputation.html#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(poly_grm, <span class="st">&#39;class3&#39;</span>, <span class="at">col =</span> <span class="fu">viridis</span>(<span class="dv">3</span>), <span class="at">type =</span> <span class="st">&#39;classes&#39;</span>,</span>
+<span id="cb8-5"><a href="imputation.html#cb8-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">plg =</span> <span class="fu">list</span>(<span class="at">x =</span> <span class="st">&#39;topright&#39;</span>, <span class="at">cex =</span> <span class="dv">2</span>, <span class="at">title =</span> <span class="st">&#39;Species Class&#39;</span>),</span>
+<span id="cb8-6"><a href="imputation.html#cb8-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&#39;&#39;</span>)</span>
+<span id="cb8-7"><a href="imputation.html#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="at">main =</span> <span class="st">&#39;Imputed Species Class (3) of GRM Segmented Forest Stands&#39;</span>, <span class="at">cex.main =</span> <span class="dv">3</span>)</span>
+<span id="cb8-8"><a href="imputation.html#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="imputation.html#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(poly_fri, <span class="st">&#39;class3&#39;</span>, <span class="at">col =</span> <span class="fu">viridis</span>(<span class="dv">3</span>), <span class="at">type =</span> <span class="st">&#39;classes&#39;</span>,</span>
+<span id="cb8-10"><a href="imputation.html#cb8-10" aria-hidden="true" tabindex="-1"></a>     <span class="at">plg =</span> <span class="fu">list</span>(<span class="at">x =</span> <span class="st">&#39;topright&#39;</span>, <span class="at">cex =</span> <span class="dv">2</span>, <span class="at">title =</span> <span class="st">&#39;Species Class&#39;</span>),</span>
+<span id="cb8-11"><a href="imputation.html#cb8-11" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&#39;&#39;</span>)</span>
+<span id="cb8-12"><a href="imputation.html#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="at">main =</span> <span class="st">&#39;Species Class (3) FRI Forest Stands&#39;</span>, <span class="at">cex.main =</span> <span class="dv">3</span>)</span></code></pre></div>
+<p><img src="05-Imputation_files/figure-html/imputationp4b-1.png" width="1728" /></p>
+</div>
+<div id="imputationp4c" class="section level2 unnumbered hasAnchor">
+<h2>4c. Figures of Forest Stand 5-Species Classification<a href="imputation.html#imputationp4c" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="imputation.html#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># plot group of 5 species</span></span>
+<span id="cb9-2"><a href="imputation.html#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>))</span>
+<span id="cb9-3"><a href="imputation.html#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="imputation.html#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(poly_grm, <span class="st">&#39;class5&#39;</span>, <span class="at">col =</span> <span class="fu">viridis</span>(<span class="dv">5</span>), <span class="at">type =</span> <span class="st">&#39;classes&#39;</span>,</span>
+<span id="cb9-5"><a href="imputation.html#cb9-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">plg =</span> <span class="fu">list</span>(<span class="at">x =</span> <span class="st">&#39;topright&#39;</span>, <span class="at">cex =</span> <span class="dv">2</span>, <span class="at">title =</span> <span class="st">&#39;Species Class&#39;</span>),</span>
+<span id="cb9-6"><a href="imputation.html#cb9-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&#39;&#39;</span>)</span>
+<span id="cb9-7"><a href="imputation.html#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="at">main =</span> <span class="st">&#39;Imputed Species Class (5) of GRM Segmented Forest Stands&#39;</span>, <span class="at">cex.main =</span> <span class="dv">3</span>)</span>
+<span id="cb9-8"><a href="imputation.html#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="imputation.html#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(poly_fri, <span class="st">&#39;class5&#39;</span>, <span class="at">col =</span> <span class="fu">viridis</span>(<span class="dv">5</span>), <span class="at">type =</span> <span class="st">&#39;classes&#39;</span>,</span>
+<span id="cb9-10"><a href="imputation.html#cb9-10" aria-hidden="true" tabindex="-1"></a>     <span class="at">plg =</span> <span class="fu">list</span>(<span class="at">x =</span> <span class="st">&#39;topright&#39;</span>, <span class="at">cex =</span> <span class="dv">2</span>, <span class="at">title =</span> <span class="st">&#39;Species Class&#39;</span>),</span>
+<span id="cb9-11"><a href="imputation.html#cb9-11" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&#39;&#39;</span>)</span>
+<span id="cb9-12"><a href="imputation.html#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="at">main =</span> <span class="st">&#39;Species Class (5) FRI Forest Stands&#39;</span>, <span class="at">cex.main =</span> <span class="dv">3</span>)</span></code></pre></div>
+<p><img src="05-Imputation_files/figure-html/imputationp4c-1.png" width="1728" /></p>
+</div>
+<div id="imputationp4d" class="section level2 unnumbered hasAnchor">
+<h2>4d. Density Plots of Forest Stand Age<a href="imputation.html#imputationp4d" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="imputation.html#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># density plots of age</span></span>
+<span id="cb10-2"><a href="imputation.html#cb10-2" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(dat_grm, <span class="fu">aes</span>(<span class="at">x =</span> age)) <span class="sc">+</span></span>
+<span id="cb10-3"><a href="imputation.html#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">fill =</span> <span class="st">&#39;grey&#39;</span>) <span class="sc">+</span></span>
+<span id="cb10-4"><a href="imputation.html#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept =</span> <span class="fu">median</span>(age, <span class="at">na.rm =</span> T)),</span>
+<span id="cb10-5"><a href="imputation.html#cb10-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">linetype =</span> <span class="st">&quot;dashed&quot;</span>,</span>
+<span id="cb10-6"><a href="imputation.html#cb10-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">size =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb10-7"><a href="imputation.html#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">200</span>)) <span class="sc">+</span></span>
+<span id="cb10-8"><a href="imputation.html#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.02</span>)) <span class="sc">+</span></span>
+<span id="cb10-9"><a href="imputation.html#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb10-10"><a href="imputation.html#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">&#39;Age&#39;</span>) <span class="sc">+</span></span>
+<span id="cb10-11"><a href="imputation.html#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&#39;Density&#39;</span>) <span class="sc">+</span></span>
+<span id="cb10-12"><a href="imputation.html#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&#39;Imputed Age of GRM Segmented Forest Stands&#39;</span>) <span class="sc">+</span></span>
+<span id="cb10-13"><a href="imputation.html#cb10-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">25</span>),</span>
+<span id="cb10-14"><a href="imputation.html#cb10-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">30</span>))</span>
+<span id="cb10-15"><a href="imputation.html#cb10-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-16"><a href="imputation.html#cb10-16" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="fu">as.data.frame</span>(poly_fri), <span class="fu">aes</span>(<span class="at">x =</span> AGE2018)) <span class="sc">+</span></span>
+<span id="cb10-17"><a href="imputation.html#cb10-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">fill =</span> <span class="st">&#39;grey&#39;</span>) <span class="sc">+</span></span>
+<span id="cb10-18"><a href="imputation.html#cb10-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept =</span> <span class="fu">median</span>(AGE, <span class="at">na.rm =</span> T)),</span>
+<span id="cb10-19"><a href="imputation.html#cb10-19" aria-hidden="true" tabindex="-1"></a>             <span class="at">linetype =</span> <span class="st">&quot;dashed&quot;</span>,</span>
+<span id="cb10-20"><a href="imputation.html#cb10-20" aria-hidden="true" tabindex="-1"></a>             <span class="at">size =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb10-21"><a href="imputation.html#cb10-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">200</span>)) <span class="sc">+</span></span>
+<span id="cb10-22"><a href="imputation.html#cb10-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.02</span>)) <span class="sc">+</span></span>
+<span id="cb10-23"><a href="imputation.html#cb10-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb10-24"><a href="imputation.html#cb10-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">&#39;Age&#39;</span>) <span class="sc">+</span></span>
+<span id="cb10-25"><a href="imputation.html#cb10-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&#39;Density&#39;</span>) <span class="sc">+</span></span>
+<span id="cb10-26"><a href="imputation.html#cb10-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&#39;Age of FRI Forest Stands&#39;</span>) <span class="sc">+</span></span>
+<span id="cb10-27"><a href="imputation.html#cb10-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">25</span>),</span>
+<span id="cb10-28"><a href="imputation.html#cb10-28" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">30</span>))</span>
+<span id="cb10-29"><a href="imputation.html#cb10-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-30"><a href="imputation.html#cb10-30" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(p1, p2, <span class="at">ncol =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="05-Imputation_files/figure-html/imputationp4d-1.png" width="1728" /></p>
+</div>
+<div id="imputationp4e" class="section level2 unnumbered hasAnchor">
+<h2>4e. Distribution of 3-Species Classification<a href="imputation.html#imputationp4e" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="imputation.html#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># distribution of 3 species classes</span></span>
+<span id="cb11-2"><a href="imputation.html#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># create data frame for GRM 3 classes</span></span>
+<span id="cb11-3"><a href="imputation.html#cb11-3" aria-hidden="true" tabindex="-1"></a>dat_grm_c3 <span class="ot">&lt;-</span> dat_grm <span class="sc">%&gt;%</span> </span>
+<span id="cb11-4"><a href="imputation.html#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tabyl</span>(class3) <span class="sc">%&gt;%</span>  </span>
+<span id="cb11-5"><a href="imputation.html#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">is.na</span>(class3) <span class="sc">==</span> F) <span class="sc">%&gt;%</span> </span>
+<span id="cb11-6"><a href="imputation.html#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(class3)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-7"><a href="imputation.html#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">prop =</span> n <span class="sc">/</span> <span class="fu">sum</span>(.<span class="sc">$</span>n)<span class="sc">*</span><span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb11-8"><a href="imputation.html#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ypos =</span> <span class="fu">cumsum</span>(prop) <span class="sc">-</span> <span class="fl">0.5</span><span class="sc">*</span>prop) <span class="sc">%&gt;%</span></span>
+<span id="cb11-9"><a href="imputation.html#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">lbl =</span> <span class="fu">round</span>(prop))</span>
+<span id="cb11-10"><a href="imputation.html#cb11-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-11"><a href="imputation.html#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="co"># create data frame for FRI 3 classes</span></span>
+<span id="cb11-12"><a href="imputation.html#cb11-12" aria-hidden="true" tabindex="-1"></a>dat_fri_c3 <span class="ot">&lt;-</span> poly_fri <span class="sc">%&gt;%</span> as.data.frame <span class="sc">%&gt;%</span></span>
+<span id="cb11-13"><a href="imputation.html#cb11-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tabyl</span>(class3) <span class="sc">%&gt;%</span>  </span>
+<span id="cb11-14"><a href="imputation.html#cb11-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">is.na</span>(class3) <span class="sc">==</span> F) <span class="sc">%&gt;%</span> </span>
+<span id="cb11-15"><a href="imputation.html#cb11-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(class3)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-16"><a href="imputation.html#cb11-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">prop =</span> n <span class="sc">/</span> <span class="fu">sum</span>(.<span class="sc">$</span>n)<span class="sc">*</span><span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb11-17"><a href="imputation.html#cb11-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ypos =</span> <span class="fu">cumsum</span>(prop) <span class="sc">-</span> <span class="fl">0.5</span><span class="sc">*</span>prop) <span class="sc">%&gt;%</span></span>
+<span id="cb11-18"><a href="imputation.html#cb11-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">lbl =</span> <span class="fu">round</span>(prop))</span>
+<span id="cb11-19"><a href="imputation.html#cb11-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-20"><a href="imputation.html#cb11-20" aria-hidden="true" tabindex="-1"></a><span class="co"># plot</span></span>
+<span id="cb11-21"><a href="imputation.html#cb11-21" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(dat_grm_c3, <span class="fu">aes</span>(<span class="at">x =</span> <span class="st">&quot;&quot;</span>, <span class="at">y =</span> prop, <span class="at">fill =</span> class3)) <span class="sc">+</span></span>
+<span id="cb11-22"><a href="imputation.html#cb11-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">width =</span> <span class="dv">1</span>, <span class="at">stat =</span> <span class="st">&quot;identity&quot;</span>) <span class="sc">+</span></span>
+<span id="cb11-23"><a href="imputation.html#cb11-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_polar</span>(<span class="st">&quot;y&quot;</span>, <span class="at">start =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb11-24"><a href="imputation.html#cb11-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>() <span class="sc">+</span></span>
+<span id="cb11-25"><a href="imputation.html#cb11-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">y =</span> ypos, <span class="at">label =</span> <span class="fu">str_c</span>(lbl, <span class="st">&quot;%&quot;</span>)), <span class="at">size =</span> <span class="dv">15</span>) <span class="sc">+</span></span>
+<span id="cb11-26"><a href="imputation.html#cb11-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">30</span>),</span>
+<span id="cb11-27"><a href="imputation.html#cb11-27" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">20</span>),</span>
+<span id="cb11-28"><a href="imputation.html#cb11-28" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.key.width =</span> <span class="fu">unit</span>(<span class="dv">2</span>, <span class="st">&#39;cm&#39;</span>),</span>
+<span id="cb11-29"><a href="imputation.html#cb11-29" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">30</span>)) <span class="sc">+</span></span>
+<span id="cb11-30"><a href="imputation.html#cb11-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">fill =</span> <span class="st">&quot;3 Species Classification&quot;</span>) <span class="sc">+</span></span>
+<span id="cb11-31"><a href="imputation.html#cb11-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Imputed 3 Species Classification </span><span class="sc">\n</span><span class="st">of GRM Segmented Forest Stands&quot;</span>)</span>
+<span id="cb11-32"><a href="imputation.html#cb11-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-33"><a href="imputation.html#cb11-33" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(dat_fri_c3, <span class="fu">aes</span>(<span class="at">x =</span> <span class="st">&quot;&quot;</span>, <span class="at">y =</span> prop, <span class="at">fill =</span> class3)) <span class="sc">+</span></span>
+<span id="cb11-34"><a href="imputation.html#cb11-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">width =</span> <span class="dv">1</span>, <span class="at">stat =</span> <span class="st">&quot;identity&quot;</span>) <span class="sc">+</span></span>
+<span id="cb11-35"><a href="imputation.html#cb11-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_polar</span>(<span class="st">&quot;y&quot;</span>, <span class="at">start =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb11-36"><a href="imputation.html#cb11-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>() <span class="sc">+</span></span>
+<span id="cb11-37"><a href="imputation.html#cb11-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">y =</span> ypos, <span class="at">label =</span> <span class="fu">str_c</span>(lbl, <span class="st">&quot;%&quot;</span>)), <span class="at">size =</span> <span class="dv">15</span>) <span class="sc">+</span></span>
+<span id="cb11-38"><a href="imputation.html#cb11-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">30</span>),</span>
+<span id="cb11-39"><a href="imputation.html#cb11-39" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">20</span>),</span>
+<span id="cb11-40"><a href="imputation.html#cb11-40" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.key.width =</span> <span class="fu">unit</span>(<span class="dv">2</span>, <span class="st">&#39;cm&#39;</span>),</span>
+<span id="cb11-41"><a href="imputation.html#cb11-41" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">30</span>)) <span class="sc">+</span></span>
+<span id="cb11-42"><a href="imputation.html#cb11-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">fill =</span> <span class="st">&quot;3 Species Classification&quot;</span>) <span class="sc">+</span></span>
+<span id="cb11-43"><a href="imputation.html#cb11-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;3 Species Classification </span><span class="sc">\n</span><span class="st">of FRI Forest Stands&quot;</span>)</span>
+<span id="cb11-44"><a href="imputation.html#cb11-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-45"><a href="imputation.html#cb11-45" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(p1, p2, <span class="at">ncol =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="05-Imputation_files/figure-html/imputationp4e-1.png" width="1728" /></p>
+</div>
+<div id="imputationp4f" class="section level2 unnumbered hasAnchor">
+<h2>4f. Distribution of 5-Species Classification<a href="imputation.html#imputationp4f" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="imputation.html#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># distribution of 5 species classes</span></span>
+<span id="cb12-2"><a href="imputation.html#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># create data frame for GRM 5 classes</span></span>
+<span id="cb12-3"><a href="imputation.html#cb12-3" aria-hidden="true" tabindex="-1"></a>dat_grm_c5 <span class="ot">&lt;-</span> dat_grm <span class="sc">%&gt;%</span> </span>
+<span id="cb12-4"><a href="imputation.html#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tabyl</span>(class5) <span class="sc">%&gt;%</span>  </span>
+<span id="cb12-5"><a href="imputation.html#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">is.na</span>(class5) <span class="sc">==</span> F) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-6"><a href="imputation.html#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(class5)) <span class="sc">%&gt;%</span></span>
+<span id="cb12-7"><a href="imputation.html#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">prop =</span> n <span class="sc">/</span> <span class="fu">sum</span>(.<span class="sc">$</span>n)<span class="sc">*</span><span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb12-8"><a href="imputation.html#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ypos =</span> <span class="fu">cumsum</span>(prop) <span class="sc">-</span> <span class="fl">0.5</span><span class="sc">*</span>prop) <span class="sc">%&gt;%</span></span>
+<span id="cb12-9"><a href="imputation.html#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">lbl =</span> <span class="fu">round</span>(prop))</span>
+<span id="cb12-10"><a href="imputation.html#cb12-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-11"><a href="imputation.html#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="co"># create data frame for FRI 3 classes</span></span>
+<span id="cb12-12"><a href="imputation.html#cb12-12" aria-hidden="true" tabindex="-1"></a>dat_fri_c5 <span class="ot">&lt;-</span> poly_fri <span class="sc">%&gt;%</span> as.data.frame <span class="sc">%&gt;%</span></span>
+<span id="cb12-13"><a href="imputation.html#cb12-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tabyl</span>(class5) <span class="sc">%&gt;%</span>  </span>
+<span id="cb12-14"><a href="imputation.html#cb12-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">is.na</span>(class5) <span class="sc">==</span> F) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-15"><a href="imputation.html#cb12-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(class5)) <span class="sc">%&gt;%</span></span>
+<span id="cb12-16"><a href="imputation.html#cb12-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">prop =</span> n <span class="sc">/</span> <span class="fu">sum</span>(.<span class="sc">$</span>n)<span class="sc">*</span><span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb12-17"><a href="imputation.html#cb12-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ypos =</span> <span class="fu">cumsum</span>(prop) <span class="sc">-</span> <span class="fl">0.5</span><span class="sc">*</span>prop) <span class="sc">%&gt;%</span></span>
+<span id="cb12-18"><a href="imputation.html#cb12-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">lbl =</span> <span class="fu">round</span>(prop))</span>
+<span id="cb12-19"><a href="imputation.html#cb12-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-20"><a href="imputation.html#cb12-20" aria-hidden="true" tabindex="-1"></a><span class="co"># plot</span></span>
+<span id="cb12-21"><a href="imputation.html#cb12-21" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(dat_grm_c5, <span class="fu">aes</span>(<span class="at">x =</span> <span class="st">&quot;&quot;</span>, <span class="at">y =</span> prop, <span class="at">fill =</span> class5)) <span class="sc">+</span></span>
+<span id="cb12-22"><a href="imputation.html#cb12-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">width =</span> <span class="dv">1</span>, <span class="at">stat =</span> <span class="st">&quot;identity&quot;</span>) <span class="sc">+</span></span>
+<span id="cb12-23"><a href="imputation.html#cb12-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_polar</span>(<span class="st">&quot;y&quot;</span>, <span class="at">start =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb12-24"><a href="imputation.html#cb12-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>() <span class="sc">+</span></span>
+<span id="cb12-25"><a href="imputation.html#cb12-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">y =</span> ypos, <span class="at">label =</span> <span class="fu">str_c</span>(lbl, <span class="st">&quot;%&quot;</span>)), <span class="at">size =</span> <span class="dv">15</span>) <span class="sc">+</span></span>
+<span id="cb12-26"><a href="imputation.html#cb12-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">30</span>),</span>
+<span id="cb12-27"><a href="imputation.html#cb12-27" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">20</span>),</span>
+<span id="cb12-28"><a href="imputation.html#cb12-28" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.key.width =</span> <span class="fu">unit</span>(<span class="dv">2</span>, <span class="st">&#39;cm&#39;</span>),</span>
+<span id="cb12-29"><a href="imputation.html#cb12-29" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">30</span>)) <span class="sc">+</span></span>
+<span id="cb12-30"><a href="imputation.html#cb12-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">fill =</span> <span class="st">&quot;5 Species Classification&quot;</span>) <span class="sc">+</span></span>
+<span id="cb12-31"><a href="imputation.html#cb12-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Imputed 5 Species Classification </span><span class="sc">\n</span><span class="st">of GRM Segmented Forest Stands&quot;</span>)</span>
+<span id="cb12-32"><a href="imputation.html#cb12-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-33"><a href="imputation.html#cb12-33" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(dat_fri_c5, <span class="fu">aes</span>(<span class="at">x =</span> <span class="st">&quot;&quot;</span>, <span class="at">y =</span> prop, <span class="at">fill =</span> class5)) <span class="sc">+</span></span>
+<span id="cb12-34"><a href="imputation.html#cb12-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">width =</span> <span class="dv">1</span>, <span class="at">stat =</span> <span class="st">&quot;identity&quot;</span>) <span class="sc">+</span></span>
+<span id="cb12-35"><a href="imputation.html#cb12-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_polar</span>(<span class="st">&quot;y&quot;</span>, <span class="at">start =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb12-36"><a href="imputation.html#cb12-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>() <span class="sc">+</span></span>
+<span id="cb12-37"><a href="imputation.html#cb12-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">y =</span> ypos, <span class="at">label =</span> <span class="fu">str_c</span>(lbl, <span class="st">&quot;%&quot;</span>)), <span class="at">size =</span> <span class="dv">15</span>) <span class="sc">+</span></span>
+<span id="cb12-38"><a href="imputation.html#cb12-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">30</span>),</span>
+<span id="cb12-39"><a href="imputation.html#cb12-39" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">20</span>),</span>
+<span id="cb12-40"><a href="imputation.html#cb12-40" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.key.width =</span> <span class="fu">unit</span>(<span class="dv">2</span>, <span class="st">&#39;cm&#39;</span>),</span>
+<span id="cb12-41"><a href="imputation.html#cb12-41" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">30</span>)) <span class="sc">+</span></span>
+<span id="cb12-42"><a href="imputation.html#cb12-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">fill =</span> <span class="st">&quot;5 Species Classification&quot;</span>) <span class="sc">+</span></span>
+<span id="cb12-43"><a href="imputation.html#cb12-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;5 Species Classification </span><span class="sc">\n</span><span class="st">of FRI Forest Stands&quot;</span>)</span>
+<span id="cb12-44"><a href="imputation.html#cb12-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-45"><a href="imputation.html#cb12-45" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(p1, p2, <span class="at">ncol =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="05-Imputation_files/figure-html/imputationp4f-1.png" width="1728" /></p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="segmentation-update.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

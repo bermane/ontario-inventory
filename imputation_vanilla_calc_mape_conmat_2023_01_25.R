@@ -1,24 +1,15 @@
-# This code runs an imputation algorithm on LiDAR attributes connecting them to interpreter
-# derived response attributes resulting in a model that can be applied to forest stands
-# segmented from LiDAR rasters
-
-# This version of the code uses a simple nearest neighbor approach to query
-# the attributes of choice and find the sample that minimizes euclidean
-# distance between the variables
-
-# we can then impute all the attributes of the nearest neighbor into the 
-# newly generated polygon
+# This code runs kNN imputation on the best output in order 
+# to derive MAPE and other tables and figures for the 
+# imputation paper
 
 # load packages
 library(terra)
 library(tidyverse)
 library(magrittr)
-library(RANN)
 library(corrplot)
 library(reshape2)
-library(gtools)
 library(janitor)
-library(doParallel)
+library(circlize)
 
 ###################################################
 ###LOAD POLYGON DATASET AND ADD LIDAR ATTRIBUTES###
@@ -161,7 +152,10 @@ mae <- function(obs, est){
 
 # create mape function
 mape <- function(obs, est){
-  sum(abs((obs - est) / obs)) / length(obs) * 100
+  check <- abs((obs - est) / obs)
+  check <- check[is.infinite(check) == F]
+  l <- length(check)
+  sum(check) / l * 100
 }
 
 # create knn function
@@ -402,4 +396,258 @@ df <- run_knn(dat, vars, k = 5)
 df %<>% filter(str_detect(variable, 'mape')) %>%
   mutate(value = round(value, 2))
 
-      
+# best combined attributes
+
+# select variables
+vars <- c('B6',
+          'depth_q25',
+          'rumple',
+          'ske',
+          'x',
+          'y',
+          'zpcum8')
+
+# run knn
+df <- run_knn(dat, vars, k = 5)
+
+# filter specific columns
+df %<>% filter(str_detect(variable, 'mape')) %>%
+  mutate(value = round(value, 2))
+
+###############################################
+### RUN KNN TO CALCULATE CONFUSION MATRICES ###
+###############################################
+
+# select variables
+vars <- c('B6',
+          'depth_q25',
+          'rumple',
+          'ske',
+          'x',
+          'y',
+          'zpcum8')
+
+# set k
+k <- 5
+
+# subset data
+dat_nn <- dat %>% select(all_of(vars))
+
+# scale for nn computation
+dat_nn_scaled <- dat_nn %>% scale
+
+# run nearest neighbor
+nn <- nn2(dat_nn_scaled, dat_nn_scaled, k = k + 1)
+
+# get nn indices
+nni <- nn[[1]][, 2:(k + 1)]
+
+# add vars to tibble
+
+# take mean/mode if k > 1
+if(k > 1){
+  for(i in seq_along(vars)){
+    if(i == 1){
+      nn_tab <- tibble(!!vars[i] := dat_nn[,i],
+                       !!str_c(vars[i], '_nn') := apply(nni, MARGIN = 1, FUN = function(x){
+                         mean(dat_nn[x, i])
+                       }))
+    }else{
+      nn_tab %<>% mutate(!!vars[i] := dat_nn[,i],
+                         !!str_c(vars[i], '_nn') := apply(nni, MARGIN = 1, FUN = function(x){
+                           mean(dat_nn[x, i])
+                         }))
+    }
+  }
+  
+  # add aux vars to tibble
+  nn_tab %<>% mutate(age = dat$AGE,
+                     wg = dat$WG,
+                     sp1 = dat$SP1,
+                     sp2 = dat$SP2,
+                     group5 = dat$SpeciesGroup2,
+                     group3 = dat$SpeciesGroup3,
+                     age_nn = apply(nni, MARGIN = 1, FUN = function(x){
+                       mean(dat$AGE[x])
+                     }),
+                     wg_nn = apply(nni, MARGIN = 1, FUN = function(x){
+                       getmode(dat$WG[x])
+                     }),
+                     sp1_nn = apply(nni, MARGIN = 1, FUN = function(x){
+                       getmode(dat$SP1[x])
+                     }),
+                     sp2_nn = apply(nni, MARGIN = 1, FUN = function(x){
+                       getmode(dat$SP2[x])
+                     }),
+                     group5_nn = apply(nni, MARGIN = 1, FUN = function(x){
+                       getmode(dat$SpeciesGroup2[x])
+                     }),
+                     group3_nn = apply(nni, MARGIN = 1, FUN = function(x){
+                       getmode(dat$SpeciesGroup3[x])
+                     }))
+}
+
+# calculate 5 species confusion matrix
+# build accuracy table
+accmat <- table("pred" = nn_tab$group5_nn, "ref" = nn_tab$group5)
+
+# UA
+ua <- diag(accmat) / rowSums(accmat) * 100
+
+# PA
+pa <- diag(accmat) / colSums(accmat) * 100
+
+# OA
+oa <- sum(diag(accmat)) / sum(accmat) * 100
+
+# build confusion matrix
+accmat_ext <- addmargins(accmat)
+accmat_ext <- rbind(accmat_ext, "Users" = c(pa, NA))
+accmat_ext <- cbind(accmat_ext, "Producers" = c(ua, NA, oa))
+#colnames(accmat_wg_ext) <- c(levels(as.factor(shp.train$classes)), "Sum", "PA")
+#rownames(accmat_wg_ext) <- c(levels(as.factor(shp.train$classes)), "Sum", "UA")
+accmat_ext <- round(accmat_ext, 2)
+dimnames(accmat_ext) <- list("Imputed" = colnames(accmat_ext),
+                                "Observed" = rownames(accmat_ext))
+class(accmat_ext) <- "table"
+accmat_ext
+
+# # calculate kappa coefficient
+# kap <- kappa(accmat) %>% round(2)
+# 
+# # add kappa to matrix
+# accmat_wg_ext <- rbind(accmat_wg_ext, c(kap, rep('', NCOL(accmat_wg_ext) - 1)))
+# rownames(accmat_wg_ext)[NROW(accmat_wg_ext)] <- 'Kappa'
+
+# write to csv
+write.csv(accmat_ext, file = 'D:/ontario_inventory/imputation/vanilla/conmat_best_mod_group5.csv')
+
+# calculate 3 species confusion matrix
+# build accuracy table
+accmat <- table("pred" = nn_tab$group3_nn, "ref" = nn_tab$group3)
+
+# UA
+ua <- diag(accmat) / rowSums(accmat) * 100
+
+# PA
+pa <- diag(accmat) / colSums(accmat) * 100
+
+# OA
+oa <- sum(diag(accmat)) / sum(accmat) * 100
+
+# build confusion matrix
+accmat_ext <- addmargins(accmat)
+accmat_ext <- rbind(accmat_ext, "Users" = c(pa, NA))
+accmat_ext <- cbind(accmat_ext, "Producers" = c(ua, NA, oa))
+#colnames(accmat_wg_ext) <- c(levels(as.factor(shp.train$classes)), "Sum", "PA")
+#rownames(accmat_wg_ext) <- c(levels(as.factor(shp.train$classes)), "Sum", "UA")
+accmat_ext <- round(accmat_ext, 2)
+dimnames(accmat_ext) <- list("Imputed" = colnames(accmat_ext),
+                             "Observed" = rownames(accmat_ext))
+class(accmat_ext) <- "table"
+accmat_ext
+
+# # calculate kappa coefficient
+# kap <- kappa(accmat) %>% round(2)
+# 
+# # add kappa to matrix
+# accmat_wg_ext <- rbind(accmat_wg_ext, c(kap, rep('', NCOL(accmat_wg_ext) - 1)))
+# rownames(accmat_wg_ext)[NROW(accmat_wg_ext)] <- 'Kappa'
+
+# write to csv
+write.csv(accmat_ext, file = 'D:/ontario_inventory/imputation/vanilla/conmat_best_mod_group3.csv')
+
+# calculate leading species confusion matrix
+# create df of sp1
+sp1 <- data.frame(obs = nn_tab$sp1 %>% as.factor,
+                 est = nn_tab$sp1_nn %>% as.factor)
+
+# make estimate levels match obs levels
+levels(sp1$est) <- c(levels(sp1$est), levels(sp1$obs)[!(levels(sp1$obs) %in% levels(sp1$est))])
+sp1$est <- factor(sp1$est, levels = levels(sp1$obs))
+
+# create column of match or not
+sp1$match <- sp1$obs == sp1$est
+
+# total percent of matching WG
+NROW(sp1[sp1$match == T,])/NROW(sp1)
+
+# check count of different working groups
+plyr::count(sp1, 'obs')
+plyr::count(sp1, 'est')
+
+# build accuracy table
+accmat <- table("pred" = sp1$est, "ref" = sp1$obs)
+
+# UA
+ua <- diag(accmat) / rowSums(accmat) * 100
+
+# PA
+pa <- diag(accmat) / colSums(accmat) * 100
+
+# OA
+oa <- sum(diag(accmat)) / sum(accmat) * 100
+
+# build confusion matrix
+accmat_ext <- addmargins(accmat)
+accmat_ext <- rbind(accmat_ext, "Users" = c(pa, NA))
+accmat_ext <- cbind(accmat_ext, "Producers" = c(ua, NA, oa))
+#colnames(accmat_wg_ext) <- c(levels(as.factor(shp.train$classes)), "Sum", "PA")
+#rownames(accmat_wg_ext) <- c(levels(as.factor(shp.train$classes)), "Sum", "UA")
+accmat_ext <- round(accmat_ext, 2)
+dimnames(accmat_ext) <- list("Imputed" = colnames(accmat_ext),
+                             "Observed" = rownames(accmat_ext))
+class(accmat_ext) <- "table"
+accmat_ext
+
+# # calculate kappa coefficient
+# kap <- kappa(accmat) %>% round(2)
+# 
+# # add kappa to matrix
+# accmat_wg_ext <- rbind(accmat_wg_ext, c(kap, rep('', NCOL(accmat_wg_ext) - 1)))
+# rownames(accmat_wg_ext)[NROW(accmat_wg_ext)] <- 'Kappa'
+
+# write to csv
+write.csv(accmat_ext, file = 'D:/ontario_inventory/imputation/vanilla/conmat_best_mod_sp1.csv')
+
+######################
+### CHORD DIAGRAMS ###
+######################
+
+# 5 functional group
+
+# make table
+accmat <- table("Imputed" = nn_tab$group5_nn, "Observed" = nn_tab$group5)
+
+# set row and col names
+rownames(accmat) <- c(str_c('BS (n = ', sum(accmat[1,]), ')'),
+                      str_c('HW (n = ', sum(accmat[2,]), ')'),
+                      str_c('JP (n = ', sum(accmat[3,]), ')'),
+                      str_c('MC (n = ', sum(accmat[4,]), ')'),
+                      str_c('MW (n = ', sum(accmat[5,]), ')'))
+
+colnames(accmat) <- c(str_c('BS (n = ', sum(accmat[,1]), ')'),
+                      str_c('HW (n = ', sum(accmat[,2]), ')'),
+                      str_c('JP (n = ', sum(accmat[,3]), ')'),
+                      str_c('MC (n = ', sum(accmat[,4]), ')'),
+                      str_c('MW (n = ', sum(accmat[,5]), ')'))
+
+# change row names
+rownames(accmat) <- str_c(rownames(accmat), ' ')
+
+# set grid colors
+grid_col <- c("BS (n = 21468)" = '#ccbb44',
+              "HW (n = 10321)" = '#228833',
+              "JP (n = 3672)" = '#4477aa',
+              "MC (n = 3759)" = '#ee6677',
+              "MW (n = 12200)" = '#aa3377',
+              "BS (n = 19059)" = '#ccbb44',
+              "HW (n = 10322)" = '#228833',
+              "JP (n = 4073)" = '#4477aa',
+              "MC (n = 5578)" = '#ee6677',
+              "MW (n = 12388)" = '#aa3377')
+
+# create diagram
+par(cex = 2)
+chordDiagram(accmat, grid.col = grid_col, annotationTrack = c("name", "grid"))
+

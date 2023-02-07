@@ -28,11 +28,10 @@ The variables used in the imputation algorithm are as follows, and were selected
 
 ## 1a. Extract attributes in FRI polygons {-#imputationp1a}
 
-```{r, options, results=FALSE, message=FALSE, warning=FALSE, echo=FALSE}
-knitr::opts_chunk$set(fig.width=18, fig.height=12)
-```
 
-```{r, imputationp1a, results=FALSE, message=FALSE, warning=FALSE, fig.width=18, fig.height=12}
+
+
+```r
 # load packages
 library(terra)
 library(tidyverse)
@@ -97,13 +96,12 @@ dat_fri$AGE2018 <- 2018 - dat_fri$YRORG
 
 # save extracted dataframe for fast rebooting
 save(dat_fri, file = 'D:/ontario_inventory/imputation/example/dat_fri_extr.RData')
-
 ```
 
 ## 1b. Extract attributes in newly segmented polygons {-#imputationp1b}
 
-```{r, imputationp1b, results=FALSE, message=FALSE, warning=FALSE, fig.width=18, fig.height=12}
 
+```r
 # load GRM segmented polygons
 poly <- vect('D:/ontario_inventory/segmentation/grm/shp/grm_10_01_05.shp')
 
@@ -163,7 +161,6 @@ save(dat_grm, file = 'D:/ontario_inventory/imputation/example/grm_10_01_05_extr.
 
 # clear workspace
 rm(list=ls())
-
 ```
 
 ## 2. Screen FRI polygons to curate an optimal dataset to use for imputation {-#imputationp2}
@@ -176,7 +173,8 @@ b) polygon >= 50% forested landcover
 c) p95 (95th percentile of LiDAR height returns) >= 5 meters (definition of 'forest')
 d) Canopy cover (% of returns > 2 m) >= 50%
 
-```{r, imputationp2, results=FALSE, message=FALSE, warning=FALSE, fig.width=18, fig.height=12}
+
+```r
 # load FRI polygons
 poly <- vect('D:/ontario_inventory/romeo/RMF_EFI_layers/Polygons Inventory/RMF_PolygonForest.shp')
 
@@ -293,7 +291,6 @@ save(dat_fri_scr, file = 'D:/ontario_inventory/imputation/example/dat_fri_scr.RD
 
 # clear workspace
 rm(list=ls())
-
 ```
 
 ## 3. Run imputation on FRI polygons ONLY to assess imputation performance {-#imputationp3}
@@ -312,8 +309,8 @@ e) 5-Group species classification (jack pine dominated, black spruce dominated, 
 
 ## 3a. Create functions needed {-#imputationp3a}
 
-```{r, imputationp3a, results=FALSE, message=FALSE, warning=FALSE, fig.width=18, fig.height=12}
 
+```r
 ####################################################
 ###FUNCTIONS TO RUN K NEAREST NEIGHBOR IMPUTATION###
 ####################################################
@@ -524,8 +521,8 @@ run_knn_fri <- function(dat, vars, k) {
 
 ## 3b. Run the imputation and assess performance {-#imputationp3b}
 
-```{r, imputationp3b, results=FALSE, message=FALSE, warning=FALSE, fig.width=18, fig.height=12}
 
+```r
 ###########################
 ### LOAD FRI DATA FRAME ###
 ###########################
@@ -618,7 +615,6 @@ perf %<>% mutate(value = round(value, 2))
 
 # display results
 knitr::kable(perf, caption = "Imputation Performance of FRI Forest Stand Polygons", label = NA)
-
 ```
 
 EDIT!
@@ -633,8 +629,8 @@ Although we cannot assess performance of age and species composition when imputi
 
 We can also review maps and distributions comparing FRI age/species composition against the same attributes imputed into GRM segmented polygons.
 
-```{r, imputationp4, results=FALSE, message=FALSE, warning=FALSE, fig.width=18, fig.height=12}
 
+```r
 # load additional packages
 library(viridis)
 library(scales)
@@ -789,12 +785,12 @@ perf %<>% mutate(value = round(value, 2))
 
 # display results of imputation rmsd
 knitr::kable(perf, caption = "Imputation Performance between FRI and GRM Forest Stand Polygons", label = NA)
-
 ```
 
 ## 4a. Figures of Forest Stand Age {-#imputationp4a}
 
-```{r, imputationp4a, results=FALSE, message=FALSE, warning=FALSE, fig.width=18, fig.height=12}
+
+```r
 # load GRM polygons
 poly_grm <- vect('D:/ontario_inventory/segmentation/grm/shp/grm_10_01_05.shp')
 
@@ -856,12 +852,14 @@ plot(poly_fri, 'AGE2018', col = viridis(14), type = 'interval', breaks = seq(0, 
      plg = list(x = 'topright', cex = 2, title = 'Age'),
      main = '')
 title(main = 'Age of FRI Forest Stands', cex.main = 3)
-
 ```
+
+<img src="05-Imputation_files/figure-html/imputationp4a-1.png" width="1728" />
 
 ## 4b. Figures of Forest Stand 3-Species Classification {-#imputationp4b}
 
-```{r, imputationp4b, results=FALSE, message=FALSE, warning=FALSE, fig.width=18, fig.height=12}
+
+```r
 # plot group of 3 species
 par(mfrow=c(2,1))
 
@@ -876,9 +874,12 @@ plot(poly_fri, 'class3', col = viridis(3), type = 'classes',
 title(main = 'Species Class (3) FRI Forest Stands', cex.main = 3)
 ```
 
+<img src="05-Imputation_files/figure-html/imputationp4b-1.png" width="1728" />
+
 ## 4c. Figures of Forest Stand 5-Species Classification {-#imputationp4c}
 
-```{r, imputationp4c, results=FALSE, message=FALSE, warning=FALSE, fig.width=18, fig.height=12}
+
+```r
 # plot group of 5 species
 par(mfrow=c(2,1))
 
@@ -893,9 +894,12 @@ plot(poly_fri, 'class5', col = viridis(5), type = 'classes',
 title(main = 'Species Class (5) FRI Forest Stands', cex.main = 3)
 ```
 
+<img src="05-Imputation_files/figure-html/imputationp4c-1.png" width="1728" />
+
 ## 4d. Density Plots of Forest Stand Age {-#imputationp4d}
 
-```{r, imputationp4d, results=FALSE, message=FALSE, warning=FALSE, fig.width=18, fig.height=12}
+
+```r
 # density plots of age
 p1 <- ggplot(dat_grm, aes(x = age)) +
   geom_density(fill = 'grey') +
@@ -926,12 +930,14 @@ p2 <- ggplot(as.data.frame(poly_fri), aes(x = AGE2018)) +
         plot.title = element_text(size=30))
 
 grid.arrange(p1, p2, ncol = 2)
-
 ```
+
+<img src="05-Imputation_files/figure-html/imputationp4d-1.png" width="1728" />
 
 ## 4e. Distribution of 3-Species Classification {-#imputationp4e}
 
-```{r, imputationp4e, results=FALSE, message=FALSE, warning=FALSE, fig.width=18, fig.height=12}
+
+```r
 # distribution of 3 species classes
 # create data frame for GRM 3 classes
 dat_grm_c3 <- dat_grm %>% 
@@ -977,12 +983,14 @@ p2 <- ggplot(dat_fri_c3, aes(x = "", y = prop, fill = class3)) +
   ggtitle("3 Species Classification \nof FRI Forest Stands")
 
 grid.arrange(p1, p2, ncol = 2)
-
 ```
+
+<img src="05-Imputation_files/figure-html/imputationp4e-1.png" width="1728" />
 
 ## 4f. Distribution of 5-Species Classification {-#imputationp4f}
 
-```{r, imputationp4f, results=FALSE, message=FALSE, warning=FALSE, fig.width=18, fig.height=12}
+
+```r
 # distribution of 5 species classes
 # create data frame for GRM 5 classes
 dat_grm_c5 <- dat_grm %>% 
@@ -1028,5 +1036,6 @@ p2 <- ggplot(dat_fri_c5, aes(x = "", y = prop, fill = class5)) +
   ggtitle("5 Species Classification \nof FRI Forest Stands")
 
 grid.arrange(p1, p2, ncol = 2)
-
 ```
+
+<img src="05-Imputation_files/figure-html/imputationp4f-1.png" width="1728" />

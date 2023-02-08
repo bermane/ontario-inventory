@@ -913,7 +913,7 @@ p1 <- ggplot(dat_grm, aes(x = age)) +
 
 p2 <- ggplot(as.data.frame(poly_fri), aes(x = AGE2018)) +
   geom_density(fill = 'grey') +
-  geom_vline(aes(xintercept = median(AGE, na.rm = T)),
+  geom_vline(aes(xintercept = median(AGE2018, na.rm = T)),
              linetype = "dashed",
              size = 0.6) +
   xlim(c(0, 200)) +
@@ -993,7 +993,7 @@ dat_grm_c5 <- dat_grm %>%
   mutate(ypos = cumsum(prop) - 0.5*prop) %>%
   mutate(lbl = round(prop))
 
-# create data frame for FRI 3 classes
+# create data frame for FRI 5 classes
 dat_fri_c5 <- poly_fri %>% as.data.frame %>%
   tabyl(class5) %>%  
   filter(is.na(class5) == F) %>% 

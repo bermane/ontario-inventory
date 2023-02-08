@@ -7,12 +7,17 @@ library(terra)
 library(tidyverse)
 library(exactextractr)
 library(sf)
+library(magrittr)
 
 # load spl segmented polygons
 poly <- vect('D:/ontario_inventory/segmentation/grm/shp/grm_10_01_05.shp')
 
 # convert to df
 dat <- as.data.frame(poly)
+
+# remove p95 and cc
+# we'll recalculate for consistency
+dat %<>% select(-c(p95, cc))
 
 # load LiDAR datasets we need to extract over polygons
 # create named vector with variable names and data links
@@ -39,30 +44,141 @@ lidar_ras <- rast(lidar)
 
 # project poly to crs of raster
 poly_ras <- project(poly, lidar_ras)
-  
+
 # convert to sf
 poly_ras <- st_as_sf(poly_ras)
 
 #extract median values
-vec <- exact_extract(lidar_ras, poly_ras, function(values, coverage_fraction){
-  values <- values[coverage_fraction == 1,]
-  apply(values, 2, function(x) median(x, na.rm = T))
-})
-
-# transpose matrix and make data.frame
-vec <- t(vec) %>% as.data.frame
+vec <- exact_extract(lidar_ras, poly_ras, 'median')
 
 # change column names
 colnames(vec) <- names(lidar)
 
-# remove p95 and cc columns
-dat <- dat %>% select(-p95, -cc)
-
 # add new column into dat
 dat <- cbind(dat, vec)
 
-dat_lidar <- dat
+################################
+### ADD SENTINAL REFLECTANCE ###
+################################
 
-# save extracted dataframe for fast rebooting
-save(dat_lidar, file = 'D:/ontario_inventory/segmentation/grm/lidar_extracted/grm_10_01_05_ext_100.RData')
+# load sentinel BOA mosaic
+sent_ras <- rast('D:/ontario_inventory/romeo/Sentinel/Mosaic/BOA/S2_BOA_20_Mosaic.tif')
 
+# project poly to crs of raster
+poly_ras <- project(poly, sent_ras)
+
+# convert to sf
+poly_ras <- st_as_sf(poly_ras)
+
+#extract median values
+vec <- exact_extract(sent_ras, poly_ras, 'median')
+
+# change column names
+colnames(vec) <- names(sent_ras)
+
+# add new columns into dat
+dat <- cbind(dat, vec)
+
+####################################
+### ADD ADDITIONAL LIDAR METRICS ###
+####################################
+
+# load PZABOVE data
+ras <- rast('D:/ontario_inventory/romeo/SPL metrics/PZABOVE_MOSAIC/RMF_PZABOVE_MOSAIC.tif')
+
+# set band names
+names(ras) <- c('PZABOVEMEAN', 'PZABOVE2', 'PZABOVE5')
+
+# project poly to crs of raster
+poly_ras <- project(poly, ras)
+
+# convert to sf
+poly_ras <- st_as_sf(poly_ras)
+
+#extract median values
+vec <- exact_extract(ras, poly_ras, 'median')
+
+# change column names
+colnames(vec) <- names(ras)
+
+# add new columns into dat
+dat <- cbind(dat, vec)
+
+# I already extracted the rumple and depth_q25 into the individual metrics
+# folder so we can skip these two and move directly to individual
+
+# # load RUMPLE data
+# ras <- rast('D:/ontario_inventory/romeo/SPL metrics/RUMPLE_MOSAIC/RMF_RUMPLE_MOSAIC.tif')
+# 
+# # set band names
+# names(ras) <- 'RUMPLE'
+# 
+# # project poly to crs of raster
+# poly_ras <- project(poly, ras)
+# 
+# # convert to sf
+# poly_ras <- st_as_sf(poly_ras)
+# 
+# #extract median values
+# vec <- exact_extract(ras, poly_ras, 'median')
+# 
+# # add new columns into dat
+# dat <- cbind(dat, vec)
+# 
+# # load SAD data
+# ras <- rast('D:/ontario_inventory/romeo/SPL metrics/SAD_MOSAIC/RMF_SAD_MOSAIC.tif')
+# 
+# # set band names
+# names(ras) <- c("depth_mean", "depth_max", 
+#                 "depth_min", "depth_sd", 
+#                 "depth_q10", "depth_q25", 
+#                 "depth_q50", "depth_q75", 
+#                 "depth_q95", "depth_q99")
+# 
+# # project poly to crs of raster
+# poly_ras <- project(poly, ras)
+# 
+# # convert to sf
+# poly_ras <- st_as_sf(poly_ras)
+# 
+# #extract median values
+# vec <- exact_extract(ras, poly_ras, 'median')
+# 
+# # add new columns into dat
+# dat <- cbind(dat, vec)
+
+# load additional Z metrics data
+ras_files <- list.files('D:/ontario_inventory/romeo/SPL metrics/Z_METRICS_MOSAIC/individual',
+                        full.names = T)
+ras_names <- list.files('D:/ontario_inventory/romeo/SPL metrics/Z_METRICS_MOSAIC/individual')
+ras_names <- sapply(ras_names, function(x){
+  str_split_fixed(x, pattern = '_', n = 5) %>% .[5] %>%
+    str_replace(pattern = '.tif', replacement = '')
+})
+
+# load rasters
+ras <- rast(ras_files)
+
+# set band names
+names(ras) <- ras_names
+
+# project poly to crs of raster
+poly_ras <- project(poly, ras)
+
+# convert to sf
+poly_ras <- st_as_sf(poly_ras)
+
+#extract median values
+vec <- exact_extract(ras, poly_ras, 'median')
+
+# change column names
+colnames(vec) <- names(ras)
+
+# add new columns into dat
+dat <- cbind(dat, vec)
+
+# change name
+dat_grm <- dat
+
+# save extracted dataframe
+save(dat_grm, file = 'D:/ontario_inventory/dat/dat_grm_extr.RData')

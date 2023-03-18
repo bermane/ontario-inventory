@@ -2,29 +2,31 @@
 
 ## Intro {-#intro}
 
-This page provides an example of the imputation approach used to estimate age and species composition in newly-generated forest stands. The imputation is based on a k-nearest neighbor algorithm. "Link" variables between the photo-interpreted FRI and Generic Region Merging (GRM) generated forest stands are identified and for each GRM forest polygon, the k-nearest neighbor FRI polygons that minimize the Euclidean distance of the link variables are identified and are used to impute age and species composition for the new polygon. If k = 1 the age and species variables are imputed directly from the best matching polygon. If k > 1 age is imputed as the mean age of k-matching polygons and species variables are imputed as the mode of k-matching polygons. The basic workflow is as follows:
+This page provides an example of the imputation approach used to estimate age and species composition in newly-generated forest stands. The imputation is based on a k-nearest neighbor (kNN) algorithm. X-variables (variables that are contiguous across reference and target polygons) are identified and for each Generic Region Merging (GRM) generated forest polygon (the target polygon), the k-nearest neighbor FRI polygons (the reference polygons) that minimize the Euclidean distance of the X-variables are identified and used to impute age and species composition into the target polygon. If k = 1, the age and species variables are imputed directly from the best matching reference polygon. If k > 1, age is imputed as the mean age of kNN polygons and species variables are imputed as the mode across kNN polygons. The basic workflow is as follows:
 
 0. Run GRM Segmentation to derive new polygon dataset (see previous posts)
 1. Extract LiDAR attributes in FRI polygons and GRM segmented polygons
 2. Screen FRI polygons to curate an optimal dataset to use for imputation
 3. Run imputation on FRI polygons ONLY to assess imputation performance
-4. Run imputation on GRM polygon dataset to derive estimates of age and species composition
+4. Run imputation between FRI and GRM polygons to impute estimates of age and species composition
 
-## 1. Extract LiDAR attributes in FRI polygons and newly derived polygons {-#imputationp1}
+## 1. Extract LiDAR attributes in FRI polygons and GRM polygons {-#imputationp1}
 
-Before running imputation we need to extract LiDAR attributes in all FRI polygons and GRM segmented polygons. For this example, we only extract the attributes we will use in the imputation (listed below) as well as the attributes needed for FRI polygon data screening in section 2 of this walk-through. The value extracted for each polygon is the median cell value, weighted by the fraction of each cell that is covered by the polygon.
+Before running imputation we need to extract LiDAR and Sentinel 2 attributes in all FRI and GRM polygons. For this example, we only extract attributes used in the optimal imputation model (listed below) as well as the attributes needed for polygon data screening in step 2 of this walk-through. The value extracted for each polygon is the median cell value, weighted by the fraction of each cell that is covered by the polygon.
 
-The variables used in the imputation algorithm are as follows, and were selected with guidance from previous works as well as a sensitivity analysis:
+The variables used in the imputation algorithm are as follows, and were selected with guidance from previous works as well as a performance analysis (the details of which will be disclosed in a forthcoming journal article):
 
-* avg: Average height of returns (> 1.3 m classified as vegetation ??)
-* zsd: Standard deviation of returns height (> 1.3 m classified as vegetation ??)
-* rumple: Ratio of canopy outer surface area to ground surface area
-* zpcum8: Cumulative percentage of LiDAR returns found in 80% percentile of LiDAR height
-* x and y: Coordinates of polygon centroid
-* red_edge_2: Sentinel 2 surface reflectance band (740 nm)
+* avg: mean returns height > 1.3 m classified as vegetation
+* sd: standard deviation of returns height > 1.3 m classified as vegetation
+* rumple: ratio of canopy outer surface area to ground surface area
+* zpcum8: cumulative percentage of LiDAR returns found in 80% percentile of LiDAR height
+* x and y: coordinates of polygon centroid (in UTM coordinates)
+* red_edge_2: Sentinel 2 surface reflectance band 6 (740 nm)
+
+The following two variables are needed for polygon data screening:
 
 * p95: 95th percentile of LiDAR height returns > 1.3 m classified as vegetation
-* depth_q25: 25th percentile of signal attenuation depth of all returns
+* cc: percent of first returns > 2 meters (canopy cover)
 
 ## 1a. Extract attributes in FRI polygons {-#imputationp1a}
 
@@ -53,11 +55,10 @@ dat_fri <- cbind(dat_fri, centroids(poly) %>% crds)
 # create named vector with variable names and data links
 
 lidar <- c('p95' = 'D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_p95.tif',
-           'avg' = 'D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_avg.tif',
-           'zsd' = 'D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_std.tif',
+           'sd' = 'D:/ontario_inventory/romeo/SPL metrics/Z_METRICS_MOSAIC/individual/RMF_Z_METRICS_MOSAIC_zsd.tif',
            'rumple' = 'D:/ontario_inventory/romeo/SPL metrics/Z_METRICS_MOSAIC/individual/RMF_RUMPLE_MOSAIC_r_rumple.tif',
            'zpcum8' = 'D:/ontario_inventory/romeo/SPL metrics/Z_METRICS_MOSAIC/individual/RMF_Z_METRICS_MOSAIC_zpcum8.tif',
-           #'depth_q25' = 'D:/ontario_inventory/romeo/SPL metrics/Z_METRICS_MOSAIC/individual/RMF_SAD_METRICS_MOSAIC_depth_q25.tif',
+           'avg' = 'D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_avg.tif',
            'red_edge_2' = 'D:/ontario_inventory/romeo/Sentinel/red_edge_2.tif',
            'cc' = 'D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_2m_cov.tif')
 
@@ -98,7 +99,7 @@ dat_fri$AGE2018 <- 2018 - dat_fri$YRORG
 save(dat_fri, file = 'D:/ontario_inventory/imputation/example/dat_fri_extr.RData')
 ```
 
-## 1b. Extract attributes in newly segmented polygons {-#imputationp1b}
+## 1b. Extract attributes in GRM segmented polygons {-#imputationp1b}
 
 
 ```r
@@ -111,18 +112,17 @@ dat_grm <- as.data.frame(poly)
 # cbind centroids to dat
 dat_grm <- cbind(dat_grm, centroids(poly) %>% crds)
 
-# remove p95 and cc as we'll re calculate here for consistency
+# remove p95 and cc as we'll re-calculate here for consistency
 dat_grm %<>% select(-c(p95, cc))
 
 # load LiDAR datasets we need to extract over polygons
 # create named vector with variable names and data links
 
 lidar <- c('p95' = 'D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_p95.tif',
-           'avg' = 'D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_avg.tif',
-           'zsd' = 'D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_std.tif',
+           'sd' = 'D:/ontario_inventory/romeo/SPL metrics/Z_METRICS_MOSAIC/individual/RMF_Z_METRICS_MOSAIC_zsd.tif',
            'rumple' = 'D:/ontario_inventory/romeo/SPL metrics/Z_METRICS_MOSAIC/individual/RMF_RUMPLE_MOSAIC_r_rumple.tif',
            'zpcum8' = 'D:/ontario_inventory/romeo/SPL metrics/Z_METRICS_MOSAIC/individual/RMF_Z_METRICS_MOSAIC_zpcum8.tif',
-           #'depth_q25' = 'D:/ontario_inventory/romeo/SPL metrics/Z_METRICS_MOSAIC/individual/RMF_SAD_METRICS_MOSAIC_depth_q25.tif',
+           'avg' = 'D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_avg.tif',
            'red_edge_2' = 'D:/ontario_inventory/romeo/Sentinel/red_edge_2.tif',
            'cc' = 'D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_2m_cov.tif')
 
@@ -168,10 +168,11 @@ rm(list=ls())
 In order to ensure the best possible imputation results, it is important to screen the FRI dataset and remove polygons that do not fit certain data quality criteria, or are not representative of forest stands.
 
 The current criteria being used are:
-a) POLYTYPE == 'FOR'
-b) polygon >= 50% forested landcover
-c) p95 (95th percentile of LiDAR height returns) >= 5 meters (definition of 'forest')
-d) Canopy cover (% of returns > 2 m) >= 50%
+
+* POLYTYPE == 'FOR'
+* polygon >= 50% forested landcover
+* p95 >= 5 meters (broad definition of 'forest')
+* Canopy cover >= 50%
 
 
 ```r
@@ -205,28 +206,6 @@ poly_lcsf <- st_as_sf(poly_lc)
 # extract landcover values
 lc_poly <- exact_extract(lc, poly_lcsf)
 
-# set landcover class key
-lc_key <- c(`20` = 'Water',
-            `31` = 'Snow/Ice',
-            `32` = 'Rock/Rubble',
-            `33` = 'Exposed/Barren Land',
-            `40` = 'Bryoids',
-            `50` = 'Shrubland',
-            `80` = 'Wetland',
-            `81` = 'Wetland-Treed',
-            `100` = 'Herbs',
-            `210` = 'Coniferous',
-            `220` = 'Broadleaf',
-            `230` = 'Mixed Wood')
-
-# # find number of unique lc types in each polygon
-# # apply over list
-# lc_uni <- sapply(lc_poly, function(x){
-#   x$value <- recode(x$value, !!!lc_key)
-#   x %<>% filter(coverage_fraction >= 0.5)
-#   return(length(unique(x$value)))
-# })
-
 # set landcover class key with single forested class
 lc_key_for <- c(`20` = 'Water',
                 `31` = 'Snow/Ice',
@@ -241,7 +220,7 @@ lc_key_for <- c(`20` = 'Water',
                 `220` = 'Forest',
                 `230` = 'Forest')
 
-# find pixels with forest at least 50% of pixel
+# find polygons with forest at least 50% of pixels
 # apply over list
 lc_dom_for <- sapply(lc_poly, function(x){
   x$value <- recode(x$value, !!!lc_key_for)
@@ -295,25 +274,27 @@ rm(list=ls())
 
 ## 3. Run imputation on FRI polygons ONLY to assess imputation performance {-#imputationp3}
 
-The goal of this imputation procedure is to estimate age and species composition in newly segmented forest polygons. But it is also important to assess the performance of the algorithm. To do this, we can conduct the imputation over the FRI dataset ONLY. For each FRI polygon, we find the k-nearest neighbor matches, and calculate the age and species composition to impute. We can then compare the observed age and species composition of the polygon to the imputed values. Note we have to do this calculation on the FRI dataset alone because we do not have observed age and species composition values for the GRM segmented polygons. Also note that ALL attributes are imputed from the same k-nearest neighbors. The algorithm is not run for individual attributes.
+The goal of this imputation procedure is to estimate age and species composition in GRM segmented forest polygons. But it is also important to assess the performance of the algorithm. To do this, we can conduct the imputation over the FRI dataset ONLY. For each FRI polygon, we find the k-nearest neighbors, and calculate the age and species composition attributes to impute. We can then compare the observed age and species composition of the polygon to the imputed values. Note we have to do this calculation on the FRI dataset alone because we do not have observed age and species composition values for the GRM segmented polygons. Also note that ALL attributes are imputed from the same k-nearest neighbors. The algorithm is not run for individual attributes.
 
-We present the performance of numeric attributes (age as well as the variables used to conduct the imputation algorithm) as Mean Absolute Error (MAE) and Mean Absolute Percentage Error (MAPE). MAE gives an indication of performance in the units of each attribute (such as Age) while MAPE gives a percentage error that can be compared across variables.
+For age, we report root mean squared difference (RMSD), mean absolute error (MAE) and mean bias error (MBE). RMSD is used for assess results for model comparison. MAE gives an average error of imputed age in years. MBE gives an indication of whether we are imputing younger or older ages on average.
 
-For species composition, we report the percent of observed and imputed values that match (Accuracy). Species composition is broken down into several distinct attributes:
+For species composition, we report the percent of observed and imputed values that match (accuracy). Species composition is broken down into several distinct attributes:
 
 a) Working group
-b) First dominant species (from FRI SPCOMP attribute)
-c) Second dominant species (from FRI SPCOMP attribute)
-d) 3-Group species classification (softwood, mixedwood, hardwood)
-e) 5-Group species classification (jack pine dominated, black spruce dominated, mixed conifer, mixedwood, hardwood)
+b) First leading species (from FRI SPCOMP attribute)
+c) Second leading species (from FRI SPCOMP attribute)
+d) Three functional group classification (softwood, mixedwood, hardwood) derived from SPCOMP
+e) Five functional group classification (jack pine dominated, black spruce dominated, mixed conifer, mixedwood, hardwood) derived from SPCOMP
+
+We also calculate performance metrics on the X-variables used in imputation: relative RMSD (RRMSD) and relative MBE (RMBE), calculated by dividing RMSD and RMBE by the mean value of each variable and multiplying by 100. RRMSD and RMBE give a percent error that can be compared across variables and when variables have difficult to interpret units, such as several of the ALS metrics used in imputation.
 
 ## 3a. Create functions needed {-#imputationp3a}
 
 
 ```r
-####################################################
-###FUNCTIONS TO RUN K NEAREST NEIGHBOR IMPUTATION###
-####################################################
+######################################################
+### FUNCTIONS TO RUN K NEAREST NEIGHBOR IMPUTATION ###
+######################################################
 
 # load packages
 library(RANN)
@@ -325,14 +306,29 @@ getmode <- function(v) {
   uniqv[which.max(tabulate(match(v, uniqv)))]
 }
 
-# create mae function
-mae <- function(obs, est){
-  sum(abs(obs - est)) / length(obs)
+# create rmsd function
+rmsd <- function(obs, est){
+  sqrt(mean((est - obs) ^ 2))
 }
 
-# create mape function
-mape <- function(obs, est){
-  sum(abs((obs - est) / obs)) / length(obs) * 100
+# create rrmsd function
+rrmsd <- function(obs, est){
+  sqrt(mean((est - obs) ^ 2)) / mean(obs) * 100
+}
+
+# create mae function
+mae <- function(obs, est){
+  mean(abs(est - obs))
+}
+
+# create mbe function
+mbe <- function(obs, est){
+  mean(est - obs)
+}
+
+# create rmbe function
+rmbe <- function(obs, est){
+  mean(est - obs) / mean(obs) * 100
 }
 
 # create knn function
@@ -351,7 +347,6 @@ run_knn_fri <- function(dat, vars, k) {
   nni <- nn[[1]][, 2:(k + 1)]
   
   # add vars to tibble
-  
   # take mean/mode if k > 1
   if(k > 1){
     for(i in seq_along(vars)){
@@ -368,7 +363,7 @@ run_knn_fri <- function(dat, vars, k) {
       }
     }
     
-    # add aux vars to tibble
+    # add target vars to tibble
     nn_tab %<>% mutate(age = dat$AGE2018,
                        wg = dat$WG,
                        sp1 = dat$SP1,
@@ -407,7 +402,7 @@ run_knn_fri <- function(dat, vars, k) {
       }
     }
     
-    # add aux vars to tibble
+    # add target vars to tibble
     nn_tab %<>% mutate(age = dat$AGE2018,
                        wg = dat$WG,
                        sp1 = dat$SP1,
@@ -426,25 +421,28 @@ run_knn_fri <- function(dat, vars, k) {
   # calculate fit metrics for vars
   for(i in seq_along(vars)){
     if(i == 1){
-      perform_df <- tibble(!!str_c(vars[i], '_mae') := 
-                             mae(pull(nn_tab, vars[i]),
+      perform_df <- tibble(variable = vars[i],
+                           metric = c('rrmsd (%)', 'rmbe (%)'),
+                           value = c(rrmsd(pull(nn_tab, vars[i]),
                                   pull(nn_tab, str_c(vars[i], '_nn'))),
-                           !!str_c(vars[i], '_mape') := 
-                             mape(pull(nn_tab, vars[i]),
-                                  pull(nn_tab, str_c(vars[i], '_nn'))))
+                                  rmbe(pull(nn_tab, vars[i]),
+                                  pull(nn_tab, str_c(vars[i], '_nn')))))
     }else{
-      perform_df %<>% mutate(!!str_c(vars[i], '_mae') := 
-                             mae(pull(nn_tab, vars[i]),
+      perform_df %<>% add_row(variable = vars[i],
+                           metric = c('rrmsd (%)', 'rmbe (%)'),
+                           value = c(rrmsd(pull(nn_tab, vars[i]),
                                   pull(nn_tab, str_c(vars[i], '_nn'))),
-                           !!str_c(vars[i], '_mape') := 
-                             mape(pull(nn_tab, vars[i]),
-                                  pull(nn_tab, str_c(vars[i], '_nn'))))
+                                  rmbe(pull(nn_tab, vars[i]),
+                                  pull(nn_tab, str_c(vars[i], '_nn')))))
     }
   }
   
-  # calculate rmse for aux vars
-  perform_df %<>% mutate(age_mae = mae(nn_tab$age, nn_tab$age_nn),
-                         age_mape = mape(nn_tab$age, nn_tab$age_nn))
+  # calculate metrics for age
+  perform_df %<>% add_row(variable = 'age',
+                          metric = c('rmsd (yrs)', 'mbe (yrs)', 'mae (yrs)'),
+                          value = c(rmsd(nn_tab$age, nn_tab$age_nn),
+                                    mbe(nn_tab$age, nn_tab$age_nn),
+                                    mae(nn_tab$age, nn_tab$age_nn)))
   
   # calculate wg accuracy
   # create df of WG
@@ -455,9 +453,10 @@ run_knn_fri <- function(dat, vars, k) {
   wg$match <- wg$obs == wg$est
   
   # add total percent of matching WG to perform_df
-  perform_df <- cbind(perform_df,
-                      data.frame(wg_accuracy = NROW(wg[wg$match == T,]) /
-                                   NROW(wg)))
+  perform_df %<>% add_row(variable = 'working group',
+                          metric = 'accuracy (%)',
+                          value = NROW(wg[wg$match == T,]) /
+                                   NROW(wg) * 100)
   
   # calculate SP1 accuracy
   # create df of SP1
@@ -468,9 +467,10 @@ run_knn_fri <- function(dat, vars, k) {
   sp1$match <- sp1$obs == sp1$est
   
   # add total percent of matching SP1 to perform_df
-  perform_df <- cbind(perform_df,
-                      data.frame(sp1_accuracy = NROW(sp1[sp1$match == T,]) /
-                                   NROW(sp1)))
+  perform_df %<>% add_row(variable = 'leading species',
+                          metric = 'accuracy (%)',
+                          value = NROW(sp1[sp1$match == T,]) /
+                                   NROW(sp1) * 100)
   
   # calculate SP2 accuracy
   # create df of SP2
@@ -481,9 +481,10 @@ run_knn_fri <- function(dat, vars, k) {
   sp2$match <- sp2$obs == sp2$est
   
   # add total percent of matching SP2 to perform_df
-  perform_df <- cbind(perform_df,
-                      data.frame(sp2_accuracy = NROW(sp2[sp2$match == T,]) /
-                                   NROW(sp2)))
+  perform_df %<>% add_row(variable = 'second species', 
+                        metric = 'accuracy (%)',
+                        value = NROW(sp2[sp2$match == T,]) /
+                                   NROW(sp2) * 100)
   
   # calculate GROUP3 accuracy
   # create df of GROUP3
@@ -493,10 +494,11 @@ run_knn_fri <- function(dat, vars, k) {
   # create column of match or not
   group3$match <- group3$obs == group3$est
   
-  # add total percent of matching SP2 to perform_df
-  perform_df <- cbind(perform_df,
-                      data.frame(group3_accuracy = NROW(group3[group3$match == T,]) /
-                                   NROW(group3)))
+  # add total percent of matching group3 to perform_df
+  perform_df %<>% add_row(variable = 'three func group class',
+                          metric = 'accuracy (%)',
+                          value = NROW(group3[group3$match == T,]) /
+                                   NROW(group3) * 100)
   
   # calculate GROUP5 accuracy
   # create df of GROUP5
@@ -506,13 +508,11 @@ run_knn_fri <- function(dat, vars, k) {
   # create column of match or not
   group5$match <- group5$obs == group5$est
   
-  # add total percent of matching SP2 to perform_df
-  perform_df <- cbind(perform_df,
-                      data.frame(group5_accuracy = NROW(group5[group5$match == T,]) /
-                                   NROW(group5)))
-
-  # melt df
-  perform_df <- melt(perform_df)
+  # add total percent of matching group5 to perform_df
+  perform_df %<>% add_row(variable = 'five func group class',
+                        metric = 'accuracy (%)',
+                        value = NROW(group5[group5$match == T,]) /
+                                   NROW(group5) * 100)
   
   # return df
   return(perform_df)
@@ -532,7 +532,7 @@ load('D:/ontario_inventory/imputation/example/dat_fri_scr.RData')
 
 # subset only the attributes we need
 dat_fri_scr %<>% select(POLYID, AGE2018, SPCOMP, WG, 
-                        avg, zsd,
+                        avg, sd,
                         rumple, zpcum8,
                         x, y, red_edge_2)
 
@@ -600,32 +600,73 @@ dat_fri_scr <- left_join(dat_fri_scr,
                  sp_group %>% select(POLYID, SpeciesGroup2, SpeciesGroup3), 
                  by = 'POLYID')
 
-##############################################
+#############################################
 ### RUN NEAREST NEIGHBOR IMPUTATION K = 5 ###
-##############################################
+#############################################
+
+# create vector of X-variables for imputation
+vars <- c('avg', 'sd', 'rumple',
+          'zpcum8', 'x',
+          'y', 'red_edge_2')
 
 # run_knn function already created
-# we use top_height, cc, red_edge_2 in the algorithm
-perf <- run_knn_fri(dat_fri_scr, c('avg', 'zsd', 'rumple', 
-                                   'zpcum8', 'x', 
-                                   'y', 'red_edge_2'), k = 5)
+perf <- run_knn_fri(dat_fri_scr, vars, k = 5)
 
 # round values
 perf %<>% mutate(value = round(value, 2))
 
+# factor variable and metric categories to order
+perf %<>% mutate(variable = factor(variable, levels = c('age', 'working group','leading species', 
+                                                        'second species', 'three func group class',
+                                                        'five func group class', vars))) %>%
+  mutate(metric = factor(metric, levels = c('rmsd (yrs)', 'mbe (yrs)', 'mae (yrs)', 'accuracy (%)', 'rrmsd (%)', 'rmbe (%)')))
+
+# cast df
+perf_cast <- dcast(perf, variable ~ metric)
+
+# remove x and y
+perf_cast %<>% filter(!(variable %in% c('x', 'y')))
+
+# set NA to blank
+perf_cast[is.na(perf_cast)] <- ''
+
 # display results
-knitr::kable(perf, caption = "Imputation Performance of FRI Forest Stand Polygons", label = NA)
+knitr::kable(perf_cast, caption = "Imputation Performance of FRI Forest Stand Polygons", label = NA)
 ```
 
-EDIT!
 
-*** Mean Absolute Percent Error (MAPE) of the imputation attributes (p95, rumple, zpcum8, depth_q25, x, y, red_edge_2) is below 5% for all attributes. These are low values, which demonstrate that the imputation algorithm is finding optimal matches within the database of available FRI polygons. The Mean Absolute Error of Age is 16.27, and the MAPE is 38.71 percent. Accuracy of first species classification (sp1) is 67%, and a much lower 36% for second species. Species classification with 3 and 5 classes have respective accuracies of 74% and 63%. ***
 
-## 4. Run imputation on GRM polygon dataset to derive estimates of age and species composition {-#imputationp4}
+Table: Imputation Performance of FRI Forest Stand Polygons
 
-The last step is to run the imputation between the screened FRI data frame and the GRM segmented polygons. For each GRM segmented polygon, the k-nearest neighbors in the FRI data are found and used to impute age and species composition. Note we do not conduct imputation on all the GRM segmented polygons, but only the polygons that have >= 50% forested landcover, p95 >= 5 meters, and canopy cover >= 50% (same criteria as FRI data screening conducted above in step 2).
+|variable               |rmsd (yrs) |mbe (yrs) |mae (yrs) |accuracy (%) |rrmsd (%) |rmbe (%) |
+|:----------------------|:----------|:---------|:---------|:------------|:---------|:--------|
+|age                    |23.31      |-0.14     |16.06     |             |          |         |
+|working group          |           |          |          |66.77        |          |         |
+|leading species        |           |          |          |65.46        |          |         |
+|second species         |           |          |          |34.05        |          |         |
+|three func group class |           |          |          |72.34        |          |         |
+|five func group class  |           |          |          |60.73        |          |         |
+|avg                    |           |          |          |             |3.6       |0        |
+|sd                     |           |          |          |             |3.88      |-0.33    |
+|rumple                 |           |          |          |             |2.54      |0.01     |
+|zpcum8                 |           |          |          |             |0.9       |0.13     |
+|red_edge_2             |           |          |          |             |2.15      |-0.1     |
 
-Although we cannot assess performance of age and species composition when imputing into the GRM segmented polygons, we can still assess the fit of the variables used in the imputation: avg, zsd, rumple, zpcum8, x, y, and Sentinel red_edge_2.
+*The mean bias error (MBE) of age is -0.14 years, indicating the imputed estimates of age are not skewed toward younger or older values. The mean absolute error (MAE) of age is 16.06 years, which is the average difference between the observed and imputed value.*
+
+*Accuracy of leading species classification is 65.46%, and a much lower 34.05% for second leading species. Three and five functional group classification have respective accuracies of 72.34% and 60.73%.*
+
+*Relative root mean squared difference (RRMSD) of the imputation attributes (avg, sd, rumple, zpcum8, and red_edge_2) is below 4% for all attributes. These are low values, which demonstrate that the imputation algorithm is finding optimal matches within the database of available FRI polygons.*
+
+*Relative mean bias error (RMBE) of the imputation attributes is close to 0%, meaning that the nearest neighbor selections are not skewed toward positive or negative values of these attributes.*
+
+*RRMSD/RMBE are not calculated for x and y because the coordinates do not represent a value scale.*
+
+## 4. Run imputation between FRI and GRM polygons to derive estimates of age and species composition {-#imputationp4}
+
+The last step is to run the imputation between the screened FRI polygons and the GRM segmented polygons. For each GRM segmented polygon, the k-nearest neighbors in the FRI data are found and used to impute age and species composition. Note we do not conduct imputation on all the GRM segmented polygons, but only the polygons that have >= 50% forested landcover, p95 >= 5 meters, and canopy cover >= 50% (same criteria as FRI data screening conducted above in step 2).
+
+Although we cannot directly assess the error of age and species composition when imputing into the GRM segmented polygons, we can still assess the fit of the variables used in the imputation.
 
 We can also review maps and distributions comparing FRI age/species composition against the same attributes imputed into GRM segmented polygons.
 
@@ -645,10 +686,10 @@ dat_grm_scr <- dat_grm %>% filter(dom_for == 'Yes',
                                   cc >= 50)
 
 # create data frame for grm and fri metrics used in imputation
-dat_grm_imp <- dat_grm_scr %>% select(id, avg, zsd, 
+dat_grm_imp <- dat_grm_scr %>% select(id, avg, sd, 
                                       rumple, zpcum8,
                                       x, y, red_edge_2) %>% na.omit
-dat_fri_imp <- dat_fri_scr %>% select(avg, zsd, 
+dat_fri_imp <- dat_fri_scr %>% select(avg, sd, 
                                       rumple, zpcum8,
                                       x, y, red_edge_2) %>% na.omit
 
@@ -665,127 +706,102 @@ nn <- nn2(dat_fri_scaled, dat_grm_scaled, k = 5)
 nni <- nn[[1]]
 
 # add imputed attributes into GRM imputation data frame
-dat_grm_imp %<>% add_column(
-  avg_imp = apply(
-    nni,
-    MARGIN = 1,
-    FUN = function(x) {
-      mean(dat_fri_imp[x, 'avg'])
-    }
-  ),
-  zsd_imp = apply(
-    nni,
-    MARGIN = 1,
-    FUN = function(x) {
-      mean(dat_fri_imp[x, 'zsd'])
-    }
-  ),
-  rumple_imp = apply(
-    nni,
-    MARGIN = 1,
-    FUN = function(x) {
-      mean(dat_fri_imp[x, 'rumple'])
-    }
-  ),
-  zpcum8_imp = apply(
-    nni,
-    MARGIN = 1,
-    FUN = function(x) {
-      mean(dat_fri_imp[x, 'zpcum8'])
-    }
-  ),
-  x_imp = apply(
-    nni,
-    MARGIN = 1,
-    FUN = function(x) {
-      mean(dat_fri_imp[x, 'x'])
-    }
-  ),
-  y_imp = apply(
-    nni,
-    MARGIN = 1,
-    FUN = function(x) {
-      mean(dat_fri_imp[x, 'y'])
-    }
-  ),
-  red_edge_2_imp = apply(
-    nni,
-    MARGIN = 1,
-    FUN = function(x) {
-      mean(dat_fri_imp[x, 'red_edge_2'])
-    }
-  ),
-  age = apply(
-    nni,
-    MARGIN = 1,
-    FUN = function(x) {
-      mean(dat_fri_scr[x, 'AGE2018'])
-    }
-  ),
-  wg = apply(
-    nni,
-    MARGIN = 1,
-    FUN = function(x) {
-      getmode(dat_fri_scr[x, 'WG'])
-    }
-  ),
-  sp1 = apply(
-    nni,
-    MARGIN = 1,
-    FUN = function(x) {
-      getmode(dat_fri_scr[x, 'SP1'])
-    }
-  ),
-  sp2 = apply(
-    nni,
-    MARGIN = 1,
-    FUN = function(x) {
-      getmode(dat_fri_scr[x, 'SP2'])
-    }
-  ),
-  class3 = apply(
-    nni,
-    MARGIN = 1,
-    FUN = function(x) {
-      getmode(dat_fri_scr[x, 'SpeciesGroup3'])
-    }
-  ),
-  class5 = apply(
-    nni,
-    MARGIN = 1,
-    FUN = function(x) {
-      getmode(dat_fri_scr[x, 'SpeciesGroup2'])
-    }
-  )
-)
+for(i in seq_along(vars)){
+  dat_grm_imp %<>% add_column(
+    !!str_c(vars[i], '_imp') := apply(
+      nni, 
+      MARGIN = 1, 
+      FUN = function(x){
+        mean(dat_fri_imp[x, vars[i]])
+      }
+    ))
+}
+
+# create vector of target variables
+tar_vars <- c('AGE2018', 'WG', 'SP1', 'SP2',
+              'SpeciesGroup3', 'SpeciesGroup2')
+  
+# add age and species variables to GRM data frame
+for(i in seq_along(tar_vars)){
+  if(i == 'AGE2018'){
+    dat_grm_imp %<>% add_column(
+      !!tar_vars[i] := apply(
+        nni, 
+        MARGIN = 1, 
+        FUN = function(x){
+          mean(dat_fri_scr[x, tar_vars[i]])
+        }
+      ))
+  } else{
+    dat_grm_imp %<>% add_column(
+      !!tar_vars[i] := apply(
+        nni, 
+        MARGIN = 1, 
+        FUN = function(x){
+          getmode(dat_fri_scr[x, tar_vars[i]])
+        }
+      ))
+  }
+}
+
+# update colnames
+dat_grm_imp %<>% rename(age = AGE2018,
+                        class3 = SpeciesGroup3,
+                        class5 = SpeciesGroup2)
 
 # add values back into main GRM data frame (missing values for polygons not
 # included in the imputation)
 dat_grm <- left_join(dat_grm, dat_grm_imp)
 
 # calculate performance across imputation attributes
-perf <- tibble(avg_mae = mae(dat_grm_imp$avg, dat_grm_imp$avg_imp),
-               avg_mape = mape(dat_grm_imp$avg, dat_grm_imp$avg_imp),
-               zsd_mae = mae(dat_grm_imp$zsd, dat_grm_imp$zsd_imp),
-               zsd_mape = mape(dat_grm_imp$zsd, dat_grm_imp$zsd_imp),
-               rumple_mae = mae(dat_grm_imp$rumple, dat_grm_imp$rumple_imp),
-               rumple_mape = mape(dat_grm_imp$rumple, dat_grm_imp$rumple_imp),
-               zpcum8_mae = mae(dat_grm_imp$zpcum8, dat_grm_imp$zpcum8_imp),
-               zpcum8_mape = mape(dat_grm_imp$zpcum8, dat_grm_imp$zpcum8_imp),
-               x_mae = mae(dat_grm_imp$x, dat_grm_imp$x_imp),
-               x_mape = mape(dat_grm_imp$x, dat_grm_imp$x_imp),
-               y_mae = mae(dat_grm_imp$y, dat_grm_imp$y_imp),
-               y_mape = mape(dat_grm_imp$y, dat_grm_imp$y_imp),
-               red_edge_2_mae = mae(dat_grm_imp$red_edge_2, dat_grm_imp$red_edge_2_imp),
-               red_edge_2_mape = mape(dat_grm_imp$red_edge_2, dat_grm_imp$red_edge_2_imp)
-               ) %>% melt
+  for(i in seq_along(vars)){
+    if(i == 1){
+      perf <- tibble(variable = vars[i],
+                           metric = c('rrmsd (%)', 'rmbe (%)'),
+                           value = c(rrmsd(dat_grm_imp[, vars[i]],
+                         dat_grm_imp[, str_c(vars[i], '_imp')]),
+                                 rmbe(dat_grm_imp[, vars[i]],
+                         dat_grm_imp[, str_c(vars[i], '_imp')])))
+    }else{
+      perf %<>% add_row(variable = vars[i],
+                           metric = c('rrmsd (%)', 'rmbe (%)'),
+                           value = c(rrmsd(dat_grm_imp[, vars[i]],
+                         dat_grm_imp[, str_c(vars[i], '_imp')]),
+                                  rmbe(dat_grm_imp[, vars[i]],
+                          dat_grm_imp[, str_c(vars[i], '_imp')])))
+    }
+  }
 
 # round to two decimal places
 perf %<>% mutate(value = round(value, 2))
 
+# factor so table displays nicely
+perf %<>% mutate(variable = factor(variable, levels = vars)) %>%
+  mutate(metric = factor(metric, levels = c('rrmsd (%)', 'rmbe (%)')))
+
+# cast df
+perf_cast <- dcast(perf, variable ~ metric)
+
+# remove x and y
+perf_cast %<>% filter(!(variable %in% c('x', 'y')))
+
 # display results of imputation rmsd
-knitr::kable(perf, caption = "Imputation Performance between FRI and GRM Forest Stand Polygons", label = NA)
+knitr::kable(perf_cast, caption = "Imputation Performance between FRI and GRM Forest Stand Polygons", label = NA)
 ```
+
+
+
+Table: Imputation Performance between FRI and GRM Forest Stand Polygons
+
+|variable   | rrmsd (%)| rmbe (%)|
+|:----------|---------:|--------:|
+|avg        |      3.82|     0.05|
+|sd         |      4.05|    -0.46|
+|rumple     |      2.65|     0.11|
+|zpcum8     |      0.86|     0.12|
+|red_edge_2 |      2.09|    -0.12|
+
+*The RRMSD results are again all below ~4% and RMBE does not show bias toward negative of positive difference.*
 
 ## 4a. Figures of Forest Stand Age {-#imputationp4a}
 
@@ -811,7 +827,7 @@ sp_group <- read.csv(
   'D:/ontario_inventory/romeo/RMF_EFI_layers/Polygons Inventory/RMF_PolygonForest_SPGROUP.shp'
 )
 
-# load poly_Fri dataframe
+# load poly_fri dataframe
 dat_fri <- as.data.frame(poly_fri)
 
 # change POLYID to numeric
@@ -840,61 +856,95 @@ poly_fri$AGE2018[!(poly_fri$POLYID %in% dat_fri_scr$POLYID)] <- NA
 poly_fri$class3[!(poly_fri$POLYID %in% dat_fri_scr$POLYID)] <- NA
 poly_fri$class5[!(poly_fri$POLYID %in% dat_fri_scr$POLYID)] <- NA
 
+# create df to plot age
+grm_sf <- st_as_sf(poly_grm)
+fri_sf <- st_as_sf(poly_fri)
+
+# cut dfs
+grm_sf %<>% mutate(age_cut = cut(age, breaks = c(seq(0, 130, 10), 250)))
+fri_sf %<>% mutate(age_cut = cut(AGE2018, breaks = c(seq(0, 130, 10), 250)))
+
 # plot age
-par(mfrow=c(2,1))
+p1 <- ggplot(grm_sf) +
+  geom_sf(mapping = aes(fill = age_cut), linewidth = 0.05) +
+  coord_sf() +
+  scale_fill_manual(values = viridis(14), name = 'Age', na.translate = F) +
+  theme_void(base_size = 30) +
+  ggtitle('Imputed Age of GRM \nSegmented Forest Stands') +
+  theme(plot.title = element_text(hjust = 0.5))
 
-plot(poly_grm, 'age', col = viridis(14), type = 'interval', breaks = seq(0, 140, 10),
-     plg = list(x = 'topright', cex = 2, title = 'Age'),
-     main = '')
-title(main = 'Imputed Age of GRM Segmented Forest Stands', cex.main = 3)
+p2 <- ggplot(fri_sf) +
+  geom_sf(mapping = aes(fill = age_cut), linewidth = 0.05) +
+  coord_sf() +
+  scale_fill_manual(values = viridis(14), name = 'Age', na.translate = F) +
+  theme_void(base_size = 30) +
+  ggtitle('Age of FRI \nForest Stands') +
+  theme(plot.title = element_text(hjust = 0.5))
 
-plot(poly_fri, 'AGE2018', col = viridis(14), type = 'interval', breaks = seq(0, 140, 10),
-     plg = list(x = 'topright', cex = 2, title = 'Age'),
-     main = '')
-title(main = 'Age of FRI Forest Stands', cex.main = 3)
+grid.arrange(p1, p2, ncol = 1)
 ```
 
-<img src="05-Imputation_files/figure-html/imputationp4a-1.png" width="1728" />
+<img src="05-Imputation_files/figure-html/imputationp4a-1.png" width="1152" />
+*Imputed age values show a similar spatial distribution to observed age values at a broad scale. Of course, the values should be scrutinized on a fine scale in specific areas. This task is much easier to do in a GIS software using the output shapefiles.*
 
-## 4b. Figures of Forest Stand 3-Species Classification {-#imputationp4b}
+## 4b. Figures of Three Functional Group Classification {-#imputationp4b}
 
 
 ```r
-# plot group of 3 species
-par(mfrow=c(2,1))
+# plot three func group classification
+p1 <- ggplot(grm_sf) +
+  geom_sf(mapping = aes(fill = class3), linewidth = 0.05) +
+  coord_sf() +
+  scale_fill_manual(values = c('#228833', '#aa3377', '#ccbb44'), 
+                    name = 'Species Class', na.translate = F) +
+  theme_void(base_size = 30) +
+  ggtitle('Imputed Three Functional \nGroup Classification (GRM)') +
+  theme(plot.title = element_text(hjust = 0.5))
 
-plot(poly_grm, 'class3', col = viridis(3), type = 'classes',
-     plg = list(x = 'topright', cex = 2, title = 'Species Class'),
-     main = '')
-title(main = 'Imputed Species Class (3) of GRM Segmented Forest Stands', cex.main = 3)
+p2 <- ggplot(fri_sf) +
+  geom_sf(mapping = aes(fill = class3), linewidth = 0.05) +
+  coord_sf() +
+  scale_fill_manual(values = c('#228833', '#aa3377', '#ccbb44'), 
+                    name = 'Species Class', na.translate = F) +
+  theme_void(base_size = 30) +
+  ggtitle('Three Functional \nGroup Classification (FRI)') +
+  theme(plot.title = element_text(hjust = 0.5))
 
-plot(poly_fri, 'class3', col = viridis(3), type = 'classes',
-     plg = list(x = 'topright', cex = 2, title = 'Species Class'),
-     main = '')
-title(main = 'Species Class (3) FRI Forest Stands', cex.main = 3)
+grid.arrange(p1, p2, ncol = 1)
 ```
 
-<img src="05-Imputation_files/figure-html/imputationp4b-1.png" width="1728" />
+<img src="05-Imputation_files/figure-html/imputationp4b-1.png" width="1152" />
+*We can also observe a similar distribution of species classes.*
 
-## 4c. Figures of Forest Stand 5-Species Classification {-#imputationp4c}
+## 4c. Figures of Five Functional Group Classification {-#imputationp4c}
 
 
 ```r
-# plot group of 5 species
-par(mfrow=c(2,1))
+# plot five func group classification
+p1 <- ggplot(grm_sf) +
+  geom_sf(mapping = aes(fill = class5), linewidth = 0.05) +
+  coord_sf() +
+  scale_fill_manual(values = c('#ccbb44', '#228833', '#4477aa',
+                      '#ee6677', '#aa3377'), 
+                    name = 'Species Class', na.translate = F) +
+  theme_void(base_size = 30) +
+  ggtitle('Imputed Five Functional \nGroup Classification (GRM)') +
+  theme(plot.title = element_text(hjust = 0.5))
 
-plot(poly_grm, 'class5', col = viridis(5), type = 'classes',
-     plg = list(x = 'topright', cex = 2, title = 'Species Class'),
-     main = '')
-title(main = 'Imputed Species Class (5) of GRM Segmented Forest Stands', cex.main = 3)
+p2 <- ggplot(fri_sf) +
+  geom_sf(mapping = aes(fill = class5), linewidth = 0.05) +
+  coord_sf() +
+  scale_fill_manual(values = c('#ccbb44', '#228833', '#4477aa',
+                      '#ee6677', '#aa3377'), 
+                    name = 'Species Class', na.translate = F) +
+  theme_void(base_size = 30) +
+  ggtitle('Five Functional \nGroup Classification (FRI)') +
+  theme(plot.title = element_text(hjust = 0.5))
 
-plot(poly_fri, 'class5', col = viridis(5), type = 'classes',
-     plg = list(x = 'topright', cex = 2, title = 'Species Class'),
-     main = '')
-title(main = 'Species Class (5) FRI Forest Stands', cex.main = 3)
+grid.arrange(p1, p2, ncol = 1)
 ```
 
-<img src="05-Imputation_files/figure-html/imputationp4c-1.png" width="1728" />
+<img src="05-Imputation_files/figure-html/imputationp4c-1.png" width="1152" />
 
 ## 4d. Density Plots of Forest Stand Age {-#imputationp4d}
 
@@ -917,7 +967,7 @@ p1 <- ggplot(dat_grm, aes(x = age)) +
 
 p2 <- ggplot(as.data.frame(poly_fri), aes(x = AGE2018)) +
   geom_density(fill = 'grey') +
-  geom_vline(aes(xintercept = median(AGE, na.rm = T)),
+  geom_vline(aes(xintercept = median(AGE2018, na.rm = T)),
              linetype = "dashed",
              size = 0.6) +
   xlim(c(0, 200)) +
@@ -929,16 +979,16 @@ p2 <- ggplot(as.data.frame(poly_fri), aes(x = AGE2018)) +
   theme(text = element_text(size = 25),
         plot.title = element_text(size=30))
 
-grid.arrange(p1, p2, ncol = 2)
+grid.arrange(p1, p2, ncol = 1)
 ```
 
 <img src="05-Imputation_files/figure-html/imputationp4d-1.png" width="1728" />
+*The distribution of imputed age in GRM polygons closely matches that of observed age in FRI polygons. The median age values (dotted lines) are 78 (GRM) and 83 (FRI).*
 
-## 4e. Distribution of 3-Species Classification {-#imputationp4e}
+## 4e. Distribution of Three Functional Group Classification {-#imputationp4e}
 
 
 ```r
-# distribution of 3 species classes
 # create data frame for GRM 3 classes
 dat_grm_c3 <- dat_grm %>% 
   tabyl(class3) %>%  
@@ -967,8 +1017,9 @@ p1 <- ggplot(dat_grm_c3, aes(x = "", y = prop, fill = class3)) +
         legend.text = element_text(size = 20),
         legend.key.width = unit(2, 'cm'),
         plot.title = element_text(size=30)) +
-  labs(fill = "3 Species Classification") +
-  ggtitle("Imputed 3 Species Classification \nof GRM Segmented Forest Stands")
+  scale_fill_manual(values = c('#228833', '#aa3377', '#ccbb44')) +
+  labs(fill = "") +
+  ggtitle("Imputed Three Functional \nGroup Classification (GRM)")
 
 p2 <- ggplot(dat_fri_c3, aes(x = "", y = prop, fill = class3)) +
   geom_bar(width = 1, stat = "identity") +
@@ -979,15 +1030,17 @@ p2 <- ggplot(dat_fri_c3, aes(x = "", y = prop, fill = class3)) +
         legend.text = element_text(size = 20),
         legend.key.width = unit(2, 'cm'),
         plot.title = element_text(size=30)) +
-  labs(fill = "3 Species Classification") +
-  ggtitle("3 Species Classification \nof FRI Forest Stands")
+  scale_fill_manual(values = c('#228833', '#aa3377', '#ccbb44')) +
+  labs(fill = "") +
+  ggtitle("Three Functional Group \nClassification (FRI)")
 
 grid.arrange(p1, p2, ncol = 2)
 ```
 
 <img src="05-Imputation_files/figure-html/imputationp4e-1.png" width="1728" />
+*The distribution of three functional groups is equal in the hardwood class (20%). The distribution of mixedwood and softwood is slightly different in the imputed values, with 3% more softwood, and thus 3% less mixedwood.*
 
-## 4f. Distribution of 5-Species Classification {-#imputationp4f}
+## 4f. Distribution of Five Functional Group Classification {-#imputationp4f}
 
 
 ```r
@@ -1001,7 +1054,7 @@ dat_grm_c5 <- dat_grm %>%
   mutate(ypos = cumsum(prop) - 0.5*prop) %>%
   mutate(lbl = round(prop))
 
-# create data frame for FRI 3 classes
+# create data frame for FRI 5 classes
 dat_fri_c5 <- poly_fri %>% as.data.frame %>%
   tabyl(class5) %>%  
   filter(is.na(class5) == F) %>% 
@@ -1020,8 +1073,10 @@ p1 <- ggplot(dat_grm_c5, aes(x = "", y = prop, fill = class5)) +
         legend.text = element_text(size = 20),
         legend.key.width = unit(2, 'cm'),
         plot.title = element_text(size=30)) +
-  labs(fill = "5 Species Classification") +
-  ggtitle("Imputed 5 Species Classification \nof GRM Segmented Forest Stands")
+  scale_fill_manual(values = c('#ccbb44', '#228833', '#4477aa',
+                                        '#ee6677', '#aa3377')) +
+  labs(fill = "") +
+  ggtitle("Imputed Five Functional \nGroup Classification (GRM)")
 
 p2 <- ggplot(dat_fri_c5, aes(x = "", y = prop, fill = class5)) +
   geom_bar(width = 1, stat = "identity") +
@@ -1032,10 +1087,13 @@ p2 <- ggplot(dat_fri_c5, aes(x = "", y = prop, fill = class5)) +
         legend.text = element_text(size = 20),
         legend.key.width = unit(2, 'cm'),
         plot.title = element_text(size=30)) +
-  labs(fill = "5 Species Classification") +
-  ggtitle("5 Species Classification \nof FRI Forest Stands")
+  scale_fill_manual(values = c('#ccbb44', '#228833', '#4477aa',
+                                        '#ee6677', '#aa3377')) +
+  labs(fill = "") +
+  ggtitle("Five Functional Group \nClassification (FRI)")
 
 grid.arrange(p1, p2, ncol = 2)
 ```
 
 <img src="05-Imputation_files/figure-html/imputationp4f-1.png" width="1728" />
+*The distribution of imputed five classes of species is also very similar to the FRI distribution. The imputed values contain slightly more black spruce dominated stands (3% more than the FRI) and mixedwood stands (1% more than the FRI), and slightly less mixed conifers and jack pine dominated.*

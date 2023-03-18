@@ -1,7 +1,7 @@
 --- 
 title: "Integration of Photo Interpreted and LIDAR Attributes Into a Polygonal Forest Inventory Framework"
 author: "Ethan Berman"
-date: "2022-07-03"
+date: "2023-03-18"
 site: bookdown::bookdown_site
 documentclass: book
 bibliography: [book.bib]

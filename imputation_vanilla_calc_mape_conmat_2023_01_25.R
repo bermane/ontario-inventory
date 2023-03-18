@@ -10,6 +10,7 @@ library(corrplot)
 library(reshape2)
 library(janitor)
 library(circlize)
+library(RANN)
 
 ###################################################
 ###LOAD POLYGON DATASET AND ADD LIDAR ATTRIBUTES###
@@ -140,22 +141,29 @@ getmode <- function(v) {
   uniqv[which.max(tabulate(match(v, uniqv)))]
 }
 
-# create rmse function
-rmse <- function(obs, est){
-  sqrt(mean((obs - est) ^ 2))
+# create rmsd function
+rmsd <- function(obs, est){
+  sqrt(mean((est - obs) ^ 2))
+}
+
+# create rrmsd function
+rrmsd <- function(obs, est){
+  sqrt(mean((est - obs) ^ 2)) / mean(obs) * 100
+}
+
+# create md function
+md <- function(obs, est){
+  mean(est - obs)
+}
+
+# create rmd function
+rmd <- function(obs, est){
+  mean(est - obs) / mean(obs) * 100
 }
 
 # create mae function
 mae <- function(obs, est){
-  sum(abs(obs-est)) / length(obs)
-}
-
-# create mape function
-mape <- function(obs, est){
-  check <- abs((obs - est) / obs)
-  check <- check[is.infinite(check) == F]
-  l <- length(check)
-  sum(check) / l * 100
+  mean(abs(est - obs))
 }
 
 # create knn function
@@ -246,45 +254,49 @@ run_knn <- function(dat, vars, k) {
   }
   
   
-  # calculate rmse for vars
+  # calculate performance metrics for vars
   for(i in seq_along(vars)){
     if(i == 1){
-      perform_df <- tibble(!!str_c(vars[i], '_raw_rmsd') := 
-                             rmse(pull(nn_tab, vars[i]),
+      perform_df <- tibble(!!str_c(vars[i], '_rmsd') := 
+                             rmsd(pull(nn_tab, vars[i]),
                                   pull(nn_tab, str_c(vars[i], '_nn'))),
-                           !!str_c(vars[i], '_scaled_rmsd') := 
-                             rmse(pull(nn_tab, vars[i]),
-                                  pull(nn_tab, str_c(vars[i], '_nn'))) / 
-                             sd(pull(nn_tab, vars[i])),
+                           !!str_c(vars[i], '_rrmsd') := 
+                             rrmsd(pull(nn_tab, vars[i]),
+                                   pull(nn_tab, str_c(vars[i], '_nn'))),
+                           !!str_c(vars[i], '_md') := 
+                             md(pull(nn_tab, vars[i]),
+                                pull(nn_tab, str_c(vars[i], '_nn'))),
+                           !!str_c(vars[i], '_rmd') := 
+                             rmd(pull(nn_tab, vars[i]),
+                                 pull(nn_tab, str_c(vars[i], '_nn'))),
                            !!str_c(vars[i], '_mae') := 
                              mae(pull(nn_tab, vars[i]),
-                                 pull(nn_tab, str_c(vars[i], '_nn'))),
-                           !!str_c(vars[i], '_mape') := 
-                             mape(pull(nn_tab, vars[i]),
-                                  pull(nn_tab, str_c(vars[i], '_nn'))))
+                                 pull(nn_tab, str_c(vars[i], '_nn'))))
     }else{
-      perform_df %<>% mutate(!!str_c(vars[i], '_raw_rmsd') := 
-                               rmse(pull(nn_tab, vars[i]),
+      perform_df %<>% mutate(!!str_c(vars[i], '_rmsd') := 
+                               rmsd(pull(nn_tab, vars[i]),
                                     pull(nn_tab, str_c(vars[i], '_nn'))),
-                             !!str_c(vars[i], '_scaled_rmsd') := 
-                               rmse(pull(nn_tab, vars[i]),
-                                    pull(nn_tab, str_c(vars[i], '_nn'))) / 
-                               sd(pull(nn_tab, vars[i])),
+                             !!str_c(vars[i], '_rrmsd') := 
+                               rrmsd(pull(nn_tab, vars[i]),
+                                     pull(nn_tab, str_c(vars[i], '_nn'))),
+                             !!str_c(vars[i], '_md') := 
+                               md(pull(nn_tab, vars[i]),
+                                  pull(nn_tab, str_c(vars[i], '_nn'))),
+                             !!str_c(vars[i], '_rmd') := 
+                               rmd(pull(nn_tab, vars[i]),
+                                   pull(nn_tab, str_c(vars[i], '_nn'))),
                              !!str_c(vars[i], '_mae') := 
                                mae(pull(nn_tab, vars[i]),
-                                   pull(nn_tab, str_c(vars[i], '_nn'))),
-                             !!str_c(vars[i], '_mape') := 
-                               mape(pull(nn_tab, vars[i]),
-                                    pull(nn_tab, str_c(vars[i], '_nn'))))
+                                   pull(nn_tab, str_c(vars[i], '_nn'))))
     }
   }
   
-  # calculate rmse for aux vars
-  perform_df %<>% mutate(age_raw_rmse = rmse(nn_tab$age, nn_tab$age_nn),
-                         age_scaled_rmse = rmse(nn_tab$age, nn_tab$age_nn) /
-                           sd(nn_tab$age),
-                         age_mae = mae(nn_tab$age, nn_tab$age_nn),
-                         age_mape = mape(nn_tab$age, nn_tab$age_nn))
+  # calculate perf metrics for aux vars
+  perform_df %<>% mutate(age_rmsd = rmsd(nn_tab$age, nn_tab$age_nn),
+                         age_rrmsd = rrmsd(nn_tab$age, nn_tab$age_nn),
+                         age_md = md(nn_tab$age, nn_tab$age_nn),
+                         age_rmd = rmd(nn_tab$age, nn_tab$age_nn),
+                         age_mae = mae(nn_tab$age, nn_tab$age_nn))
   
   # calculate wg accuracy
   # create df of WG
@@ -358,14 +370,14 @@ run_knn <- function(dat, vars, k) {
   return(perform_df)
 }
 
-##############################################
-### RUN KNN BEST COMBINATIONS TO CALC MAPE ###
-##############################################
+#####################################################
+### RUN KNN BEST COMBINATIONS TO CALC PERFORMANCE ###
+#####################################################
 
-# best als metrics only
+# best metrics only
 
 # select variables
-vars <- c('B6', 'cc',
+vars <- c('avg', 'B6',
           'rumple',
           'x',
           'y',
@@ -376,42 +388,7 @@ vars <- c('B6', 'cc',
 df <- run_knn(dat, vars, k = 5)
 
 # filter specific columns
-df %<>% filter(str_detect(variable, 'mape')) %>%
-  mutate(value = round(value, 2))
-
-# best efi attributes only
-
-# select variables
-vars <- c('B6', 'dens',
-          'depth_q25',
-          'lor',
-          'top_height',
-          'x',
-          'y')
-
-# run knn
-df <- run_knn(dat, vars, k = 5)
-
-# filter specific columns
-df %<>% filter(str_detect(variable, 'mape')) %>%
-  mutate(value = round(value, 2))
-
-# best combined attributes
-
-# select variables
-vars <- c('B6',
-          'depth_q25',
-          'rumple',
-          'ske',
-          'x',
-          'y',
-          'zpcum8')
-
-# run knn
-df <- run_knn(dat, vars, k = 5)
-
-# filter specific columns
-df %<>% filter(str_detect(variable, 'mape')) %>%
+df %<>% filter(str_detect(variable, 'rrmsd') | str_detect(variable, 'rmd')) %>%
   mutate(value = round(value, 2))
 
 ###############################################
@@ -419,13 +396,12 @@ df %<>% filter(str_detect(variable, 'mape')) %>%
 ###############################################
 
 # select variables
-vars <- c('B6',
-          'depth_q25',
+vars <- c('avg', 'B6',
           'rumple',
-          'ske',
           'x',
           'y',
-          'zpcum8')
+          'zpcum8',
+          'zsd')
 
 # set k
 k <- 5
@@ -614,40 +590,150 @@ write.csv(accmat_ext, file = 'D:/ontario_inventory/imputation/vanilla/conmat_bes
 ### CHORD DIAGRAMS ###
 ######################
 
-# 5 functional group
+# 3 functional group percent
 
 # make table
-accmat <- table("Imputed" = nn_tab$group5_nn, "Observed" = nn_tab$group5)
+accmat3 <- table("Imputed" = nn_tab$group3_nn, "Observed" = nn_tab$group3)
 
 # set row and col names
-rownames(accmat) <- c(str_c('BS (n = ', sum(accmat[1,]), ')'),
-                      str_c('HW (n = ', sum(accmat[2,]), ')'),
-                      str_c('JP (n = ', sum(accmat[3,]), ')'),
-                      str_c('MC (n = ', sum(accmat[4,]), ')'),
-                      str_c('MW (n = ', sum(accmat[5,]), ')'))
+rownames(accmat3) <- c(str_c(round(sum(accmat3[1,]) / sum(accmat3) * 100), '%'),
+                       str_c(round(sum(accmat3[2,]) / sum(accmat3) * 100), '%'),
+                       str_c(round(sum(accmat3[3,]) / sum(accmat3) * 100), '%'))
 
-colnames(accmat) <- c(str_c('BS (n = ', sum(accmat[,1]), ')'),
-                      str_c('HW (n = ', sum(accmat[,2]), ')'),
-                      str_c('JP (n = ', sum(accmat[,3]), ')'),
-                      str_c('MC (n = ', sum(accmat[,4]), ')'),
-                      str_c('MW (n = ', sum(accmat[,5]), ')'))
+colnames(accmat3) <- c(str_c(' ', round(sum(accmat3[,1]) / sum(accmat3) * 100), '% '),
+                       str_c(' ', round(sum(accmat3[,2]) / sum(accmat3) * 100), '% '),
+                       str_c(' ', round(sum(accmat3[,3]) / sum(accmat3) * 100), '% '))
 
 # change row names
-rownames(accmat) <- str_c(rownames(accmat), ' ')
+# rownames(accmat) <- str_c(rownames(accmat), ' ')
 
 # set grid colors
-grid_col <- c("BS (n = 21468)" = '#ccbb44',
-              "HW (n = 10321)" = '#228833',
-              "JP (n = 3672)" = '#4477aa',
-              "MC (n = 3759)" = '#ee6677',
-              "MW (n = 12200)" = '#aa3377',
-              "BS (n = 19059)" = '#ccbb44',
-              "HW (n = 10322)" = '#228833',
-              "JP (n = 4073)" = '#4477aa',
-              "MC (n = 5578)" = '#ee6677',
-              "MW (n = 12388)" = '#aa3377')
+grid_col3 <- c('#228833',
+               '#aa3377',
+               '#ccbb44',
+               '#228833',
+               '#aa3377',
+               '#ccbb44')
 
 # create diagram
 par(cex = 2)
-chordDiagram(accmat, grid.col = grid_col, annotationTrack = c("name", "grid"))
+chordDiagram(accmat3, grid.col = grid_col3, annotationTrack = c("name", "grid"))
+
+# 5 functional group percent
+
+# make table
+accmat5 <- table("Imputed" = nn_tab$group5_nn, "Observed" = nn_tab$group5)
+
+# set row and col names
+rownames(accmat5) <- c(str_c(round(sum(accmat5[1,]) / sum(accmat5) * 100), '%'),
+                       str_c(round(sum(accmat5[2,]) / sum(accmat5) * 100), '%'),
+                       str_c(round(sum(accmat5[3,]) / sum(accmat5) * 100), '%'),
+                       str_c(' ', round(sum(accmat5[4,]) / sum(accmat5) * 100), '% '),
+                       str_c(round(sum(accmat5[5,]) / sum(accmat5) * 100), '%'))
+
+colnames(accmat5) <- c(str_c(' ', round(sum(accmat5[,1]) / sum(accmat5) * 100), '% '),
+                       str_c(' ', round(sum(accmat5[,2]) / sum(accmat5) * 100), '% '),
+                       str_c(' ', round(sum(accmat5[,3]) / sum(accmat5) * 100), '% '),
+                       str_c(' ', round(sum(accmat5[,4]) / sum(accmat5) * 100), '% '),
+                       str_c(' ', round(sum(accmat5[,5]) / sum(accmat5) * 100), '% '))
+
+# change row names
+# rownames(accmat) <- str_c(rownames(accmat), ' ')
+
+# set grid colors
+grid_col5 <- c('#ccbb44',
+               '#228833',
+              '#4477aa',
+              '#ee6677',
+              '#aa3377',
+              '#ccbb44',
+              '#228833',
+              '#4477aa',
+               '#ee6677',
+               '#aa3377')
+
+# create diagram
+par(cex = 2)
+chordDiagram(accmat5, grid.col = grid_col5, annotationTrack = c("name", "grid"))
+
+# plot together
+par(mfrow = c(1, 2), cex = 2)
+
+circos.par(start.degree = 0)
+chordDiagram(accmat3, grid.col = grid_col3, 
+             annotationTrack = c("name", "grid"), big.gap = 10)
+abline(h = 0, lty = 2, col = "#00000080", lwd = 3)
+circos.clear()
+
+circos.par(start.degree = 0)
+chordDiagram(accmat5, grid.col = grid_col5, 
+             annotationTrack = c("name", "grid"), big.gap = 10)
+abline(h = 0, lty = 2, col = "#00000080", lwd = 3)
+circos.clear()
+
+# # 5 functional group
+# 
+# # make table
+# accmat5 <- table("Imputed" = nn_tab$group5_nn, "Observed" = nn_tab$group5)
+# 
+# # set row and col names
+# rownames(accmat5) <- c(str_c('BS (n = ', sum(accmat5[1,]), ')'),
+#                       str_c('HW (n = ', sum(accmat5[2,]), ')'),
+#                       str_c('JP (n = ', sum(accmat5[3,]), ')'),
+#                       str_c('MC (n = ', sum(accmat5[4,]), ')'),
+#                       str_c('MW (n = ', sum(accmat5[5,]), ')'))
+# 
+# colnames(accmat5) <- c(str_c('BS (n = ', sum(accmat5[,1]), ')'),
+#                       str_c('HW (n = ', sum(accmat5[,2]), ')'),
+#                       str_c('JP (n = ', sum(accmat5[,3]), ')'),
+#                       str_c('MC (n = ', sum(accmat5[,4]), ')'),
+#                       str_c('MW (n = ', sum(accmat5[,5]), ')'))
+# 
+# # change row names
+# # rownames(accmat) <- str_c(rownames(accmat), ' ')
+# 
+# # set grid colors
+# grid_col5 <- c("BS (n = 21468)" = '#ccbb44',
+#               "HW (n = 10321)" = '#228833',
+#               "JP (n = 3672)" = '#4477aa',
+#               "MC (n = 3759)" = '#ee6677',
+#               "MW (n = 12200)" = '#aa3377',
+#               "BS (n = 19059)" = '#ccbb44',
+#               "HW (n = 10322)" = '#228833',
+#               "JP (n = 4073)" = '#4477aa',
+#               "MC (n = 5578)" = '#ee6677',
+#               "MW (n = 12388)" = '#aa3377')
+# 
+# # create diagram
+# par(cex = 2)
+# chordDiagram(accmat5, grid.col = grid_col, annotationTrack = c("name", "grid"))
+# 
+# # 3 functional group
+# 
+# # make table
+# accmat3 <- table("Imputed" = nn_tab$group3_nn, "Observed" = nn_tab$group3)
+# 
+# # set row and col names
+# rownames(accmat3) <- c(str_c('HW (n = ', sum(accmat3[1,]), ')'),
+#                       str_c('MW (n = ', sum(accmat3[2,]), ')'),
+#                       str_c('SW (n = ', sum(accmat3[3,]), ')'))
+# 
+# colnames(accmat3) <- c(str_c('HW (n = ', sum(accmat3[,1]), ')'),
+#                       str_c('MW (n = ', sum(accmat3[,2]), ')'),
+#                       str_c('SW (n = ', sum(accmat3[,3]), ')'))
+# 
+# # change row names
+# # rownames(accmat) <- str_c(rownames(accmat), ' ')
+# 
+# # set grid colors
+# grid_col3 <- c("HW (n = 10041)" = '#228833',
+#               "MW (n = 9346)" = '#aa3377',
+#               "SW (n = 32033)" = '#ccbb44',
+#               "HW (n = 10322)" = '#228833',
+#               "MW (n = 11232)" = '#aa3377',
+#               "SW (n = 29866)" = '#ccbb44')
+# 
+# # create diagram
+# par(cex = 2)
+# chordDiagram(accmat3, grid.col = grid_col, annotationTrack = c("name", "grid"))
 

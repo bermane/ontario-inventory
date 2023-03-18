@@ -371,7 +371,7 @@ run_knn <- function(dat, vars, k) {
 # select variables
 vars <- c('lor', 'ba', 'qmdbh', 'dens',
           'agb', 'top_height', 'v', 
-          'v_merch', 'depth_q25', 'x', 'y')
+          'v_merch', 'x', 'y')
 
 # allocate list of combinations
 comb <- list()
@@ -463,7 +463,7 @@ foreach::foreach(i = seq_along(comb)) %dopar% {
   }
   
   # write out and read back in
-  write.csv(out, str_c('D:/ontario_inventory/imputation/vanilla/group1_mod_vars_chunk_', i, '.csv'))
+  write.csv(out, str_c('D:/ontario_inventory/imputation/vanilla/group1_mod_vars_chunk_', i, '2023_02_24.csv'))
 }
 
 # stop parallel cluster
@@ -476,7 +476,7 @@ parallel::stopCluster(cl)
 # select variables
 vars <- c('lor', 'ba', 'qmdbh', 'dens',
           'agb', 'top_height', 'v', 
-          'v_merch', 'depth_q25', 
+          'v_merch', 
           'x', 'y', 'B6')
 
 # allocate list of combinations
@@ -569,7 +569,7 @@ foreach::foreach(i = seq_along(comb)) %dopar% {
   }
   
   # write out and read back in
-  write.csv(out, str_c('D:/ontario_inventory/imputation/vanilla/group1b_mod_vars_chunk_', i, '.csv'))
+  write.csv(out, str_c('D:/ontario_inventory/imputation/vanilla/group1b_mod_vars_chunk_', i, '2023_02_24.csv'))
 }
 
 # stop parallel cluster
@@ -584,6 +584,7 @@ vars <- c('cc', 'avg', 'max',
           'p95', 'qav', 'ske',
           'kur', 'cv', 'B6', 'rumple',
           'zentropy', 'zpcum8',
+          'depth_q25',
           'zsd', 'x', 'y')
 
 # allocate list of combinations
@@ -676,7 +677,7 @@ foreach::foreach(i = seq_along(comb)) %dopar% {
   }
   
   # write out and read back in
-  write.csv(out, str_c('D:/ontario_inventory/imputation/vanilla/group2_raw_vars_chunk_', i, '.csv'))
+  write.csv(out, str_c('D:/ontario_inventory/imputation/vanilla/group2_raw_vars_chunk_', i, '2023_02_24.csv'))
 }
 
 # stop parallel cluster
@@ -793,213 +794,213 @@ foreach::foreach(i = seq_along(comb)) %dopar% {
   }
   
   # write out and read back in
-  write.csv(out, str_c('D:/ontario_inventory/imputation/vanilla/group3_comb_vars_chunk_', i, '.csv'))
+  write.csv(out, str_c('D:/ontario_inventory/imputation/vanilla/group3_comb_vars_chunk_', i, '2023_02_24.csv'))
 }
 
 # stop parallel cluster
 parallel::stopCluster(cl)
 
-################################
-### ORGANIZE OUTPUTS GROUP 1 ###
-################################
-
-# load filenames to read back in
-gr1_files <- list.files('D:/ontario_inventory/imputation/vanilla',
-                        pattern = 'group1_mod_vars_chunk_',
-                        full.names = T)
-
-# read back in
-gr1 <- do.call(rbind,lapply(gr1_files,read.csv))
-
-# remove row names
-gr1 %<>% select(-X)
-
-# create function to rescale values from 0 to 100
-scale_100 <- function(x){
-  x <- (x-min(x))/(max(x) - min(x))
-  return(x)
-}
-
-# lets scale age rmse
-gr1$age_rmse_scaled <- scale_100(gr1$age_raw_rmse)
-
-# take error of group3 and group5 accuracy
-# gr1$group3_error <- 1 - gr1$group3_accuracy
-gr1$group5_error <- 1 - gr1$group5_accuracy
-
-# lets scale group3 and group5 error
-# gr1$group3_error_scaled <- scale_100(gr1$group3_error)
-gr1$group5_error_scaled <- scale_100(gr1$group5_error)
-
-# take combined error mean
-gr1$error_mean <- (gr1$age_rmse_scaled + gr1$group5_error_scaled)/2
-
-#############################
-### CALCULATE BEST MODELS ###
-#############################
-
-# best model
-gr1_top <- gr1 %>% 
-  filter(error_mean %in% sort(error_mean)[1]) %>% 
-  select(vars, n, k, error_mean, age_raw_rmse, 
-         age_mae, age_mape, group3_accuracy, 
-         group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
-  arrange(error_mean) %>%
-  add_column(result = 'top', .before = 1)
-
-# best model k = 1
-gr1_top %<>% add_row(gr1 %>% 
-                         filter(k == 1) %>%
-                         filter(error_mean %in% sort(error_mean)[1]) %>% 
-                         select(vars, n, k, error_mean, age_raw_rmse, 
-                                age_mae, age_mape, group3_accuracy, 
-                                group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
-                         arrange(error_mean) %>%
-                         add_column(result = 'k = 1', .before = 1))
-
-# best model n = 5
-gr1_top %<>% add_row(gr1 %>% 
-                         filter(n == 5) %>%
-                         filter(error_mean %in% sort(error_mean)[1]) %>% 
-                         select(vars, n, k, error_mean, age_raw_rmse, 
-                                age_mae, age_mape, group3_accuracy, 
-                                group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
-                         arrange(error_mean) %>%
-                         add_column(result = 'n = 5', .before = 1))
-
-# best model n = 3
-gr1_top %<>% add_row(gr1 %>% 
-                         filter(n == 3) %>%
-                         filter(error_mean %in% sort(error_mean)[1]) %>% 
-                         select(vars, n, k, error_mean, age_raw_rmse, 
-                                age_mae, age_mape, group3_accuracy, 
-                                group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
-                         arrange(error_mean) %>%
-                         add_column(result = 'n = 3', .before = 1))
-
-# best model k = 1, n = 5
-gr1_top %<>% add_row(gr1 %>% 
-                         filter(k == 1) %>%
-                         filter(n == 5) %>%
-                         filter(error_mean %in% sort(error_mean)[1]) %>% 
-                         select(vars, n, k, error_mean, age_raw_rmse, 
-                                age_mae, age_mape, group3_accuracy, 
-                                group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
-                         arrange(error_mean) %>%
-                         add_column(result = 'k = 1 n = 5', .before = 1))
-
-# best model k = 3, n = 7
-gr1_top %<>% add_row(gr1 %>% 
-                       filter(k == 3) %>%
-                       filter(n == 7) %>%
-                       filter(error_mean %in% sort(error_mean)[1]) %>% 
-                       select(vars, n, k, error_mean, age_raw_rmse, 
-                              age_mae, age_mape, group3_accuracy, 
-                              group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
-                       arrange(error_mean) %>%
-                       add_column(result = 'k = 3 n = 7', .before = 1))
-
-# best model k = 3, n = 5
-gr1_top %<>% add_row(gr1 %>% 
-                         filter(k == 3) %>%
-                         filter(n == 5) %>%
-                         filter(error_mean %in% sort(error_mean)[1]) %>% 
-                         select(vars, n, k, error_mean, age_raw_rmse, 
-                                age_mae, age_mape, group3_accuracy, 
-                                group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
-                         arrange(error_mean) %>%
-                         add_column(result = 'k = 3 n = 5', .before = 1))
-
-# write out
-write.csv(gr1_top, 'D:/ontario_inventory/imputation/vanilla/gr1_top_2023_01_25.csv')
-
-##############################
-### CALCULATE TOP 5 MODELS ###
-##############################
-
-# best models
-gr1_top_5 <- gr1 %>% 
-  filter(error_mean %in% sort(error_mean)[1:5]) %>% 
-  select(vars, n, k, error_mean, age_raw_rmse, 
-         age_mae, age_mape, group3_accuracy, 
-         group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
-  arrange(error_mean) %>%
-  add_column(result = 'top 5', .before = 1)
-
-# best models k = 1
-gr1_top_5 %<>% add_row(gr1 %>% 
-                       filter(k == 1) %>%
-                       filter(error_mean %in% sort(error_mean)[1:5]) %>% 
-                       select(vars, n, k, error_mean, age_raw_rmse, 
-                              age_mae, age_mape, group3_accuracy, 
-                              group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
-                       arrange(error_mean) %>%
-                       add_column(result = 'top 5 k = 1', .before = 1))
-
-# best models n = 5
-gr1_top_5 %<>% add_row(gr1 %>% 
-                       filter(n == 5) %>%
-                       filter(error_mean %in% sort(error_mean)[1:5]) %>% 
-                       select(vars, n, k, error_mean, age_raw_rmse, 
-                              age_mae, age_mape, group3_accuracy, 
-                              group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
-                       arrange(error_mean) %>%
-                       add_column(result = 'top 5 n = 5', .before = 1))
-
-# best models n = 3
-gr1_top_5 %<>% add_row(gr1 %>% 
-                       filter(n == 3) %>%
-                       filter(error_mean %in% sort(error_mean)[1:5]) %>% 
-                       select(vars, n, k, error_mean, age_raw_rmse, 
-                              age_mae, age_mape, group3_accuracy, 
-                              group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
-                       arrange(error_mean) %>%
-                       add_column(result = 'top 5 n = 3', .before = 1))
-
-# best models k = 1, n = 5
-gr1_top_5 %<>% add_row(gr1 %>% 
-                       filter(k == 1) %>%
-                       filter(n == 5) %>%
-                       filter(error_mean %in% sort(error_mean)[1:5]) %>% 
-                       select(vars, n, k, error_mean, age_raw_rmse, 
-                              age_mae, age_mape, group3_accuracy, 
-                              group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
-                       arrange(error_mean) %>%
-                       add_column(result = 'top 5 k = 1 n = 5', .before = 1))
-
-# best models k = 3, n = 7
-gr1_top_5 %<>% add_row(gr1 %>% 
-                         filter(k == 3) %>%
-                         filter(n == 7) %>%
-                         filter(error_mean %in% sort(error_mean)[1:5]) %>% 
-                         select(vars, n, k, error_mean, age_raw_rmse, 
-                                age_mae, age_mape, group3_accuracy, 
-                                group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
-                         arrange(error_mean) %>%
-                         add_column(result = 'top 5 k = 3 n = 5', .before = 1))
-
-# best models k = 3, n = 5
-gr1_top_5 %<>% add_row(gr1 %>% 
-                         filter(k == 3) %>%
-                         filter(n == 5) %>%
-                         filter(error_mean %in% sort(error_mean)[1:5]) %>% 
-                         select(vars, n, k, error_mean, age_raw_rmse, 
-                                age_mae, age_mape, group3_accuracy, 
-                                group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
-                         arrange(error_mean) %>%
-                         add_column(result = 'top 5 k = 3 n = 5', .before = 1))
-
-# write out
-write.csv(gr1_top_5, 'D:/ontario_inventory/imputation/vanilla/gr1_top_5_2023_01_25.csv')
-
-# select variables
-vars <- c('lor', 'ba', 'qmdbh', 'dens',
-          'agb', 'top_height', 'v', 
-          'v_merch', 'depth_q25', 'x', 'y')
-
-# look at correlation of variables
-cor <- cor(dat[, vars], use = 'complete.obs')
-corrplot(cor, method = 'number')
+# ################################
+# ### ORGANIZE OUTPUTS GROUP 1 ###
+# ################################
+# 
+# # load filenames to read back in
+# gr1_files <- list.files('D:/ontario_inventory/imputation/vanilla',
+#                         pattern = 'group1_mod_vars_chunk_',
+#                         full.names = T)
+# 
+# # read back in
+# gr1 <- do.call(rbind,lapply(gr1_files,read.csv))
+# 
+# # remove row names
+# gr1 %<>% select(-X)
+# 
+# # create function to rescale values from 0 to 100
+# scale_100 <- function(x){
+#   x <- (x-min(x))/(max(x) - min(x))
+#   return(x)
+# }
+# 
+# # lets scale age rmse
+# gr1$age_rmse_scaled <- scale_100(gr1$age_raw_rmse)
+# 
+# # take error of group3 and group5 accuracy
+# # gr1$group3_error <- 1 - gr1$group3_accuracy
+# gr1$group5_error <- 1 - gr1$group5_accuracy
+# 
+# # lets scale group3 and group5 error
+# # gr1$group3_error_scaled <- scale_100(gr1$group3_error)
+# gr1$group5_error_scaled <- scale_100(gr1$group5_error)
+# 
+# # take combined error mean
+# gr1$error_mean <- (gr1$age_rmse_scaled + gr1$group5_error_scaled)/2
+# 
+# #############################
+# ### CALCULATE BEST MODELS ###
+# #############################
+# 
+# # best model
+# gr1_top <- gr1 %>% 
+#   filter(error_mean %in% sort(error_mean)[1]) %>% 
+#   select(vars, n, k, error_mean, age_raw_rmse, 
+#          age_mae, age_mape, group3_accuracy, 
+#          group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
+#   arrange(error_mean) %>%
+#   add_column(result = 'top', .before = 1)
+# 
+# # best model k = 1
+# gr1_top %<>% add_row(gr1 %>% 
+#                          filter(k == 1) %>%
+#                          filter(error_mean %in% sort(error_mean)[1]) %>% 
+#                          select(vars, n, k, error_mean, age_raw_rmse, 
+#                                 age_mae, age_mape, group3_accuracy, 
+#                                 group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
+#                          arrange(error_mean) %>%
+#                          add_column(result = 'k = 1', .before = 1))
+# 
+# # best model n = 5
+# gr1_top %<>% add_row(gr1 %>% 
+#                          filter(n == 5) %>%
+#                          filter(error_mean %in% sort(error_mean)[1]) %>% 
+#                          select(vars, n, k, error_mean, age_raw_rmse, 
+#                                 age_mae, age_mape, group3_accuracy, 
+#                                 group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
+#                          arrange(error_mean) %>%
+#                          add_column(result = 'n = 5', .before = 1))
+# 
+# # best model n = 3
+# gr1_top %<>% add_row(gr1 %>% 
+#                          filter(n == 3) %>%
+#                          filter(error_mean %in% sort(error_mean)[1]) %>% 
+#                          select(vars, n, k, error_mean, age_raw_rmse, 
+#                                 age_mae, age_mape, group3_accuracy, 
+#                                 group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
+#                          arrange(error_mean) %>%
+#                          add_column(result = 'n = 3', .before = 1))
+# 
+# # best model k = 1, n = 5
+# gr1_top %<>% add_row(gr1 %>% 
+#                          filter(k == 1) %>%
+#                          filter(n == 5) %>%
+#                          filter(error_mean %in% sort(error_mean)[1]) %>% 
+#                          select(vars, n, k, error_mean, age_raw_rmse, 
+#                                 age_mae, age_mape, group3_accuracy, 
+#                                 group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
+#                          arrange(error_mean) %>%
+#                          add_column(result = 'k = 1 n = 5', .before = 1))
+# 
+# # best model k = 3, n = 7
+# gr1_top %<>% add_row(gr1 %>% 
+#                        filter(k == 3) %>%
+#                        filter(n == 7) %>%
+#                        filter(error_mean %in% sort(error_mean)[1]) %>% 
+#                        select(vars, n, k, error_mean, age_raw_rmse, 
+#                               age_mae, age_mape, group3_accuracy, 
+#                               group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
+#                        arrange(error_mean) %>%
+#                        add_column(result = 'k = 3 n = 7', .before = 1))
+# 
+# # best model k = 3, n = 5
+# gr1_top %<>% add_row(gr1 %>% 
+#                          filter(k == 3) %>%
+#                          filter(n == 5) %>%
+#                          filter(error_mean %in% sort(error_mean)[1]) %>% 
+#                          select(vars, n, k, error_mean, age_raw_rmse, 
+#                                 age_mae, age_mape, group3_accuracy, 
+#                                 group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
+#                          arrange(error_mean) %>%
+#                          add_column(result = 'k = 3 n = 5', .before = 1))
+# 
+# # write out
+# write.csv(gr1_top, 'D:/ontario_inventory/imputation/vanilla/gr1_top_2023_01_25.csv')
+# 
+# ##############################
+# ### CALCULATE TOP 5 MODELS ###
+# ##############################
+# 
+# # best models
+# gr1_top_5 <- gr1 %>% 
+#   filter(error_mean %in% sort(error_mean)[1:5]) %>% 
+#   select(vars, n, k, error_mean, age_raw_rmse, 
+#          age_mae, age_mape, group3_accuracy, 
+#          group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
+#   arrange(error_mean) %>%
+#   add_column(result = 'top 5', .before = 1)
+# 
+# # best models k = 1
+# gr1_top_5 %<>% add_row(gr1 %>% 
+#                        filter(k == 1) %>%
+#                        filter(error_mean %in% sort(error_mean)[1:5]) %>% 
+#                        select(vars, n, k, error_mean, age_raw_rmse, 
+#                               age_mae, age_mape, group3_accuracy, 
+#                               group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
+#                        arrange(error_mean) %>%
+#                        add_column(result = 'top 5 k = 1', .before = 1))
+# 
+# # best models n = 5
+# gr1_top_5 %<>% add_row(gr1 %>% 
+#                        filter(n == 5) %>%
+#                        filter(error_mean %in% sort(error_mean)[1:5]) %>% 
+#                        select(vars, n, k, error_mean, age_raw_rmse, 
+#                               age_mae, age_mape, group3_accuracy, 
+#                               group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
+#                        arrange(error_mean) %>%
+#                        add_column(result = 'top 5 n = 5', .before = 1))
+# 
+# # best models n = 3
+# gr1_top_5 %<>% add_row(gr1 %>% 
+#                        filter(n == 3) %>%
+#                        filter(error_mean %in% sort(error_mean)[1:5]) %>% 
+#                        select(vars, n, k, error_mean, age_raw_rmse, 
+#                               age_mae, age_mape, group3_accuracy, 
+#                               group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
+#                        arrange(error_mean) %>%
+#                        add_column(result = 'top 5 n = 3', .before = 1))
+# 
+# # best models k = 1, n = 5
+# gr1_top_5 %<>% add_row(gr1 %>% 
+#                        filter(k == 1) %>%
+#                        filter(n == 5) %>%
+#                        filter(error_mean %in% sort(error_mean)[1:5]) %>% 
+#                        select(vars, n, k, error_mean, age_raw_rmse, 
+#                               age_mae, age_mape, group3_accuracy, 
+#                               group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
+#                        arrange(error_mean) %>%
+#                        add_column(result = 'top 5 k = 1 n = 5', .before = 1))
+# 
+# # best models k = 3, n = 7
+# gr1_top_5 %<>% add_row(gr1 %>% 
+#                          filter(k == 3) %>%
+#                          filter(n == 7) %>%
+#                          filter(error_mean %in% sort(error_mean)[1:5]) %>% 
+#                          select(vars, n, k, error_mean, age_raw_rmse, 
+#                                 age_mae, age_mape, group3_accuracy, 
+#                                 group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
+#                          arrange(error_mean) %>%
+#                          add_column(result = 'top 5 k = 3 n = 5', .before = 1))
+# 
+# # best models k = 3, n = 5
+# gr1_top_5 %<>% add_row(gr1 %>% 
+#                          filter(k == 3) %>%
+#                          filter(n == 5) %>%
+#                          filter(error_mean %in% sort(error_mean)[1:5]) %>% 
+#                          select(vars, n, k, error_mean, age_raw_rmse, 
+#                                 age_mae, age_mape, group3_accuracy, 
+#                                 group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
+#                          arrange(error_mean) %>%
+#                          add_column(result = 'top 5 k = 3 n = 5', .before = 1))
+# 
+# # write out
+# write.csv(gr1_top_5, 'D:/ontario_inventory/imputation/vanilla/gr1_top_5_2023_01_25.csv')
+# 
+# # select variables
+# vars <- c('lor', 'ba', 'qmdbh', 'dens',
+#           'agb', 'top_height', 'v', 
+#           'v_merch', 'depth_q25', 'x', 'y')
+# 
+# # look at correlation of variables
+# cor <- cor(dat[, vars], use = 'complete.obs')
+# corrplot(cor, method = 'number')
 
 #################################
 ### ORGANIZE OUTPUTS GROUP 1b ###
@@ -1007,7 +1008,7 @@ corrplot(cor, method = 'number')
 
 # load filenames to read back in
 gr1_files <- list.files('D:/ontario_inventory/imputation/vanilla',
-                        pattern = 'group1b_mod_vars_chunk_',
+                        pattern = glob2rx('group1b_mod_vars_chunk_*2023_02_24.csv'),
                         full.names = T)
 
 # read back in
@@ -1113,7 +1114,7 @@ gr1_top %<>% add_row(gr1 %>%
                        add_column(result = 'k = 3 n = 5', .before = 1))
 
 # write out
-write.csv(gr1_top, 'D:/ontario_inventory/imputation/vanilla/gr1b_top_2023_01_25.csv')
+write.csv(gr1_top, 'D:/ontario_inventory/imputation/vanilla/gr1b_top_2023_02_24.csv')
 
 ##############################
 ### CALCULATE TOP 5 MODELS ###
@@ -1192,12 +1193,12 @@ gr1_top_5 %<>% add_row(gr1 %>%
                          add_column(result = 'top 5 k = 3 n = 5', .before = 1))
 
 # write out
-write.csv(gr1_top_5, 'D:/ontario_inventory/imputation/vanilla/gr1b_top_5_2023_01_25.csv')
+write.csv(gr1_top_5, 'D:/ontario_inventory/imputation/vanilla/gr1b_top_5_2023_02_24.csv')
 
 # select variables
 vars <- c('lor', 'ba', 'qmdbh', 'dens',
           'agb', 'top_height', 'v', 
-          'v_merch', 'depth_q25', 'x', 'y')
+          'v_merch', 'x', 'y')
 
 # look at correlation of variables
 cor <- cor(dat[, vars], use = 'complete.obs')
@@ -1209,8 +1210,8 @@ corrplot(cor, method = 'number')
 
 # load filenames to read back in
 gr_files <- list.files('D:/ontario_inventory/imputation/vanilla',
-                        pattern = 'group2_raw_vars_chunk_',
-                        full.names = T)
+                       pattern = glob2rx('group2_raw_vars_chunk_*2023_02_24.csv'),
+                       full.names = T)
 
 # read back in
 gr <- do.call(rbind,lapply(gr_files,read.csv))
@@ -1253,69 +1254,69 @@ gr_top <- gr %>%
 
 # best model k = 1
 gr_top %<>% add_row(gr %>% 
-                       filter(k == 1) %>%
-                       filter(error_mean %in% sort(error_mean)[1]) %>% 
-                       select(vars, n, k, error_mean, age_raw_rmse, 
-                              age_mae, age_mape, group3_accuracy, 
-                              group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
-                       arrange(error_mean) %>%
-                       add_column(result = 'k = 1', .before = 1))
+                      filter(k == 1) %>%
+                      filter(error_mean %in% sort(error_mean)[1]) %>% 
+                      select(vars, n, k, error_mean, age_raw_rmse, 
+                             age_mae, age_mape, group3_accuracy, 
+                             group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
+                      arrange(error_mean) %>%
+                      add_column(result = 'k = 1', .before = 1))
 
 # best model n = 5
 gr_top %<>% add_row(gr %>% 
-                       filter(n == 5) %>%
-                       filter(error_mean %in% sort(error_mean)[1]) %>% 
-                       select(vars, n, k, error_mean, age_raw_rmse, 
-                              age_mae, age_mape, group3_accuracy, 
-                              group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
-                       arrange(error_mean) %>%
-                       add_column(result = 'n = 5', .before = 1))
+                      filter(n == 5) %>%
+                      filter(error_mean %in% sort(error_mean)[1]) %>% 
+                      select(vars, n, k, error_mean, age_raw_rmse, 
+                             age_mae, age_mape, group3_accuracy, 
+                             group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
+                      arrange(error_mean) %>%
+                      add_column(result = 'n = 5', .before = 1))
 
 # best model n = 3
 gr_top %<>% add_row(gr %>% 
-                       filter(n == 3) %>%
-                       filter(error_mean %in% sort(error_mean)[1]) %>% 
-                       select(vars, n, k, error_mean, age_raw_rmse, 
-                              age_mae, age_mape, group3_accuracy, 
-                              group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
-                       arrange(error_mean) %>%
-                       add_column(result = 'n = 3', .before = 1))
+                      filter(n == 3) %>%
+                      filter(error_mean %in% sort(error_mean)[1]) %>% 
+                      select(vars, n, k, error_mean, age_raw_rmse, 
+                             age_mae, age_mape, group3_accuracy, 
+                             group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
+                      arrange(error_mean) %>%
+                      add_column(result = 'n = 3', .before = 1))
 
 # best model k = 1, n = 5
 gr_top %<>% add_row(gr %>% 
-                       filter(k == 1) %>%
-                       filter(n == 5) %>%
-                       filter(error_mean %in% sort(error_mean)[1]) %>% 
-                       select(vars, n, k, error_mean, age_raw_rmse, 
-                              age_mae, age_mape, group3_accuracy, 
-                              group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
-                       arrange(error_mean) %>%
-                       add_column(result = 'k = 1 n = 5', .before = 1))
+                      filter(k == 1) %>%
+                      filter(n == 5) %>%
+                      filter(error_mean %in% sort(error_mean)[1]) %>% 
+                      select(vars, n, k, error_mean, age_raw_rmse, 
+                             age_mae, age_mape, group3_accuracy, 
+                             group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
+                      arrange(error_mean) %>%
+                      add_column(result = 'k = 1 n = 5', .before = 1))
 
 # best model k = 3, n = 7
 gr_top %<>% add_row(gr %>% 
-                       filter(k == 3) %>%
-                       filter(n == 7) %>%
-                       filter(error_mean %in% sort(error_mean)[1]) %>% 
-                       select(vars, n, k, error_mean, age_raw_rmse, 
-                              age_mae, age_mape, group3_accuracy, 
-                              group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
-                       arrange(error_mean) %>%
-                       add_column(result = 'k = 3 n = 7', .before = 1))
+                      filter(k == 3) %>%
+                      filter(n == 7) %>%
+                      filter(error_mean %in% sort(error_mean)[1]) %>% 
+                      select(vars, n, k, error_mean, age_raw_rmse, 
+                             age_mae, age_mape, group3_accuracy, 
+                             group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
+                      arrange(error_mean) %>%
+                      add_column(result = 'k = 3 n = 7', .before = 1))
 
 # best model k = 3, n = 5
 gr_top %<>% add_row(gr %>% 
-                       filter(k == 3) %>%
-                       filter(n == 5) %>%
-                       filter(error_mean %in% sort(error_mean)[1]) %>% 
-                       select(vars, n, k, error_mean, age_raw_rmse, 
-                              age_mae, age_mape, group3_accuracy, 
-                              group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
-                       arrange(error_mean) %>%
-                       add_column(result = 'k = 3 n = 5', .before = 1))
+                      filter(k == 3) %>%
+                      filter(n == 5) %>%
+                      filter(error_mean %in% sort(error_mean)[1]) %>% 
+                      select(vars, n, k, error_mean, age_raw_rmse, 
+                             age_mae, age_mape, group3_accuracy, 
+                             group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
+                      arrange(error_mean) %>%
+                      add_column(result = 'k = 3 n = 5', .before = 1))
 
 # write out
-write.csv(gr_top, 'D:/ontario_inventory/imputation/vanilla/gr2_top_2023_01_25.csv')
+write.csv(gr_top, 'D:/ontario_inventory/imputation/vanilla/gr2_top_2023_02_24.csv')
 
 ##############################
 ### CALCULATE TOP 5 MODELS ###
@@ -1332,75 +1333,76 @@ gr_top_5 <- gr %>%
 
 # best models k = 1
 gr_top_5 %<>% add_row(gr %>% 
-                         filter(k == 1) %>%
-                         filter(error_mean %in% sort(error_mean)[1:5]) %>% 
-                         select(vars, n, k, error_mean, age_raw_rmse, 
-                                age_mae, age_mape, group3_accuracy, 
-                                group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
-                         arrange(error_mean) %>%
-                         add_column(result = 'top 5 k = 1', .before = 1))
+                        filter(k == 1) %>%
+                        filter(error_mean %in% sort(error_mean)[1:5]) %>% 
+                        select(vars, n, k, error_mean, age_raw_rmse, 
+                               age_mae, age_mape, group3_accuracy, 
+                               group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
+                        arrange(error_mean) %>%
+                        add_column(result = 'top 5 k = 1', .before = 1))
 
 # best models n = 5
 gr_top_5 %<>% add_row(gr %>% 
-                         filter(n == 5) %>%
-                         filter(error_mean %in% sort(error_mean)[1:5]) %>% 
-                         select(vars, n, k, error_mean, age_raw_rmse, 
-                                age_mae, age_mape, group3_accuracy, 
-                                group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
-                         arrange(error_mean) %>%
-                         add_column(result = 'top 5 n = 5', .before = 1))
+                        filter(n == 5) %>%
+                        filter(error_mean %in% sort(error_mean)[1:5]) %>% 
+                        select(vars, n, k, error_mean, age_raw_rmse, 
+                               age_mae, age_mape, group3_accuracy, 
+                               group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
+                        arrange(error_mean) %>%
+                        add_column(result = 'top 5 n = 5', .before = 1))
 
 # best models n = 3
 gr_top_5 %<>% add_row(gr %>% 
-                         filter(n == 3) %>%
-                         filter(error_mean %in% sort(error_mean)[1:5]) %>% 
-                         select(vars, n, k, error_mean, age_raw_rmse, 
-                                age_mae, age_mape, group3_accuracy, 
-                                group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
-                         arrange(error_mean) %>%
-                         add_column(result = 'top 5 n = 3', .before = 1))
+                        filter(n == 3) %>%
+                        filter(error_mean %in% sort(error_mean)[1:5]) %>% 
+                        select(vars, n, k, error_mean, age_raw_rmse, 
+                               age_mae, age_mape, group3_accuracy, 
+                               group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
+                        arrange(error_mean) %>%
+                        add_column(result = 'top 5 n = 3', .before = 1))
 
 # best models k = 1, n = 5
 gr_top_5 %<>% add_row(gr %>% 
-                         filter(k == 1) %>%
-                         filter(n == 5) %>%
-                         filter(error_mean %in% sort(error_mean)[1:5]) %>% 
-                         select(vars, n, k, error_mean, age_raw_rmse, 
-                                age_mae, age_mape, group3_accuracy, 
-                                group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
-                         arrange(error_mean) %>%
-                         add_column(result = 'top 5 k = 1 n = 5', .before = 1))
+                        filter(k == 1) %>%
+                        filter(n == 5) %>%
+                        filter(error_mean %in% sort(error_mean)[1:5]) %>% 
+                        select(vars, n, k, error_mean, age_raw_rmse, 
+                               age_mae, age_mape, group3_accuracy, 
+                               group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
+                        arrange(error_mean) %>%
+                        add_column(result = 'top 5 k = 1 n = 5', .before = 1))
 
 # best models k = 3, n = 7
 gr_top_5 %<>% add_row(gr %>% 
-                         filter(k == 3) %>%
-                         filter(n == 7) %>%
-                         filter(error_mean %in% sort(error_mean)[1:5]) %>% 
-                         select(vars, n, k, error_mean, age_raw_rmse, 
-                                age_mae, age_mape, group3_accuracy, 
-                                group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
-                         arrange(error_mean) %>%
-                         add_column(result = 'top 5 k = 3 n = 5', .before = 1))
+                        filter(k == 3) %>%
+                        filter(n == 7) %>%
+                        filter(error_mean %in% sort(error_mean)[1:5]) %>% 
+                        select(vars, n, k, error_mean, age_raw_rmse, 
+                               age_mae, age_mape, group3_accuracy, 
+                               group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
+                        arrange(error_mean) %>%
+                        add_column(result = 'top 5 k = 3 n = 5', .before = 1))
 
 # best models k = 3, n = 5
 gr_top_5 %<>% add_row(gr %>% 
-                         filter(k == 3) %>%
-                         filter(n == 5) %>%
-                         filter(error_mean %in% sort(error_mean)[1:5]) %>% 
-                         select(vars, n, k, error_mean, age_raw_rmse, 
-                                age_mae, age_mape, group3_accuracy, 
-                                group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
-                         arrange(error_mean) %>%
-                         add_column(result = 'top 5 k = 3 n = 5', .before = 1))
+                        filter(k == 3) %>%
+                        filter(n == 5) %>%
+                        filter(error_mean %in% sort(error_mean)[1:5]) %>% 
+                        select(vars, n, k, error_mean, age_raw_rmse, 
+                               age_mae, age_mape, group3_accuracy, 
+                               group5_accuracy, sp1_accuracy, sp2_accuracy) %>%
+                        arrange(error_mean) %>%
+                        add_column(result = 'top 5 k = 3 n = 5', .before = 1))
 
 # write out
-write.csv(gr_top_5, 'D:/ontario_inventory/imputation/vanilla/gr2_top_5_2023_01_25.csv')
+write.csv(gr_top_5, 'D:/ontario_inventory/imputation/vanilla/gr2_top_5_2023_02_24.csv')
 
 # select variables
 vars <- c('cc', 'avg', 'max',
           'p95', 'qav', 'ske',
           'kur', 'cv', 'B6', 'rumple',
           'zentropy', 'zpcum8',
+          'depth_q25',
           'zsd', 'x', 'y')
 
 # look at correlation of variables

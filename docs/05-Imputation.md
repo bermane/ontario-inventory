@@ -1,6 +1,6 @@
 # Imputation {-#imputation}
 
-## Intro {-#intro}
+## Intro {-#imputationintro}
 
 This page provides an example of the imputation approach used to estimate age and species composition in newly-generated forest stands. The imputation is based on a k-nearest neighbor (kNN) algorithm. X-variables (variables that are contiguous across reference and target polygons) are identified and for each Generic Region Merging (GRM) generated forest polygon (the target polygon), the k-nearest neighbor FRI polygons (the reference polygons) that minimize the Euclidean distance of the X-variables are identified and used to impute age and species composition into the target polygon. If k = 1, the age and species variables are imputed directly from the best matching reference polygon. If k > 1, age is imputed as the mean age of kNN polygons and species variables are imputed as the mode across kNN polygons. The basic workflow is as follows:
 

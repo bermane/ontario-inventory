@@ -176,14 +176,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="" data-path="segmentation-example.html"><a href="segmentation-example.html"><i class="fa fa-check"></i>Segmentation Example</a>
 <ul>
-<li class="chapter" data-level="" data-path="segmentation-example.html"><a href="segmentation-example.html#intro"><i class="fa fa-check"></i>Intro</a></li>
+<li class="chapter" data-level="" data-path="segmentation-example.html"><a href="segmentation-example.html#segintro"><i class="fa fa-check"></i>Intro</a></li>
 <li class="chapter" data-level="" data-path="segmentation-example.html"><a href="segmentation-example.html#create-raster"><i class="fa fa-check"></i>Create Multi-band Raster</a></li>
 <li class="chapter" data-level="" data-path="segmentation-example.html"><a href="segmentation-example.html#run-segmentation"><i class="fa fa-check"></i>Run Mean Shift Segmentation</a></li>
 <li class="chapter" data-level="" data-path="segmentation-example.html"><a href="segmentation-example.html#compare-datasets"><i class="fa fa-check"></i>Compare Datasets</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="segmentation-update.html"><a href="segmentation-update.html"><i class="fa fa-check"></i>Segmentation Update</a>
 <ul>
-<li class="chapter" data-level="" data-path="segmentation-example.html"><a href="segmentation-example.html#intro"><i class="fa fa-check"></i>Intro</a></li>
+<li class="chapter" data-level="" data-path="segmentation-update.html"><a href="segmentation-update.html#updateintro"><i class="fa fa-check"></i>Intro</a></li>
 <li class="chapter" data-level="" data-path="segmentation-update.html"><a href="segmentation-update.html#updatep1"><i class="fa fa-check"></i>1. Create Multi-band Raster</a></li>
 <li class="chapter" data-level="" data-path="segmentation-update.html"><a href="segmentation-update.html#updatep2"><i class="fa fa-check"></i>2. Run GRM Segmentation</a></li>
 <li class="chapter" data-level="" data-path="segmentation-update.html"><a href="segmentation-update.html#updatep3a"><i class="fa fa-check"></i>3a. Calculate Summary Statistics</a></li>
@@ -191,7 +191,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html"><i class="fa fa-check"></i>Imputation</a>
 <ul>
-<li class="chapter" data-level="" data-path="segmentation-example.html"><a href="segmentation-example.html#intro"><i class="fa fa-check"></i>Intro</a></li>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputationintro"><i class="fa fa-check"></i>Intro</a></li>
 <li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputationp1"><i class="fa fa-check"></i>1. Extract LiDAR attributes in FRI polygons and GRM polygons</a></li>
 <li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputationp1a"><i class="fa fa-check"></i>1a. Extract attributes in FRI polygons</a></li>
 <li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputationp1b"><i class="fa fa-check"></i>1b. Extract attributes in GRM segmented polygons</a></li>
@@ -229,8 +229,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="segmentation-example" class="section level1 unnumbered hasAnchor">
 <h1>Segmentation Example<a href="segmentation-example.html#segmentation-example" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<div id="intro" class="section level2 unnumbered hasAnchor">
-<h2>Intro<a href="segmentation-example.html#intro" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="segintro" class="section level2 unnumbered hasAnchor">
+<h2>Intro<a href="segmentation-example.html#segintro" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>This page provides an example of the image segmentation approach used to derive polygonal forest stands from LiDAR-based raster data. The example data provided is from the Romeo Malette Forest (RMF).</p>
 <p>First, a three band raster at 20 m spatial resolution is generated from Enhanced Forest Inventory (EFI) metrics. The three bands comprise Lorey’s height, canopy cover (% cover above 2m) and coefficient of variation (standard deviation of LiDAR return heights divided by mean). These bands are re-scaled to comprise values from 0-100, setting the minimum and maximum values to be the 1st and 99th percentile of data observations. Large roads and waterbodies are also masked to prevent them from being included in forest stand polygons.</p>
 <p>Second, the mean shift algorithm is used to derive forest stand polygons from the input raster. The algorithm used is the <a href="https://www.orfeo-toolbox.org/CookBook-6.4/Applications/app_LargeScaleMeanShift.html">LargeScaleMeanShift</a> function from Orfeo ToolBox. Mean Shift is a robust and efficient segmentation algorithm that allows users to provide several parameters to ensure the output polygons meet certain specifications (input parameters described in above link). Although this example only runs the segmentation over a small part of the RMF, segmentation of the entire RMF only takes around 1.5 hrs on a single desktop machine.</p>

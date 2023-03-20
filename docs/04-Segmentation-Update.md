@@ -1,6 +1,6 @@
 # Segmentation Update {-#segmentation-update}
 
-## Intro {-#intro}
+## Intro {-#updateintro}
 
 This page provides an update of the segmentation approach used to derive polygons from Airborne Laser Scanning (ALS) gridded summary metrics. Based on feedback from our meetings I have now tested three segmentation algorithms to find the best approach to balance a) the visual component of the segmentation (e.g. shape, overlapping parallel lines) with b) the spectral component (outputting polygons with homogeneous values different from nearby polygons).
 

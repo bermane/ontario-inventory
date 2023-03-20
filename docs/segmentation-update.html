@@ -176,14 +176,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="" data-path="segmentation-example.html"><a href="segmentation-example.html"><i class="fa fa-check"></i>Segmentation Example</a>
 <ul>
-<li class="chapter" data-level="" data-path="segmentation-example.html"><a href="segmentation-example.html#intro"><i class="fa fa-check"></i>Intro</a></li>
+<li class="chapter" data-level="" data-path="segmentation-example.html"><a href="segmentation-example.html#segintro"><i class="fa fa-check"></i>Intro</a></li>
 <li class="chapter" data-level="" data-path="segmentation-example.html"><a href="segmentation-example.html#create-raster"><i class="fa fa-check"></i>Create Multi-band Raster</a></li>
 <li class="chapter" data-level="" data-path="segmentation-example.html"><a href="segmentation-example.html#run-segmentation"><i class="fa fa-check"></i>Run Mean Shift Segmentation</a></li>
 <li class="chapter" data-level="" data-path="segmentation-example.html"><a href="segmentation-example.html#compare-datasets"><i class="fa fa-check"></i>Compare Datasets</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="segmentation-update.html"><a href="segmentation-update.html"><i class="fa fa-check"></i>Segmentation Update</a>
 <ul>
-<li class="chapter" data-level="" data-path="segmentation-example.html"><a href="segmentation-example.html#intro"><i class="fa fa-check"></i>Intro</a></li>
+<li class="chapter" data-level="" data-path="segmentation-update.html"><a href="segmentation-update.html#updateintro"><i class="fa fa-check"></i>Intro</a></li>
 <li class="chapter" data-level="" data-path="segmentation-update.html"><a href="segmentation-update.html#updatep1"><i class="fa fa-check"></i>1. Create Multi-band Raster</a></li>
 <li class="chapter" data-level="" data-path="segmentation-update.html"><a href="segmentation-update.html#updatep2"><i class="fa fa-check"></i>2. Run GRM Segmentation</a></li>
 <li class="chapter" data-level="" data-path="segmentation-update.html"><a href="segmentation-update.html#updatep3a"><i class="fa fa-check"></i>3a. Calculate Summary Statistics</a></li>
@@ -191,7 +191,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html"><i class="fa fa-check"></i>Imputation</a>
 <ul>
-<li class="chapter" data-level="" data-path="segmentation-example.html"><a href="segmentation-example.html#intro"><i class="fa fa-check"></i>Intro</a></li>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputationintro"><i class="fa fa-check"></i>Intro</a></li>
 <li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputationp1"><i class="fa fa-check"></i>1. Extract LiDAR attributes in FRI polygons and GRM polygons</a></li>
 <li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputationp1a"><i class="fa fa-check"></i>1a. Extract attributes in FRI polygons</a></li>
 <li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputationp1b"><i class="fa fa-check"></i>1b. Extract attributes in GRM segmented polygons</a></li>
@@ -229,8 +229,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="segmentation-update" class="section level1 unnumbered hasAnchor">
 <h1>Segmentation Update<a href="segmentation-update.html#segmentation-update" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<div id="intro" class="section level2 unnumbered hasAnchor">
-<h2>Intro<a href="segmentation-example.html#intro" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="updateintro" class="section level2 unnumbered hasAnchor">
+<h2>Intro<a href="segmentation-update.html#updateintro" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>This page provides an update of the segmentation approach used to derive polygons from Airborne Laser Scanning (ALS) gridded summary metrics. Based on feedback from our meetings I have now tested three segmentation algorithms to find the best approach to balance a) the visual component of the segmentation (e.g. shape, overlapping parallel lines) with b) the spectral component (outputting polygons with homogeneous values different from nearby polygons).</p>
 <p>The three segmentation algorithms I tested are:
 1. <a href="https://www.orfeo-toolbox.org/CookBook-6.4/Applications/app_LargeScaleMeanShift.html">Large Scale Mean Shift</a> (showcased in the initial segmentation example)

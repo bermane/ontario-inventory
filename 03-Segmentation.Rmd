@@ -1,6 +1,6 @@
 # Segmentation Example {-#segmentation-example}
 
-## Intro {-#intro}
+## Intro {-#segintro}
 
 This page provides an example of the image segmentation approach used to derive polygonal forest stands from LiDAR-based raster data. The example data provided is from the Romeo Malette Forest (RMF).
 

@@ -10,7 +10,7 @@ The objective of this project is to develop open source tools to integrate curre
 
 * Integrate and refine photo interpreted attributes and LiDAR
 
-* Develop object-based image assesment techniques to use with LiDAR for species identification
+* Develop object-based image assessment techniques to use with LiDAR for species identification
 
 * Deliver open source code and methods
 
@@ -23,7 +23,6 @@ Due to the capability of airborne Single Photon LiDAR (SPL) to provide a detaile
 A key issue in utilising SPL data to derive forest inventory information is that a number of forest attributes required to provide the full complement of variables necessary for strategic-level forest inventories such as species group, composition, stand age, and site productivity, are not well predicted from SPL data alone, due to the lack of spectral and other information in the returned point cloud. A second issue is that the development of Enhanced Forest Inventories (EFI) using the area-based approaches (ABA) results in raster-based predictions of forest attributes. While these raters are produced at a fine grid cell (typically 20 x 20 m), most forest management decision making processes, such as harvest planning and scheduling, growth and yield estimation and longer term estate planning relies on polygonal data structures, such as those manually derived from photo interpreters.
 
 As a result, two gaps are evident when introducing SPL-based inventories into a forest management framework for strategic and tactical decision making. First, raster based EFI information needs to be transformed into polygonal structures and second, new approaches are needed to derive the attributes required for sustainable forest management decision making that are not readily predicted from SPL data alone.
-
 
 The goal of this project is to develop and apply an open source methodological framework that combines raster EFI predictions of stand structure, with environmental and satellite data to produce comprehensive polygonal forest inventory information in a spatially exhaustive way, over large forested areas of Ontario. These new layers will be polygon based, with the full set of required attributes, at a scale comparable to existing photo-interpreted inventory, to ensure they are compatible with subsequent forest growth and yield, harvest and estate planning software and activities.
 
@@ -39,15 +38,15 @@ If time and resources are available we would apply the approach in the second ye
 
 ## Methodology {-#methodology}
 
-First, image segmentation (or object based image analysis) will be performed on key EFI-derived raster attributes of stand (Lorey’s) height and canopy cover to derive structurally-homogeneous micro-stand objects. We will use newly developed open source segmentation tools, specifically developed for forestry LIDAR data to produce wall-to-wall polygon representations of EFI raster layers. 
+First, image segmentation (or object based image analysis) will be performed on key EFI-derived raster attributes of stand (Lorey’s) height and canopy cover to derive structurally-homogeneous micro-stand objects. We will use newly developed open source segmentation tools, specifically developed for forestry LiDAR data to produce wall-to-wall polygon representations of EFI raster layers. 
 
 Second, the boundaries of these micro-stand objects will be used to extract information from other EFI layers (volume, basal area, crown closure) transforming them from rasters into attributed micro-stand polygons. Microstands will then be cleaned and merged based on size constraints and differences within and between segments (such as between vs within variations in volume and basal area). We will utilise extensive information already produced by the Ontario MNR on Ontario Forest Resources Inventory Photo Interpretation Specifications which state key area, perimeter and quality control standards for polygon delineation to meet Ontario forestry needs. These standards will be used to ensure that the derived polygons from the raster EFI’s will closely resemble the current FRI polygons in terms of area, shape and perimeter distributions. 
 
 In the third step we will develop an imputation-based approach to derive the remaining attributes not readily predicted from LIDAR including age, species group / species composition or forest unit, and site index. We will utilise the existing Ontario FRI polygons within the forest management area. For each FRI polygon we will extract positional (latitude / longitude), terrain, and climatic information from auxiliary 30 m environmental data. We will also access considerable work completed and underway mapping forest age from historical Landsat data and spatial databases of fire, harvesting, and road disturbances compiled as part of the Boreal Disturbance Database. If available, this type of information will also be compiled and attributed into each delineated polygon. We will then develop an imputation reference dataset which links the four desired attributes to both the structural attributes within the FRI (volume, density, basal area and height), as well as the location, terrain and climate data. This will produce a reference library of every combination of structural and compositional conditions. 
 
-In the final step, we will impute the additional forest inventory attributes for each SPL derived micro-stand stand including age, species group / composition, and site index combination for that given stand based on its nearest neighbours in attribute space. We will also work with other researchers funded by KTTD investigating the use of SPL data for additional attribute such as soils prediction to ensure consistency in the use of environmental attributes. 
+In the final step, we will impute the additional forest inventory attributes for each SPL derived micro-stand including age, species group / composition, and site index combination for that given stand based on its nearest neighbours in attribute space. We will also work with other researchers funded by KTTD investigating the use of SPL data for additional attributes such as soils prediction to ensure consistency in the use of environmental attributes. 
 
-We will assess accuracy in a number of ways. For delineation of the micro-stands themselves, we will use GIS spatial overlap algorithms to assess degree of spatial coherence between manually-delineated polygons vs the automatically delineated stands micro-stands from the SPL. For imputation, we will assess agreement using independent validation samples of a hold back of FRI polygons and compare the imputation results with the manually interpreted species, age and site index assessments. 
+We will assess accuracy in a number of ways. For delineation of the micro-stands themselves, we will use GIS spatial overlap algorithms to assess degree of spatial coherence between manually-delineated polygons vs the automatically delineated stands micro-stands from the SPL. For imputation, we will assess agreement using independent validation samples of a hold back of FRI polygons and compare the imputation results with the manually interpreted species, age and site index assessments.
 
 ## Schedule {-#schedule}
 
@@ -81,12 +80,12 @@ We will work with Ontario MNR FRI staff, and GreenFirst Forest Products managers
 
 * Peer-reviewed scientific publications.
 
-* A series of online workshop on the use of methods for generating the micro-stands and the additional attribution approaches. These will be regional, as needed, to ensure the developed approaches are consistent with regionally specific datasets and needs. Workshops will also be designed to focus on industry forest practitioners, as needed.
+* A series of online workshops on the use of methods for generating the micro-stands and the additional attribution approaches. These will be regional, as needed, to ensure the developed approaches are consistent with regionally specific datasets and needs. Workshops will also be designed to focus on industry forest practitioners, as needed.
 
 * A technical memo describing the methods developed for key technical staff as it is these staff that are applying these tools themselves as well as for consulting firms which can also be hired by smaller SFLs to implement solutions.   
 
 * Open access to R and other developed programming scripts to undertake the modeling and comparisons. 
 
-More broadly key outputs of this project will be an increased awareness and capacity building of operational forest managers on the use of these technologies for next generation forest inventory which will lead to an increased ability to dissolve current boundaries between operational (tactical) and strategic (forest level) inventories. 
+More broadly key outputs of this project will be an increased awareness and capacity building of operational forest managers on the use of these technologies for next generation forest inventory which will lead to an increased ability to dissolve current boundaries between operational (tactical) and strategic (forest level) inventories.
 
 In addition, more thorough adoption of SPL technologies as a critical component of forest inventories will benefit other Canadian industries such as survey providers and technology developers by increasing the market and consolidating their international competitiveness, key goals of the Ontario Forest Sector strategy.

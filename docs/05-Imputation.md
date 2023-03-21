@@ -28,7 +28,7 @@ The following two variables are needed for polygon data screening:
 * p95: 95th percentile of LiDAR height returns > 1.3 m classified as vegetation
 * cc: percent of first returns > 2 meters (canopy cover)
 
-## 1a. Extract attributes in FRI polygons {-#imputationp1a}
+### 1a. Extract attributes in FRI polygons {-#imputationp1a}
 
 
 
@@ -99,7 +99,7 @@ dat_fri$AGE2018 <- 2018 - dat_fri$YRORG
 save(dat_fri, file = 'D:/ontario_inventory/imputation/example/dat_fri_extr.RData')
 ```
 
-## 1b. Extract attributes in GRM segmented polygons {-#imputationp1b}
+### 1b. Extract attributes in GRM segmented polygons {-#imputationp1b}
 
 
 ```r
@@ -288,7 +288,7 @@ e) Five functional group classification (jack pine dominated, black spruce domin
 
 We also calculate performance metrics on the X-variables used in imputation: relative RMSD (RRMSD) and relative MBE (RMBE), calculated by dividing RMSD and RMBE by the mean value of each variable and multiplying by 100. RRMSD and RMBE give a percent error that can be compared across variables and when variables have difficult to interpret units, such as several of the ALS metrics used in imputation.
 
-## 3a. Create functions needed {-#imputationp3a}
+### 3a. Create functions needed {-#imputationp3a}
 
 
 ```r
@@ -519,7 +519,7 @@ run_knn_fri <- function(dat, vars, k) {
 }
 ```
 
-## 3b. Run the imputation and assess performance {-#imputationp3b}
+### 3b. Run the imputation and assess performance {-#imputationp3b}
 
 
 ```r
@@ -803,7 +803,7 @@ Table: Imputation Performance between FRI and GRM Forest Stand Polygons
 
 *The RRMSD results are again all below ~4% and RMBE does not show bias toward negative of positive difference.*
 
-## 4a. Figures of Forest Stand Age {-#imputationp4a}
+### 4a. Figures of Forest Stand Age {-#imputationp4a}
 
 
 ```r
@@ -887,7 +887,7 @@ grid.arrange(p1, p2, ncol = 1)
 <img src="05-Imputation_files/figure-html/imputationp4a-1.png" width="1152" />
 *Imputed age values show a similar spatial distribution to observed age values at a broad scale. Of course, the values should be scrutinized on a fine scale in specific areas. This task is much easier to do in a GIS software using the output shapefiles.*
 
-## 4b. Figures of Three Functional Group Classification {-#imputationp4b}
+### 4b. Figures of Three Functional Group Classification {-#imputationp4b}
 
 
 ```r
@@ -916,7 +916,7 @@ grid.arrange(p1, p2, ncol = 1)
 <img src="05-Imputation_files/figure-html/imputationp4b-1.png" width="1152" />
 *We can also observe a similar distribution of species classes.*
 
-## 4c. Figures of Five Functional Group Classification {-#imputationp4c}
+### 4c. Figures of Five Functional Group Classification {-#imputationp4c}
 
 
 ```r
@@ -946,7 +946,7 @@ grid.arrange(p1, p2, ncol = 1)
 
 <img src="05-Imputation_files/figure-html/imputationp4c-1.png" width="1152" />
 
-## 4d. Density Plots of Forest Stand Age {-#imputationp4d}
+### 4d. Density Plots of Forest Stand Age {-#imputationp4d}
 
 
 ```r
@@ -985,7 +985,7 @@ grid.arrange(p1, p2, ncol = 1)
 <img src="05-Imputation_files/figure-html/imputationp4d-1.png" width="1728" />
 *The distribution of imputed age in GRM polygons closely matches that of observed age in FRI polygons. The median age values (dotted lines) are 78 (GRM) and 83 (FRI).*
 
-## 4e. Distribution of Three Functional Group Classification {-#imputationp4e}
+### 4e. Distribution of Three Functional Group Classification {-#imputationp4e}
 
 
 ```r
@@ -1040,7 +1040,7 @@ grid.arrange(p1, p2, ncol = 2)
 <img src="05-Imputation_files/figure-html/imputationp4e-1.png" width="1728" />
 *The distribution of three functional groups is equal in the hardwood class (20%). The distribution of mixedwood and softwood is slightly different in the imputed values, with 3% more softwood, and thus 3% less mixedwood.*
 
-## 4f. Distribution of Five Functional Group Classification {-#imputationp4f}
+### 4f. Distribution of Five Functional Group Classification {-#imputationp4f}
 
 
 ```r
@@ -1097,3 +1097,15 @@ grid.arrange(p1, p2, ncol = 2)
 
 <img src="05-Imputation_files/figure-html/imputationp4f-1.png" width="1728" />
 *The distribution of imputed five classes of species is also very similar to the FRI distribution. The imputed values contain slightly more black spruce dominated stands (3% more than the FRI) and mixedwood stands (1% more than the FRI), and slightly less mixed conifers and jack pine dominated.*
+
+## 5. Conclusion {-#imputationp5}
+
+This tutorial has demonstrated a novel approach to update forest stand polygons and populate them with important forest attributes derived from both expert interpretation of aerial photography and ALS point clouds. The imputation approach is open-source, reproducible, and scalable to meet the needs of operational and strategic planning at various levels.
+
+As we transition into the final months of this project, the focus will be on completing the following:
+
+
+* Digital workshop and code demo
+* Final packaging of open source methods and codes for delivery to all partners
+* Peer-reviewed papers
+* Project wrap-up meeting

@@ -1,5 +1,5 @@
 --- 
-title: "Integration of Photo Interpreted and LIDAR Attributes Into a Polygonal Forest Inventory Framework"
+title: "Integration of Photo Interpreted and LiDAR Attributes into a Polygonal Forest Inventory Framework"
 author:  | 
   | Ethan Berman 
   | Research Scientist 

@@ -1,11 +1,11 @@
 --- 
-title: "Integration of Photo Interpreted and LIDAR Attributes Into a Polygonal Forest Inventory Framework"
+title: "Integration of Photo Interpreted and LiDAR Attributes into a Polygonal Forest Inventory Framework"
 author:  | 
   | Ethan Berman 
   | Research Scientist 
   | Integrated Remote Sensing Studio 
   | University of British Columbia 
-date: "2023-03-21"
+date: "2023-03-22"
 site: bookdown::bookdown_site
 documentclass: book
 bibliography: [book.bib]

@@ -4,36 +4,35 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Part 1 Introduction | Integration of Photo Interpreted and LIDAR Attributes Into a Polygonal Forest Inventory Framework</title>
+  <title>Integration of Photo Interpreted and LiDAR Attributes into a Polygonal Forest Inventory Framework</title>
   <meta name="description" content="A place to find background information and follow updates related to the project." />
-  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.27 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Part 1 Introduction | Integration of Photo Interpreted and LIDAR Attributes Into a Polygonal Forest Inventory Framework" />
+  <meta property="og:title" content="Integration of Photo Interpreted and LiDAR Attributes into a Polygonal Forest Inventory Framework" />
   <meta property="og:type" content="book" />
-  <meta property="og:url" content="http://bermane.github.io/ontario-inventory/" />
   
   <meta property="og:description" content="A place to find background information and follow updates related to the project." />
   <meta name="github-repo" content="bermane/ontario-inventory" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Part 1 Introduction | Integration of Photo Interpreted and LIDAR Attributes Into a Polygonal Forest Inventory Framework" />
+  <meta name="twitter:title" content="Integration of Photo Interpreted and LiDAR Attributes into a Polygonal Forest Inventory Framework" />
   
   <meta name="twitter:description" content="A place to find background information and follow updates related to the project." />
   
 
-<meta name="author" content="Ethan Berman" />
 
 
-<meta name="date" content="2021-07-30" />
+<meta name="date" content="2023-04-25" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="diving-in.html"/>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+
+<link rel="next" href="people.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -49,12 +48,75 @@
 
 
 
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 
-<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
-<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 
-
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
 
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -70,15 +132,83 @@
       <nav role="navigation">
 
 <ul class="summary">
-<li><a href="./">Integration of Photo Interpreted and LIDAR Attributes Into a Polygonal Forest Inventory Framework</a></li>
+<li><a href="./">Integration of Photo Interpreted and LiDAR Attributes Into a Polygonal Forest Inventory Framework</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Overview</a><ul>
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html#project-summary"><i class="fa fa-check"></i>Project Summary</a></li>
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html#project-partners"><i class="fa fa-check"></i>Project Partners</a></li>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><strong>1</strong> Introduction</a>
+<ul>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#summary"><i class="fa fa-check"></i><strong>1.1</strong> Project Summary</a></li>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#partners"><i class="fa fa-check"></i><strong>1.2</strong> Project Partners</a></li>
 </ul></li>
-<li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
-<li class="chapter" data-level="2" data-path="diving-in.html"><a href="diving-in.html"><i class="fa fa-check"></i><b>2</b> Diving In</a></li>
+<li class="chapter" data-level="" data-path="people.html"><a href="people.html"><i class="fa fa-check"></i><strong>2</strong> People</a>
+<ul>
+<li class="chapter" data-level="" data-path="people.html"><a href="people.html#ubc"><i class="fa fa-check"></i><strong>2.1</strong> University of British Columbia</a>
+<ul>
+<li class="chapter" data-level="" data-path="people.html"><a href="people.html#ncc"><i class="fa fa-check"></i>Prof. Nicholas Coops, <em>project lead</em></a></li>
+<li class="chapter" data-level="" data-path="people.html"><a href="people.html#eb"><i class="fa fa-check"></i>Ethan Berman, <em>research scientist</em></a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="people.html"><a href="people.html#greenfirst"><i class="fa fa-check"></i><strong>2.2</strong> GreenFirst Forest Products</a>
+<ul>
+<li class="chapter" data-level="" data-path="people.html"><a href="people.html#cm"><i class="fa fa-check"></i>Chris McDonell, <em>partner</em></a></li>
+<li class="chapter" data-level="" data-path="people.html"><a href="people.html#gm"><i class="fa fa-check"></i>Grant McCartney, <em>partner</em></a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="people.html"><a href="people.html#ministry"><i class="fa fa-check"></i><strong>2.3</strong> Ontario Ministry of Natural Resources and Forestry</a>
+<ul>
+<li class="chapter" data-level="" data-path="people.html"><a href="people.html#is"><i class="fa fa-check"></i>Ian Sinclair, <em>partner</em></a></li>
+<li class="chapter" data-level="" data-path="people.html"><a href="people.html#grm"><i class="fa fa-check"></i>Geordie Robere-McGugan, <em>partner</em></a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="people.html"><a href="people.html#laval"><i class="fa fa-check"></i><strong>2.4</strong> Laval University</a>
+<ul>
+<li class="chapter" data-level="0.0.1" data-path="people.html"><a href="people.html#alexis-achim-advisor--aachim"><i class="fa fa-check"></i><b>0.0.1</b> Alexis Achim, <em>advisor</em> {-$aachim}</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="project-details.html"><a href="project-details.html"><i class="fa fa-check"></i><strong>3</strong> Project Details</a>
+<ul>
+<li class="chapter" data-level="" data-path="project-details.html"><a href="project-details.html#objective"><i class="fa fa-check"></i><strong>3.1</strong> Objective</a></li>
+<li class="chapter" data-level="" data-path="project-details.html"><a href="project-details.html#themes"><i class="fa fa-check"></i><strong>3.2</strong> Themes</a></li>
+<li class="chapter" data-level="" data-path="project-details.html"><a href="project-details.html#description"><i class="fa fa-check"></i><strong>3.3</strong> Description</a></li>
+<li class="chapter" data-level="" data-path="project-details.html"><a href="project-details.html#study-area"><i class="fa fa-check"></i><strong>3.4</strong> Study Area</a></li>
+<li class="chapter" data-level="" data-path="project-details.html"><a href="project-details.html#methodology"><i class="fa fa-check"></i><strong>3.5</strong> Methodology</a></li>
+<li class="chapter" data-level="" data-path="project-details.html"><a href="project-details.html#knowledge-transfer"><i class="fa fa-check"></i><strong>3.6</strong> Knowledge &amp; Technology Transfer</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="segmentation.html"><a href="segmentation.html"><i class="fa fa-check"></i><strong>4</strong> Segmentation</a>
+<ul>
+<li class="chapter" data-level="" data-path="segmentation.html"><a href="segmentation.html#segmentation41"><i class="fa fa-check"></i><strong>4.1</strong> Introduction</a></li>
+<li class="chapter" data-level="" data-path="segmentation.html"><a href="segmentation.html#segmentation42"><i class="fa fa-check"></i><strong>4.2</strong> Generic Region Merging Parameters</a></li>
+<li class="chapter" data-level="" data-path="segmentation.html"><a href="segmentation.html#segmentation43"><i class="fa fa-check"></i><strong>4.3</strong> Data Requirements</a></li>
+<li class="chapter" data-level="" data-path="segmentation.html"><a href="segmentation.html#segmentation44"><i class="fa fa-check"></i><strong>4.4</strong> Set Code and File Parameters</a></li>
+<li class="chapter" data-level="" data-path="segmentation.html"><a href="segmentation.html#segmentation45"><i class="fa fa-check"></i><strong>4.5</strong> Pre-processing</a></li>
+<li class="chapter" data-level="" data-path="segmentation.html"><a href="segmentation.html#segmentation46"><i class="fa fa-check"></i><strong>4.6</strong> Execute GRM Segmentation</a></li>
+<li class="chapter" data-level="" data-path="segmentation.html"><a href="segmentation.html#segmentation47"><i class="fa fa-check"></i><strong>4.7</strong> Post-processing</a></li>
+<li class="chapter" data-level="" data-path="segmentation.html"><a href="segmentation.html#segmentation48"><i class="fa fa-check"></i><strong>4.8</strong> Performance Analysis</a></li>
+<li class="chapter" data-level="" data-path="segmentation.html"><a href="segmentation.html#segmentation49"><i class="fa fa-check"></i><strong>4.9</strong> Results: GRM Algorithm</a></li>
+<li class="chapter" data-level="" data-path="segmentation.html"><a href="segmentation.html#segmentation410"><i class="fa fa-check"></i><strong>4.10</strong> Results: Summary Statisics</a></li>
+<li class="chapter" data-level="" data-path="segmentation.html"><a href="segmentation.html#segmentation411"><i class="fa fa-check"></i><strong>4.11</strong> Results: Visual examples of GRM and FRI Polygons</a></li>
+<li class="chapter" data-level="" data-path="segmentation.html"><a href="segmentation.html#segmentation412"><i class="fa fa-check"></i><strong>4.12</strong> Results: Distribution Plots</a></li>
+<li class="chapter" data-level="" data-path="segmentation.html"><a href="segmentation.html#segmentation413"><i class="fa fa-check"></i><strong>4.13</strong> Caveats</a></li>
+<li class="chapter" data-level="" data-path="segmentation.html"><a href="segmentation.html#segmentation414"><i class="fa fa-check"></i><strong>4.14</strong> Future Work</a></li>
+<li class="chapter" data-level="" data-path="segmentation.html"><a href="segmentation.html#segmentation415"><i class="fa fa-check"></i><strong>4.15</strong> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html"><i class="fa fa-check"></i><strong>5</strong> Imputation</a>
+<ul>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputation51"><i class="fa fa-check"></i><strong>5.1</strong> Introduction</a></li>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputation52"><i class="fa fa-check"></i><strong>5.2</strong> Imputation Parameters</a></li>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputation53"><i class="fa fa-check"></i><strong>5.3</strong> Data Requirements</a></li>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputation54"><i class="fa fa-check"></i><strong>5.4</strong> Set Code and File Parameters</a></li>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputation55"><i class="fa fa-check"></i><strong>5.5</strong> Pre-processing: Extract Variables into Polygons</a></li>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputation56"><i class="fa fa-check"></i><strong>5.6</strong> Pre-processing: Calculate Species Attributes</a></li>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputation57"><i class="fa fa-check"></i><strong>5.7</strong> Pre-processing: Forest Data Screening</a></li>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputation58"><i class="fa fa-check"></i><strong>5.8</strong> Execute Imputation Algorithm Over FRI Polygons ONLY</a></li>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputation59"><i class="fa fa-check"></i><strong>5.9</strong> Results: Imputation over FRI</a></li>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputation510"><i class="fa fa-check"></i><strong>5.10</strong> Execute Imputation Algorithm From FRI to GRM Polygons</a></li>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputation511"><i class="fa fa-check"></i><strong>5.11</strong> Results: Imputation X-Variable Performance</a></li>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputation512"><i class="fa fa-check"></i><strong>5.12</strong> Results: Distribution of Age</a></li>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputation513"><i class="fa fa-check"></i><strong>5.13</strong> Results: Distribution of Species</a></li>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputation516"><i class="fa fa-check"></i><strong>5.16</strong> Caveats</a></li>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputation517"><i class="fa fa-check"></i><strong>5.17</strong> Future Work</a></li>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputation518"><i class="fa fa-check"></i><strong>5.18</strong> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><strong>6</strong> References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 
@@ -91,7 +221,7 @@
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Integration of Photo Interpreted and LIDAR Attributes Into a Polygonal Forest Inventory Framework</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Integration of Photo Interpreted and LiDAR Attributes into a Polygonal Forest Inventory Framework</a>
           </h1>
         </div>
 
@@ -99,22 +229,42 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="introduction" class="section level1">
-<h1><span class="header-section-number">Part 1</span> Introduction</h1>
-<p>This is the first real chapter.</p>
+<div id="header">
+<h1 class="title">Integration of Photo Interpreted and LiDAR Attributes into a Polygonal Forest Inventory Framework</h1>
+<p class="author"><em><div class="line-block">Ethan Berman<br />
+Research Scientist<br />
+Integrated Remote Sensing Studio<br />
+University of British Columbia</div></em></p>
+<p class="date"><em>2023-04-25</em></p>
+</div>
+<div id="introduction" class="section level1 unnumbered hasAnchor">
+<h1><strong>1</strong> Introduction<a href="introduction.html#introduction" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Welcome! This website serves as the information hub for the <em>Integration of Photo Interpreted and LiDAR Attributes into a Polygonal Forest Inventory Framework</em> project. The project is led by Prof. Nicholas Coops from 2021-2023 and made possible through a <a href="http://www.forestryfutures.ca/">Forestry Futures Trust Ontario</a> grant. Here you will find details about the project partners, project objectives, and analyses completed including coding demos and results. For further inquiries please feel free to <a href="ethan.berman@ubc.ca">email me</a>.</p>
+<div id="summary" class="section level2 unnumbered hasAnchor">
+<h2><strong>1.1</strong> Project Summary<a href="introduction.html#summary" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The acquisition of Airborne Laser Scanning (ALS) Single Photon Lidar over the forested area of Ontario is redefining how forest attributes are predicted and monitored throughout the Province. A key question remains however, of how to aggregate these area-based (raster) estimates of forest attributes into traditional strategic or tactical-level inventory polygons. This project is designed to address this need. Outcomes of the project will be open source segmentation and attribute prediction tools to develop a polygon based forest inventory inclusive of both ALS and interpreted forest stand attributes as well as knowledge transfer activities and demonstration at a number of forest management units.</p>
+</div>
+<div id="partners" class="section level2 unnumbered hasAnchor">
+<h2><strong>1.2</strong> Project Partners<a href="introduction.html#partners" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>This project is principally a partnership between the University of British Columbia, GreenFirst Forest Products, the Ontario Ministry of Natural Resources and Forestry, and Forestry Futures Trust Ontario.</p>
+<p>GreenFirst Forest Products (previously RYAM Forest Management) and the University of British Columbia have a history of successful collaboration including the use of LiDAR and aerial photogrammetry for spruce budworm assessment and regeneration mapping. This project will also build upon the very strong links UBC has with the Canadian Wood Fiber Centre (CWFC), which has thus far culminated in more than 20 peer-reviewed publications on CWFC-funded work, including the award winning best practices guide.</p>
+<p>In addition, UBC, GreenFirst Forest Products and the Ontario Ministry of Natural Resources and Forestry are involved in a large NSERC funded project, <a href="mailto:Silv@21" class="email">Silv@21</a>, which is a collaborative research program across Canada focused on developing and applying new silvicultural approaches to forest management under changing forestry demand and markets, climate and diverse public expectations. The questions addressed throughout this project are beyond the scope of <a href="mailto:Silv@21" class="email">Silv@21</a> and therefore an additional effort was needed.</p>
+<p>Working with the province and industry with advanced remote sensing data sources such as ALS ensures that the new forest inventory provides detailed information on forest composition and structure to inform how much wood can be harvested sustainably across the province. By developing tools which allow for integration of raster-based forest inventory attributes from the ALS and utilizing the recognized benefits of the Forest Resources Inventory (FRI) polygonal inventory, Forestry Futures Trust Ontario has the opportunity to advance forest inventory within Ontario in a significant way.</p>
+<p>Issues around data management, modeling and fusion of these datasets together into one integrated accurate and operational inventory is of critical importance. This project provides open access tools and methodologies to allow this to be done.</p>
+<p>The partnerships assembled through private industry, government and universities to address the needs highlighted in this project are critically important and are in direct support of the new Ontario Forest Sector strategy and the Crown Forest Sustainability Act by providing foundational information for economically sustainable forest management planning and spatial planning in the Province.</p>
 
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="diving-in.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+
+<a href="people.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -154,6 +304,10 @@ gitbook.start({
 "text": null
 },
 "download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "subsection"
 }

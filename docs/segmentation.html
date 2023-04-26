@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>4 Segmentation | Integration of Photo Interpreted and LiDAR Attributes into a Polygonal Forest Inventory Framework</title>
+  <meta name="description" content="A place to find background information and follow updates related to the project." />
+  <meta name="generator" content="bookdown 0.27 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="4 Segmentation | Integration of Photo Interpreted and LiDAR Attributes into a Polygonal Forest Inventory Framework" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="A place to find background information and follow updates related to the project." />
+  <meta name="github-repo" content="bermane/ontario-inventory" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="4 Segmentation | Integration of Photo Interpreted and LiDAR Attributes into a Polygonal Forest Inventory Framework" />
+  
+  <meta name="twitter:description" content="A place to find background information and follow updates related to the project." />
+  
+
+
+
+<meta name="date" content="2023-04-25" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="project-details.html"/>
+<link rel="next" href="imputation.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Integration of Photo Interpreted and LiDAR Attributes Into a Polygonal Forest Inventory Framework</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><strong>1</strong> Introduction</a>
+<ul>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#summary"><i class="fa fa-check"></i><strong>1.1</strong> Project Summary</a></li>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#partners"><i class="fa fa-check"></i><strong>1.2</strong> Project Partners</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="people.html"><a href="people.html"><i class="fa fa-check"></i><strong>2</strong> People</a>
+<ul>
+<li class="chapter" data-level="" data-path="people.html"><a href="people.html#ubc"><i class="fa fa-check"></i><strong>2.1</strong> University of British Columbia</a>
+<ul>
+<li class="chapter" data-level="" data-path="people.html"><a href="people.html#ncc"><i class="fa fa-check"></i>Prof. Nicholas Coops, <em>project lead</em></a></li>
+<li class="chapter" data-level="" data-path="people.html"><a href="people.html#eb"><i class="fa fa-check"></i>Ethan Berman, <em>research scientist</em></a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="people.html"><a href="people.html#greenfirst"><i class="fa fa-check"></i><strong>2.2</strong> GreenFirst Forest Products</a>
+<ul>
+<li class="chapter" data-level="" data-path="people.html"><a href="people.html#cm"><i class="fa fa-check"></i>Chris McDonell, <em>partner</em></a></li>
+<li class="chapter" data-level="" data-path="people.html"><a href="people.html#gm"><i class="fa fa-check"></i>Grant McCartney, <em>partner</em></a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="people.html"><a href="people.html#ministry"><i class="fa fa-check"></i><strong>2.3</strong> Ontario Ministry of Natural Resources and Forestry</a>
+<ul>
+<li class="chapter" data-level="" data-path="people.html"><a href="people.html#is"><i class="fa fa-check"></i>Ian Sinclair, <em>partner</em></a></li>
+<li class="chapter" data-level="" data-path="people.html"><a href="people.html#grm"><i class="fa fa-check"></i>Geordie Robere-McGugan, <em>partner</em></a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="people.html"><a href="people.html#laval"><i class="fa fa-check"></i><strong>2.4</strong> Laval University</a>
+<ul>
+<li class="chapter" data-level="0.0.1" data-path="people.html"><a href="people.html#alexis-achim-advisor--aachim"><i class="fa fa-check"></i><b>0.0.1</b> Alexis Achim, <em>advisor</em> {-$aachim}</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="project-details.html"><a href="project-details.html"><i class="fa fa-check"></i><strong>3</strong> Project Details</a>
+<ul>
+<li class="chapter" data-level="" data-path="project-details.html"><a href="project-details.html#objective"><i class="fa fa-check"></i><strong>3.1</strong> Objective</a></li>
+<li class="chapter" data-level="" data-path="project-details.html"><a href="project-details.html#themes"><i class="fa fa-check"></i><strong>3.2</strong> Themes</a></li>
+<li class="chapter" data-level="" data-path="project-details.html"><a href="project-details.html#description"><i class="fa fa-check"></i><strong>3.3</strong> Description</a></li>
+<li class="chapter" data-level="" data-path="project-details.html"><a href="project-details.html#study-area"><i class="fa fa-check"></i><strong>3.4</strong> Study Area</a></li>
+<li class="chapter" data-level="" data-path="project-details.html"><a href="project-details.html#methodology"><i class="fa fa-check"></i><strong>3.5</strong> Methodology</a></li>
+<li class="chapter" data-level="" data-path="project-details.html"><a href="project-details.html#knowledge-transfer"><i class="fa fa-check"></i><strong>3.6</strong> Knowledge &amp; Technology Transfer</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="segmentation.html"><a href="segmentation.html"><i class="fa fa-check"></i><strong>4</strong> Segmentation</a>
+<ul>
+<li class="chapter" data-level="" data-path="segmentation.html"><a href="segmentation.html#segmentation41"><i class="fa fa-check"></i><strong>4.1</strong> Introduction</a></li>
+<li class="chapter" data-level="" data-path="segmentation.html"><a href="segmentation.html#segmentation42"><i class="fa fa-check"></i><strong>4.2</strong> Generic Region Merging Parameters</a></li>
+<li class="chapter" data-level="" data-path="segmentation.html"><a href="segmentation.html#segmentation43"><i class="fa fa-check"></i><strong>4.3</strong> Data Requirements</a></li>
+<li class="chapter" data-level="" data-path="segmentation.html"><a href="segmentation.html#segmentation44"><i class="fa fa-check"></i><strong>4.4</strong> Set Code and File Parameters</a></li>
+<li class="chapter" data-level="" data-path="segmentation.html"><a href="segmentation.html#segmentation45"><i class="fa fa-check"></i><strong>4.5</strong> Pre-processing</a></li>
+<li class="chapter" data-level="" data-path="segmentation.html"><a href="segmentation.html#segmentation46"><i class="fa fa-check"></i><strong>4.6</strong> Execute GRM Segmentation</a></li>
+<li class="chapter" data-level="" data-path="segmentation.html"><a href="segmentation.html#segmentation47"><i class="fa fa-check"></i><strong>4.7</strong> Post-processing</a></li>
+<li class="chapter" data-level="" data-path="segmentation.html"><a href="segmentation.html#segmentation48"><i class="fa fa-check"></i><strong>4.8</strong> Performance Analysis</a></li>
+<li class="chapter" data-level="" data-path="segmentation.html"><a href="segmentation.html#segmentation49"><i class="fa fa-check"></i><strong>4.9</strong> Results: GRM Algorithm</a></li>
+<li class="chapter" data-level="" data-path="segmentation.html"><a href="segmentation.html#segmentation410"><i class="fa fa-check"></i><strong>4.10</strong> Results: Summary Statisics</a></li>
+<li class="chapter" data-level="" data-path="segmentation.html"><a href="segmentation.html#segmentation411"><i class="fa fa-check"></i><strong>4.11</strong> Results: Visual examples of GRM and FRI Polygons</a></li>
+<li class="chapter" data-level="" data-path="segmentation.html"><a href="segmentation.html#segmentation412"><i class="fa fa-check"></i><strong>4.12</strong> Results: Distribution Plots</a></li>
+<li class="chapter" data-level="" data-path="segmentation.html"><a href="segmentation.html#segmentation413"><i class="fa fa-check"></i><strong>4.13</strong> Caveats</a></li>
+<li class="chapter" data-level="" data-path="segmentation.html"><a href="segmentation.html#segmentation414"><i class="fa fa-check"></i><strong>4.14</strong> Future Work</a></li>
+<li class="chapter" data-level="" data-path="segmentation.html"><a href="segmentation.html#segmentation415"><i class="fa fa-check"></i><strong>4.15</strong> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html"><i class="fa fa-check"></i><strong>5</strong> Imputation</a>
+<ul>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputation51"><i class="fa fa-check"></i><strong>5.1</strong> Introduction</a></li>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputation52"><i class="fa fa-check"></i><strong>5.2</strong> Imputation Parameters</a></li>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputation53"><i class="fa fa-check"></i><strong>5.3</strong> Data Requirements</a></li>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputation54"><i class="fa fa-check"></i><strong>5.4</strong> Set Code and File Parameters</a></li>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputation55"><i class="fa fa-check"></i><strong>5.5</strong> Pre-processing: Extract Variables into Polygons</a></li>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputation56"><i class="fa fa-check"></i><strong>5.6</strong> Pre-processing: Calculate Species Attributes</a></li>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputation57"><i class="fa fa-check"></i><strong>5.7</strong> Pre-processing: Forest Data Screening</a></li>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputation58"><i class="fa fa-check"></i><strong>5.8</strong> Execute Imputation Algorithm Over FRI Polygons ONLY</a></li>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputation59"><i class="fa fa-check"></i><strong>5.9</strong> Results: Imputation over FRI</a></li>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputation510"><i class="fa fa-check"></i><strong>5.10</strong> Execute Imputation Algorithm From FRI to GRM Polygons</a></li>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputation511"><i class="fa fa-check"></i><strong>5.11</strong> Results: Imputation X-Variable Performance</a></li>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputation512"><i class="fa fa-check"></i><strong>5.12</strong> Results: Distribution of Age</a></li>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputation513"><i class="fa fa-check"></i><strong>5.13</strong> Results: Distribution of Species</a></li>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputation516"><i class="fa fa-check"></i><strong>5.16</strong> Caveats</a></li>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputation517"><i class="fa fa-check"></i><strong>5.17</strong> Future Work</a></li>
+<li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputation518"><i class="fa fa-check"></i><strong>5.18</strong> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><strong>6</strong> References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Integration of Photo Interpreted and LiDAR Attributes into a Polygonal Forest Inventory Framework</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="segmentation" class="section level1 unnumbered hasAnchor">
+<h1><strong>4</strong> Segmentation<a href="segmentation.html#segmentation" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="segmentation41" class="section level2 unnumbered hasAnchor">
+<h2><strong>4.1</strong> Introduction<a href="segmentation.html#segmentation41" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Forest stand polygons are familiar to forest managers, used by many forest planning and valuating workflows and software, and thus are preferable for management and monitoring. As the EFI becomes more prevalent, there is an immediate need to create a systematic workflow to convert raster-based metrics into a familiar polygonal format with the goal of ensuring usability and a seamless transition from the traditional forest inventory to the EFI. Although it is straight-forward to average EFI attributes over existing inventory polygons, these polygons are out of date (Bilyk et al., 2021) and do not represent the current conditions of dynamic forested environments. Manual delineation of forest stands is challenging since there are a lack of expert photo interpreters, the process is slow and expensive, and the subjective nature of the delineation makes monitoring of resources through time difficult (Wulder et al., 2008). Thus, to improve forest inventories our first step is to automatically delineate forest stand polygons from ALS data representing current conditions.</p>
+<p>Segmenting grid data (such as metrics derived from ALS) into meaningful polygonal objects is a well-documented process of geographic object-based image analysis. <a href="https://www.orfeo-toolbox.org/CookBook/Applications/app_GenericRegionMerging.html">Generic Region Merging (GRM)</a>, available from Orfeo Toolbox, is a region merging algorithm which has three options for homogeneity criterion: Baatz &amp; Schape, Eclidean Distance, and Full Lambda. The Baatz &amp; Schape criterion (Baatz and Schäpe, 2000), is the same algorithm used by the popular subscription based Multi-resolution Segmentation (eCognition software), and thus GRM provides an open-source framework to access the most popular segmentation method for remote sensing applications (Blaschke, 2010).</p>
+<p>How do we know if the segmentation is “good”? There are no universal criteria to assess the ability of segmentation algorithms to accurately delineate features in data. Judging performance depends on the application, and may include factors such as radiometric variation within segments, contrast to other segments, segment shape, size and distribution, number of segments, and other application specific metrics such as number of landcover classes within each segment, or classification accuracy. In terms of applying segmentation to ALS data in order to generate representative forest stand polygons, we assess the segmentation results in terms of ease, efficiency, and replicability of the algorithm (thus choosing GRM), segment shape, number of segments, line work (not having multiple sets of parallel lines), and effectiveness at explaining input metric variation. Results are discussed below.</p>
+</div>
+<div id="segmentation42" class="section level2 unnumbered hasAnchor">
+<h2><strong>4.2</strong> Generic Region Merging Parameters<a href="segmentation.html#segmentation42" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Output polygon specifications depend largely on parameter selection. For the GRM algorithm, the parameters include threshold, weight of spectral homogeneity, and weight of spatial homogeneity. Although the algorithm is based on the same homogeneity criterion as Multi-resolution Segmentation (eCognition software), the parameter selection is executed differently. Segments will merge if the value of the criterion is under the threshold, which controls spectral variation and segment size. The weight of spectral heterogeneity is a value between 0.1 – 0.9 and sets the priority of color vs. shape. This value inherently sets the weight of shape, since the weight of spectral homogeneity (color) and the weight of shape sum to 1. The weight of spatial homogeneity is a value between 0.1 – 0.9 that controls the priority of compactness vs. smoothness. The value inherently sets the weight of smoothness, since the weight of spatial homogeneity (compactness) and the weight of smoothness sum to 1.</p>
+<p>eCognition has a <a href="https://www.youtube.com/watch?v=tt53hoRAw9Q">great video</a> that explains parameter selection for their Multi-resolution Segmentation algorithm. The concepts apply directly to the GRM algorithm, just remember the parameters you adjust in GRM are slightly different.</p>
+</div>
+<div id="segmentation43" class="section level2 unnumbered hasAnchor">
+<h2><strong>4.3</strong> Data Requirements<a href="segmentation.html#segmentation43" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The GRM segmentation workflow requires the following data layers, which are input into the algorithm at the beginning of the code:</p>
+<ol style="list-style-type: decimal">
+<li>Gridded raster layers of the following ALS metrics, which are used to segment the data into polygons:</li>
+</ol>
+<ul>
+<li>p95: 95th percentile of returns height &gt; 1.3 meters classified as vegetation</li>
+<li>cc: Canopy cover. Percentage of first returns &gt; 2 meters classified as vegetation</li>
+<li>cv: Coefficient of variation of returns height &gt; 1.3 meters classified as vegetation</li>
+</ul>
+<p>We use these layers as they represent the height, cover, and vertical complexity of the forest. We do not go into detail about how to pre-process ALS layers from the point cloud. These metrics were processed using the <a href="https://r-lidar.github.io/lidRbook/">lidR</a> package in R. One thing to note is that we are using ALS metrics derived directly from the point cloud, as opposed to EFI attributes modelled using an area-based approach. EFI attributes are only valid in forested areas, and we want to generate polygons for the entire landscape, later classifying polygons as forested or not.</p>
+<ol start="2" style="list-style-type: decimal">
+<li>Forest Resources Inventory polygons (shapefile)</li>
+</ol>
+<p>The polygons need to have a “polytype” attribute field, as the “WAT” value is used to mask water</p>
+<ol start="3" style="list-style-type: decimal">
+<li>A roads layer (shapefile)</li>
+</ol>
+<p>This layer is used to mask roads and re-add them after segmentation. It may not be necessary to mask small roads that can be included in segmentation.</p>
+<ol start="4" style="list-style-type: decimal">
+<li>VLCE 2.0 Canada-wide Landcover data. <a href="https://opendata.nfis.org/mapserver/nfis-change_eng.html">Download here.</a></li>
+</ol>
+<p>We use 2018 to match the year of aquisition of the ALS data.</p>
+<ol start="5" style="list-style-type: decimal">
+<li>A valid <a href="https://www.orfeo-toolbox.org/CookBook/Installation.html">Orfeo Toolbox Installation</a></li>
+</ol>
+<p>Orfeo Toolbox is run from the command line but we execute the GRM function through R. All analyses are run in <a href="https://posit.co/download/rstudio-desktop/">R using RStudio</a> – so having a valid installation is necessary too.</p>
+</div>
+<div id="segmentation44" class="section level2 unnumbered hasAnchor">
+<h2><strong>4.4</strong> Set Code and File Parameters<a href="segmentation.html#segmentation44" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Now working in R, we will showcase a demo workflow, segmenting the Romeo Malette Forest (RMF) into forest stand polygons. The first step is to install packages (if not already installed) and set the code and file parameters. The input file locations are referenced and the GRM parameters are set. After conducting a performance analysis with many algorithm iterations, we are setting threshold (10), spectral homogeneity (0.1) and spatial homogeneity (0.5).</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="segmentation.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb1-2"><a href="segmentation.html#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="do">### INSTALL PACKAGES IF NEEDED </span><span class="al">###</span></span>
+<span id="cb1-3"><a href="segmentation.html#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb1-4"><a href="segmentation.html#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="segmentation.html#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(c(&#39;terra&#39;,</span></span>
+<span id="cb1-6"><a href="segmentation.html#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">#                    &#39;tidyverse&#39;,</span></span>
+<span id="cb1-7"><a href="segmentation.html#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">#                    &#39;exactextractr&#39;,</span></span>
+<span id="cb1-8"><a href="segmentation.html#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">#                    &#39;sf&#39;,</span></span>
+<span id="cb1-9"><a href="segmentation.html#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">#                    &#39;janitor&#39;,</span></span>
+<span id="cb1-10"><a href="segmentation.html#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">#                    &#39;berryFunctions&#39;,</span></span>
+<span id="cb1-11"><a href="segmentation.html#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">#                    &#39;lwgeom&#39;,</span></span>
+<span id="cb1-12"><a href="segmentation.html#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">#                    &#39;magrittr&#39;,</span></span>
+<span id="cb1-13"><a href="segmentation.html#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">#                    &#39;gridExtra&#39;))</span></span>
+<span id="cb1-14"><a href="segmentation.html#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="segmentation.html#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># make sure to have OTB installed from here:</span></span>
+<span id="cb1-16"><a href="segmentation.html#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co"># https://www.orfeo-toolbox.org/</span></span>
+<span id="cb1-17"><a href="segmentation.html#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="segmentation.html#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="do">#####################</span></span>
+<span id="cb1-19"><a href="segmentation.html#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="do">### LOAD PACKAGES </span><span class="al">###</span></span>
+<span id="cb1-20"><a href="segmentation.html#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="do">#####################</span></span>
+<span id="cb1-21"><a href="segmentation.html#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="segmentation.html#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co"># load packages</span></span>
+<span id="cb1-23"><a href="segmentation.html#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra)</span>
+<span id="cb1-24"><a href="segmentation.html#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-25"><a href="segmentation.html#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(exactextractr)</span>
+<span id="cb1-26"><a href="segmentation.html#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb1-27"><a href="segmentation.html#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
+<span id="cb1-28"><a href="segmentation.html#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(berryFunctions)</span>
+<span id="cb1-29"><a href="segmentation.html#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lwgeom)</span>
+<span id="cb1-30"><a href="segmentation.html#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(magrittr)</span>
+<span id="cb1-31"><a href="segmentation.html#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gridExtra)</span>
+<span id="cb1-32"><a href="segmentation.html#cb1-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-33"><a href="segmentation.html#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="do">####################################</span></span>
+<span id="cb1-34"><a href="segmentation.html#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="do">### SET CODE AND FILE PARAMETERS </span><span class="al">###</span></span>
+<span id="cb1-35"><a href="segmentation.html#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="do">####################################</span></span>
+<span id="cb1-36"><a href="segmentation.html#cb1-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-37"><a href="segmentation.html#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="co"># set file names for ALS input variables</span></span>
+<span id="cb1-38"><a href="segmentation.html#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="co"># these should be gridded raster data with the same CRS and extent</span></span>
+<span id="cb1-39"><a href="segmentation.html#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="co"># p95 = 95th percentile of returns height &gt; 1.3 m</span></span>
+<span id="cb1-40"><a href="segmentation.html#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="co"># cc = canopy cover (% of firest returns &gt; 2 m)</span></span>
+<span id="cb1-41"><a href="segmentation.html#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="co"># cv = coefficient of variation of returns height &gt; 1.3 m</span></span>
+<span id="cb1-42"><a href="segmentation.html#cb1-42" aria-hidden="true" tabindex="-1"></a>p95_f <span class="ot">&lt;-</span> <span class="st">&#39;D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_p95.tif&#39;</span></span>
+<span id="cb1-43"><a href="segmentation.html#cb1-43" aria-hidden="true" tabindex="-1"></a>cc_f <span class="ot">&lt;-</span> <span class="st">&#39;D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_2m_cov.tif&#39;</span></span>
+<span id="cb1-44"><a href="segmentation.html#cb1-44" aria-hidden="true" tabindex="-1"></a>cv_f <span class="ot">&lt;-</span> <span class="st">&#39;D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_cv.tif&#39;</span></span>
+<span id="cb1-45"><a href="segmentation.html#cb1-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-46"><a href="segmentation.html#cb1-46" aria-hidden="true" tabindex="-1"></a><span class="co"># set file location of roads shape file (spatial lines)</span></span>
+<span id="cb1-47"><a href="segmentation.html#cb1-47" aria-hidden="true" tabindex="-1"></a><span class="co"># roads will be polygonized, masked from segmentation</span></span>
+<span id="cb1-48"><a href="segmentation.html#cb1-48" aria-hidden="true" tabindex="-1"></a><span class="co"># and re-added to final dataset as polygons</span></span>
+<span id="cb1-49"><a href="segmentation.html#cb1-49" aria-hidden="true" tabindex="-1"></a>roads_f <span class="ot">&lt;-</span></span>
+<span id="cb1-50"><a href="segmentation.html#cb1-50" aria-hidden="true" tabindex="-1"></a>  <span class="st">&#39;D:/ontario_inventory/romeo/RMF_EFI_layers/Roads/RMF_roads.shp&#39;</span></span>
+<span id="cb1-51"><a href="segmentation.html#cb1-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-52"><a href="segmentation.html#cb1-52" aria-hidden="true" tabindex="-1"></a><span class="co"># set file location of FRI polygons shape file</span></span>
+<span id="cb1-53"><a href="segmentation.html#cb1-53" aria-hidden="true" tabindex="-1"></a><span class="co"># FRI POLYTYPE should have a &quot;WAT&quot; classification to mask water polygons</span></span>
+<span id="cb1-54"><a href="segmentation.html#cb1-54" aria-hidden="true" tabindex="-1"></a>fri <span class="ot">&lt;-</span> <span class="st">&#39;D:/ontario_inventory/romeo/RMF_EFI_layers/Polygons Inventory/RMF_PolygonForest.shp&#39;</span></span>
+<span id="cb1-55"><a href="segmentation.html#cb1-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-56"><a href="segmentation.html#cb1-56" aria-hidden="true" tabindex="-1"></a><span class="co"># set output folder for files generated</span></span>
+<span id="cb1-57"><a href="segmentation.html#cb1-57" aria-hidden="true" tabindex="-1"></a><span class="co"># make sure no &quot;/&quot; at end of folder location!</span></span>
+<span id="cb1-58"><a href="segmentation.html#cb1-58" aria-hidden="true" tabindex="-1"></a>out_dir <span class="ot">&lt;-</span> <span class="st">&#39;C:/Users/bermane/Desktop/RMF&#39;</span></span>
+<span id="cb1-59"><a href="segmentation.html#cb1-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-60"><a href="segmentation.html#cb1-60" aria-hidden="true" tabindex="-1"></a><span class="co"># set folder location of OTB (where you installed OTB earlier)</span></span>
+<span id="cb1-61"><a href="segmentation.html#cb1-61" aria-hidden="true" tabindex="-1"></a>otb_dir <span class="ot">&lt;-</span> <span class="st">&quot;C:/OTB/bin&quot;</span></span>
+<span id="cb1-62"><a href="segmentation.html#cb1-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-63"><a href="segmentation.html#cb1-63" aria-hidden="true" tabindex="-1"></a><span class="co"># set GRM segmentation parameters</span></span>
+<span id="cb1-64"><a href="segmentation.html#cb1-64" aria-hidden="true" tabindex="-1"></a><span class="co"># the default are listed below</span></span>
+<span id="cb1-65"><a href="segmentation.html#cb1-65" aria-hidden="true" tabindex="-1"></a><span class="co"># refer to paper or OTB GRM webpage for description of parameters</span></span>
+<span id="cb1-66"><a href="segmentation.html#cb1-66" aria-hidden="true" tabindex="-1"></a>thresh <span class="ot">&lt;-</span> <span class="st">&quot;10&quot;</span></span>
+<span id="cb1-67"><a href="segmentation.html#cb1-67" aria-hidden="true" tabindex="-1"></a>spec <span class="ot">&lt;-</span> <span class="st">&quot;0.1&quot;</span></span>
+<span id="cb1-68"><a href="segmentation.html#cb1-68" aria-hidden="true" tabindex="-1"></a>spat <span class="ot">&lt;-</span> <span class="st">&quot;0.5&quot;</span></span>
+<span id="cb1-69"><a href="segmentation.html#cb1-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-70"><a href="segmentation.html#cb1-70" aria-hidden="true" tabindex="-1"></a><span class="co"># set file location of 2018 VLCE 2.0 landcover data</span></span>
+<span id="cb1-71"><a href="segmentation.html#cb1-71" aria-hidden="true" tabindex="-1"></a><span class="co"># using 2018 because it is the year of Romeo ALS acquisition</span></span>
+<span id="cb1-72"><a href="segmentation.html#cb1-72" aria-hidden="true" tabindex="-1"></a><span class="co"># can change based on ALS acquisition year</span></span>
+<span id="cb1-73"><a href="segmentation.html#cb1-73" aria-hidden="true" tabindex="-1"></a><span class="co"># download here:</span></span>
+<span id="cb1-74"><a href="segmentation.html#cb1-74" aria-hidden="true" tabindex="-1"></a><span class="co"># https://opendata.nfis.org/mapserver/nfis-change_eng.html</span></span>
+<span id="cb1-75"><a href="segmentation.html#cb1-75" aria-hidden="true" tabindex="-1"></a>lc_f <span class="ot">&lt;-</span> <span class="st">&#39;D:/ontario_inventory/VLCE/CA_forest_VLCE2_2018.tif&#39;</span></span></code></pre></div>
+</div>
+<div id="segmentation45" class="section level2 unnumbered hasAnchor">
+<h2><strong>4.5</strong> Pre-processing<a href="segmentation.html#segmentation45" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Before executing the GRM algorithm, we prepare the data. First, a three band raster at 20 m spatial resolution is generated from the gridded ALS metrics. Each band is smoothed using the mean value of a 5x5 neighborhood. Next, we mask roads and water features from the raster, and combine them into a polygon layer to be re-added to the segmentation output. We then remove pixels that have missing values in any of the raster bands, and scale the bands to comprise values from 0-100, setting the minimum and maximum values to be the 1st and 99th percentile of data observations. We write the raster and masked polygons to disk to be loaded later.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="segmentation.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="do">###################################################</span></span>
+<span id="cb2-2"><a href="segmentation.html#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="do">### LOAD MULTI BAND ALS RASTER FOR SEGMENTATION </span><span class="al">###</span></span>
+<span id="cb2-3"><a href="segmentation.html#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="do">###################################################</span></span>
+<span id="cb2-4"><a href="segmentation.html#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="segmentation.html#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># stack rasters</span></span>
+<span id="cb2-6"><a href="segmentation.html#cb2-6" aria-hidden="true" tabindex="-1"></a>spl <span class="ot">&lt;-</span> <span class="fu">rast</span>(<span class="fu">c</span>(p95_f, cc_f, cv_f))</span>
+<span id="cb2-7"><a href="segmentation.html#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="segmentation.html#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># apply smoothing function on 5 cell square</span></span>
+<span id="cb2-9"><a href="segmentation.html#cb2-9" aria-hidden="true" tabindex="-1"></a>spl[[<span class="dv">1</span>]] <span class="ot">&lt;-</span> <span class="fu">focal</span>(spl[[<span class="dv">1</span>]], <span class="at">w =</span> <span class="dv">5</span>, <span class="at">fun =</span> <span class="st">&quot;mean&quot;</span>)</span>
+<span id="cb2-10"><a href="segmentation.html#cb2-10" aria-hidden="true" tabindex="-1"></a>spl[[<span class="dv">2</span>]] <span class="ot">&lt;-</span> <span class="fu">focal</span>(spl[[<span class="dv">2</span>]], <span class="at">w =</span> <span class="dv">5</span>, <span class="at">fun =</span> <span class="st">&quot;mean&quot;</span>)</span>
+<span id="cb2-11"><a href="segmentation.html#cb2-11" aria-hidden="true" tabindex="-1"></a>spl[[<span class="dv">3</span>]] <span class="ot">&lt;-</span> <span class="fu">focal</span>(spl[[<span class="dv">3</span>]], <span class="at">w =</span> <span class="dv">5</span>, <span class="at">fun =</span> <span class="st">&quot;mean&quot;</span>)</span>
+<span id="cb2-12"><a href="segmentation.html#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="segmentation.html#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co"># create ALS template with all values equal to 1</span></span>
+<span id="cb2-14"><a href="segmentation.html#cb2-14" aria-hidden="true" tabindex="-1"></a>spl_temp <span class="ot">&lt;-</span> spl[[<span class="dv">1</span>]]</span>
+<span id="cb2-15"><a href="segmentation.html#cb2-15" aria-hidden="true" tabindex="-1"></a>spl_temp[] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb2-16"><a href="segmentation.html#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="segmentation.html#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="do">##################</span></span>
+<span id="cb2-18"><a href="segmentation.html#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="do">### MASK ROADS </span><span class="al">###</span></span>
+<span id="cb2-19"><a href="segmentation.html#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="do">##################</span></span>
+<span id="cb2-20"><a href="segmentation.html#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-21"><a href="segmentation.html#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="co"># load roads layer</span></span>
+<span id="cb2-22"><a href="segmentation.html#cb2-22" aria-hidden="true" tabindex="-1"></a>roads <span class="ot">&lt;-</span> <span class="fu">vect</span>(roads_f)</span>
+<span id="cb2-23"><a href="segmentation.html#cb2-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-24"><a href="segmentation.html#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="co"># reproject to match lidar</span></span>
+<span id="cb2-25"><a href="segmentation.html#cb2-25" aria-hidden="true" tabindex="-1"></a>roads <span class="ot">&lt;-</span> <span class="fu">project</span>(roads, spl)</span>
+<span id="cb2-26"><a href="segmentation.html#cb2-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-27"><a href="segmentation.html#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="co"># create roads polygon</span></span>
+<span id="cb2-28"><a href="segmentation.html#cb2-28" aria-hidden="true" tabindex="-1"></a>spl_r <span class="ot">&lt;-</span> <span class="fu">mask</span>(spl_temp, roads, <span class="at">touches =</span> T)</span>
+<span id="cb2-29"><a href="segmentation.html#cb2-29" aria-hidden="true" tabindex="-1"></a>npix <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">values</span>(spl_r), <span class="at">na.rm =</span> T)</span>
+<span id="cb2-30"><a href="segmentation.html#cb2-30" aria-hidden="true" tabindex="-1"></a>spl_r <span class="ot">&lt;-</span> <span class="fu">as.polygons</span>(spl_r)</span>
+<span id="cb2-31"><a href="segmentation.html#cb2-31" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(spl_r) <span class="ot">&lt;-</span> <span class="st">&#39;POLYTYPE&#39;</span></span>
+<span id="cb2-32"><a href="segmentation.html#cb2-32" aria-hidden="true" tabindex="-1"></a>spl_r<span class="sc">$</span>POLYTYPE <span class="ot">&lt;-</span> <span class="st">&#39;RDS&#39;</span></span>
+<span id="cb2-33"><a href="segmentation.html#cb2-33" aria-hidden="true" tabindex="-1"></a>spl_r<span class="sc">$</span>nbPixels <span class="ot">&lt;-</span> npix</span>
+<span id="cb2-34"><a href="segmentation.html#cb2-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-35"><a href="segmentation.html#cb2-35" aria-hidden="true" tabindex="-1"></a><span class="co"># mask road pixels to NA</span></span>
+<span id="cb2-36"><a href="segmentation.html#cb2-36" aria-hidden="true" tabindex="-1"></a>spl <span class="ot">&lt;-</span> spl <span class="sc">%&gt;%</span></span>
+<span id="cb2-37"><a href="segmentation.html#cb2-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mask</span>(., roads, <span class="at">inverse =</span> T, <span class="at">touches =</span> T)</span>
+<span id="cb2-38"><a href="segmentation.html#cb2-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-39"><a href="segmentation.html#cb2-39" aria-hidden="true" tabindex="-1"></a><span class="do">###########################</span></span>
+<span id="cb2-40"><a href="segmentation.html#cb2-40" aria-hidden="true" tabindex="-1"></a><span class="do">### MASK WATER POLYGONS </span><span class="al">###</span></span>
+<span id="cb2-41"><a href="segmentation.html#cb2-41" aria-hidden="true" tabindex="-1"></a><span class="do">###########################</span></span>
+<span id="cb2-42"><a href="segmentation.html#cb2-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-43"><a href="segmentation.html#cb2-43" aria-hidden="true" tabindex="-1"></a><span class="co"># water polygons from the FRI are masked and re-added after segmentation</span></span>
+<span id="cb2-44"><a href="segmentation.html#cb2-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-45"><a href="segmentation.html#cb2-45" aria-hidden="true" tabindex="-1"></a><span class="co"># load photo interpreted polygons</span></span>
+<span id="cb2-46"><a href="segmentation.html#cb2-46" aria-hidden="true" tabindex="-1"></a>poly <span class="ot">&lt;-</span> <span class="fu">vect</span>(fri)</span>
+<span id="cb2-47"><a href="segmentation.html#cb2-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-48"><a href="segmentation.html#cb2-48" aria-hidden="true" tabindex="-1"></a><span class="co"># subset polygons that are WAT</span></span>
+<span id="cb2-49"><a href="segmentation.html#cb2-49" aria-hidden="true" tabindex="-1"></a>poly_sub <span class="ot">&lt;-</span> poly[poly<span class="sc">$</span>POLYTYPE <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&#39;WAT&#39;</span>)]</span>
+<span id="cb2-50"><a href="segmentation.html#cb2-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-51"><a href="segmentation.html#cb2-51" aria-hidden="true" tabindex="-1"></a><span class="co"># reproject to match lidar</span></span>
+<span id="cb2-52"><a href="segmentation.html#cb2-52" aria-hidden="true" tabindex="-1"></a>poly_sub <span class="ot">&lt;-</span> <span class="fu">project</span>(poly_sub, spl)</span>
+<span id="cb2-53"><a href="segmentation.html#cb2-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-54"><a href="segmentation.html#cb2-54" aria-hidden="true" tabindex="-1"></a><span class="co"># loop through water polygons, mask raster, and vectorize</span></span>
+<span id="cb2-55"><a href="segmentation.html#cb2-55" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(poly_sub)) {</span>
+<span id="cb2-56"><a href="segmentation.html#cb2-56" aria-hidden="true" tabindex="-1"></a>  pt <span class="ot">&lt;-</span> poly_sub<span class="sc">$</span>POLYTYPE[i]</span>
+<span id="cb2-57"><a href="segmentation.html#cb2-57" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (i <span class="sc">==</span> <span class="dv">1</span>) {</span>
+<span id="cb2-58"><a href="segmentation.html#cb2-58" aria-hidden="true" tabindex="-1"></a>    spl_pt <span class="ot">&lt;-</span> spl_temp <span class="sc">%&gt;%</span> <span class="fu">crop</span>(poly_sub[i], <span class="at">snap =</span> <span class="st">&#39;out&#39;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-59"><a href="segmentation.html#cb2-59" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mask</span>(poly_sub[i], <span class="at">touches =</span> T)</span>
+<span id="cb2-60"><a href="segmentation.html#cb2-60" aria-hidden="true" tabindex="-1"></a>    npix <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">values</span>(spl_pt), <span class="at">na.rm =</span> T)</span>
+<span id="cb2-61"><a href="segmentation.html#cb2-61" aria-hidden="true" tabindex="-1"></a>    spl_pt <span class="ot">&lt;-</span> <span class="fu">as.polygons</span>(spl_pt)</span>
+<span id="cb2-62"><a href="segmentation.html#cb2-62" aria-hidden="true" tabindex="-1"></a>    <span class="fu">names</span>(spl_pt) <span class="ot">&lt;-</span> <span class="st">&#39;POLYTYPE&#39;</span></span>
+<span id="cb2-63"><a href="segmentation.html#cb2-63" aria-hidden="true" tabindex="-1"></a>    spl_pt<span class="sc">$</span>POLYTYPE <span class="ot">&lt;-</span> pt</span>
+<span id="cb2-64"><a href="segmentation.html#cb2-64" aria-hidden="true" tabindex="-1"></a>    spl_pt<span class="sc">$</span>nbPixels <span class="ot">&lt;-</span> npix</span>
+<span id="cb2-65"><a href="segmentation.html#cb2-65" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span>{</span>
+<span id="cb2-66"><a href="segmentation.html#cb2-66" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">is.error</span>(spl_temp <span class="sc">%&gt;%</span> <span class="fu">crop</span>(poly_sub[i], <span class="at">snap =</span> <span class="st">&#39;out&#39;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-67"><a href="segmentation.html#cb2-67" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">mask</span>(poly_sub[i], <span class="at">touches =</span> T)) <span class="sc">==</span> F) {</span>
+<span id="cb2-68"><a href="segmentation.html#cb2-68" aria-hidden="true" tabindex="-1"></a>      spl_hold <span class="ot">&lt;-</span> spl_temp <span class="sc">%&gt;%</span> <span class="fu">crop</span>(poly_sub[i], <span class="at">snap =</span> <span class="st">&#39;out&#39;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-69"><a href="segmentation.html#cb2-69" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mask</span>(poly_sub[i], <span class="at">touches =</span> T)</span>
+<span id="cb2-70"><a href="segmentation.html#cb2-70" aria-hidden="true" tabindex="-1"></a>      npix <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">values</span>(spl_hold), <span class="at">na.rm =</span> T)</span>
+<span id="cb2-71"><a href="segmentation.html#cb2-71" aria-hidden="true" tabindex="-1"></a>      spl_hold <span class="ot">&lt;-</span> <span class="fu">as.polygons</span>(spl_hold)</span>
+<span id="cb2-72"><a href="segmentation.html#cb2-72" aria-hidden="true" tabindex="-1"></a>      <span class="fu">names</span>(spl_hold) <span class="ot">&lt;-</span> <span class="st">&#39;POLYTYPE&#39;</span></span>
+<span id="cb2-73"><a href="segmentation.html#cb2-73" aria-hidden="true" tabindex="-1"></a>      spl_hold<span class="sc">$</span>POLYTYPE <span class="ot">&lt;-</span> pt</span>
+<span id="cb2-74"><a href="segmentation.html#cb2-74" aria-hidden="true" tabindex="-1"></a>      spl_hold<span class="sc">$</span>nbPixels <span class="ot">&lt;-</span> npix</span>
+<span id="cb2-75"><a href="segmentation.html#cb2-75" aria-hidden="true" tabindex="-1"></a>      spl_pt <span class="ot">&lt;-</span> <span class="fu">rbind</span>(spl_pt, spl_hold)</span>
+<span id="cb2-76"><a href="segmentation.html#cb2-76" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-77"><a href="segmentation.html#cb2-77" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-78"><a href="segmentation.html#cb2-78" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-79"><a href="segmentation.html#cb2-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-80"><a href="segmentation.html#cb2-80" aria-hidden="true" tabindex="-1"></a><span class="co"># reproject whole FRI to match lidar</span></span>
+<span id="cb2-81"><a href="segmentation.html#cb2-81" aria-hidden="true" tabindex="-1"></a>poly <span class="ot">&lt;-</span> <span class="fu">project</span>(poly, spl)</span>
+<span id="cb2-82"><a href="segmentation.html#cb2-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-83"><a href="segmentation.html#cb2-83" aria-hidden="true" tabindex="-1"></a><span class="co"># mask lidar outside of FRI</span></span>
+<span id="cb2-84"><a href="segmentation.html#cb2-84" aria-hidden="true" tabindex="-1"></a>spl <span class="ot">&lt;-</span> <span class="fu">mask</span>(spl, poly, <span class="at">inverse =</span> F, <span class="at">touches =</span> T)</span>
+<span id="cb2-85"><a href="segmentation.html#cb2-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-86"><a href="segmentation.html#cb2-86" aria-hidden="true" tabindex="-1"></a><span class="co"># mask WAT polygons</span></span>
+<span id="cb2-87"><a href="segmentation.html#cb2-87" aria-hidden="true" tabindex="-1"></a>spl <span class="ot">&lt;-</span> <span class="fu">mask</span>(spl, poly_sub, <span class="at">inverse =</span> T, <span class="at">touches =</span> T)</span>
+<span id="cb2-88"><a href="segmentation.html#cb2-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-89"><a href="segmentation.html#cb2-89" aria-hidden="true" tabindex="-1"></a><span class="do">###############################################</span></span>
+<span id="cb2-90"><a href="segmentation.html#cb2-90" aria-hidden="true" tabindex="-1"></a><span class="do">### COMBINE ROAD AND WATER POLYGON DATASETS </span><span class="al">###</span></span>
+<span id="cb2-91"><a href="segmentation.html#cb2-91" aria-hidden="true" tabindex="-1"></a><span class="do">###############################################</span></span>
+<span id="cb2-92"><a href="segmentation.html#cb2-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-93"><a href="segmentation.html#cb2-93" aria-hidden="true" tabindex="-1"></a>spl_pt <span class="ot">&lt;-</span> <span class="fu">rbind</span>(spl_pt, spl_r)</span>
+<span id="cb2-94"><a href="segmentation.html#cb2-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-95"><a href="segmentation.html#cb2-95" aria-hidden="true" tabindex="-1"></a><span class="do">##########################################</span></span>
+<span id="cb2-96"><a href="segmentation.html#cb2-96" aria-hidden="true" tabindex="-1"></a><span class="do">### DEAL WITH MISSING DATA AND RESCALE </span><span class="al">###</span></span>
+<span id="cb2-97"><a href="segmentation.html#cb2-97" aria-hidden="true" tabindex="-1"></a><span class="do">##########################################</span></span>
+<span id="cb2-98"><a href="segmentation.html#cb2-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-99"><a href="segmentation.html#cb2-99" aria-hidden="true" tabindex="-1"></a><span class="co"># if any band is missing values set all to NA</span></span>
+<span id="cb2-100"><a href="segmentation.html#cb2-100" aria-hidden="true" tabindex="-1"></a>spl[<span class="fu">is.na</span>(spl[[<span class="dv">1</span>]])] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb2-101"><a href="segmentation.html#cb2-101" aria-hidden="true" tabindex="-1"></a>spl[<span class="fu">is.na</span>(spl[[<span class="dv">2</span>]])] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb2-102"><a href="segmentation.html#cb2-102" aria-hidden="true" tabindex="-1"></a>spl[<span class="fu">is.na</span>(spl[[<span class="dv">3</span>]])] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb2-103"><a href="segmentation.html#cb2-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-104"><a href="segmentation.html#cb2-104" aria-hidden="true" tabindex="-1"></a><span class="co"># create function to rescale values from 0 to 100 using 1 and 99 percentile</span></span>
+<span id="cb2-105"><a href="segmentation.html#cb2-105" aria-hidden="true" tabindex="-1"></a>scale_100 <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb2-106"><a href="segmentation.html#cb2-106" aria-hidden="true" tabindex="-1"></a>  <span class="co"># calculate 1st and 99th percentile of input raster</span></span>
+<span id="cb2-107"><a href="segmentation.html#cb2-107" aria-hidden="true" tabindex="-1"></a>  perc <span class="ot">&lt;-</span></span>
+<span id="cb2-108"><a href="segmentation.html#cb2-108" aria-hidden="true" tabindex="-1"></a>    <span class="fu">values</span>(x, <span class="at">mat =</span> F) <span class="sc">%&gt;%</span> <span class="fu">quantile</span>(., <span class="at">probs =</span> <span class="fu">c</span>(<span class="fl">0.01</span>, <span class="fl">0.99</span>), <span class="at">na.rm =</span> T)</span>
+<span id="cb2-109"><a href="segmentation.html#cb2-109" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-110"><a href="segmentation.html#cb2-110" aria-hidden="true" tabindex="-1"></a>  <span class="co"># rescale raster using 1st and 99th %</span></span>
+<span id="cb2-111"><a href="segmentation.html#cb2-111" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> (x <span class="sc">-</span> perc[<span class="dv">1</span>]) <span class="sc">/</span> (perc[<span class="dv">2</span>] <span class="sc">-</span> perc[<span class="dv">1</span>]) <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb2-112"><a href="segmentation.html#cb2-112" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-113"><a href="segmentation.html#cb2-113" aria-hidden="true" tabindex="-1"></a>  <span class="co">#reset values below 0 and above 100</span></span>
+<span id="cb2-114"><a href="segmentation.html#cb2-114" aria-hidden="true" tabindex="-1"></a>  x[x <span class="sc">&lt;</span> <span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb2-115"><a href="segmentation.html#cb2-115" aria-hidden="true" tabindex="-1"></a>  x[x <span class="sc">&gt;</span> <span class="dv">100</span>] <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb2-116"><a href="segmentation.html#cb2-116" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-117"><a href="segmentation.html#cb2-117" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(x)</span>
+<span id="cb2-118"><a href="segmentation.html#cb2-118" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-119"><a href="segmentation.html#cb2-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-120"><a href="segmentation.html#cb2-120" aria-hidden="true" tabindex="-1"></a><span class="co"># rescale rasters from 0 to 100</span></span>
+<span id="cb2-121"><a href="segmentation.html#cb2-121" aria-hidden="true" tabindex="-1"></a>spl[[<span class="dv">1</span>]] <span class="ot">&lt;-</span> <span class="fu">scale_100</span>(spl[[<span class="dv">1</span>]])</span>
+<span id="cb2-122"><a href="segmentation.html#cb2-122" aria-hidden="true" tabindex="-1"></a>spl[[<span class="dv">2</span>]] <span class="ot">&lt;-</span> <span class="fu">scale_100</span>(spl[[<span class="dv">2</span>]])</span>
+<span id="cb2-123"><a href="segmentation.html#cb2-123" aria-hidden="true" tabindex="-1"></a>spl[[<span class="dv">3</span>]] <span class="ot">&lt;-</span> <span class="fu">scale_100</span>(spl[[<span class="dv">3</span>]])</span>
+<span id="cb2-124"><a href="segmentation.html#cb2-124" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-125"><a href="segmentation.html#cb2-125" aria-hidden="true" tabindex="-1"></a><span class="co"># check if main dir exists and create</span></span>
+<span id="cb2-126"><a href="segmentation.html#cb2-126" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">dir.exists</span>(out_dir) <span class="sc">==</span> F) {</span>
+<span id="cb2-127"><a href="segmentation.html#cb2-127" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dir.create</span>(out_dir)</span>
+<span id="cb2-128"><a href="segmentation.html#cb2-128" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-129"><a href="segmentation.html#cb2-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-130"><a href="segmentation.html#cb2-130" aria-hidden="true" tabindex="-1"></a><span class="co"># check if temp dir exists and create</span></span>
+<span id="cb2-131"><a href="segmentation.html#cb2-131" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">dir.exists</span>(<span class="fu">file.path</span>(out_dir, <span class="st">&#39;temp&#39;</span>)) <span class="sc">==</span> F) {</span>
+<span id="cb2-132"><a href="segmentation.html#cb2-132" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dir.create</span>(<span class="fu">file.path</span>(out_dir, <span class="st">&#39;temp&#39;</span>))</span>
+<span id="cb2-133"><a href="segmentation.html#cb2-133" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-134"><a href="segmentation.html#cb2-134" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-135"><a href="segmentation.html#cb2-135" aria-hidden="true" tabindex="-1"></a><span class="co"># write raster to tif</span></span>
+<span id="cb2-136"><a href="segmentation.html#cb2-136" aria-hidden="true" tabindex="-1"></a><span class="fu">writeRaster</span>(spl,</span>
+<span id="cb2-137"><a href="segmentation.html#cb2-137" aria-hidden="true" tabindex="-1"></a>            <span class="at">filename =</span> <span class="fu">str_c</span>(out_dir, <span class="st">&#39;/temp/spl_stack.tif&#39;</span>),</span>
+<span id="cb2-138"><a href="segmentation.html#cb2-138" aria-hidden="true" tabindex="-1"></a>            <span class="at">overwrite =</span> T)</span>
+<span id="cb2-139"><a href="segmentation.html#cb2-139" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-140"><a href="segmentation.html#cb2-140" aria-hidden="true" tabindex="-1"></a><span class="co"># write spl_pt</span></span>
+<span id="cb2-141"><a href="segmentation.html#cb2-141" aria-hidden="true" tabindex="-1"></a><span class="fu">writeVector</span>(spl_pt,</span>
+<span id="cb2-142"><a href="segmentation.html#cb2-142" aria-hidden="true" tabindex="-1"></a>            <span class="fu">str_c</span>(out_dir, <span class="st">&#39;/temp/water_roads_polygons.shp&#39;</span>),</span>
+<span id="cb2-143"><a href="segmentation.html#cb2-143" aria-hidden="true" tabindex="-1"></a>            <span class="at">overwrite =</span> T)</span></code></pre></div>
+</div>
+<div id="segmentation46" class="section level2 unnumbered hasAnchor">
+<h2><strong>4.6</strong> Execute GRM Segmentation<a href="segmentation.html#segmentation46" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The next step is to execute the GRM algorithm itself. We set the parameters, write a function to run GRM in the command line, and execute the function. The result is the segmented polygon layer, which then needs some post-processing before looking at performance results.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="segmentation.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">#######################</span></span>
+<span id="cb3-2"><a href="segmentation.html#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="do">###RUN GRM ALGORITHM###</span></span>
+<span id="cb3-3"><a href="segmentation.html#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="do">#######################</span></span>
+<span id="cb3-4"><a href="segmentation.html#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="segmentation.html#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># SET PARAMETERS</span></span>
+<span id="cb3-6"><a href="segmentation.html#cb3-6" aria-hidden="true" tabindex="-1"></a>rast_in <span class="ot">&lt;-</span> <span class="fu">str_c</span>(out_dir, <span class="st">&#39;/temp/spl_stack.tif&#39;</span>)</span>
+<span id="cb3-7"><a href="segmentation.html#cb3-7" aria-hidden="true" tabindex="-1"></a>out_p <span class="ot">&lt;-</span> <span class="fu">str_c</span>(out_dir, <span class="st">&#39;/temp&#39;</span>)</span>
+<span id="cb3-8"><a href="segmentation.html#cb3-8" aria-hidden="true" tabindex="-1"></a>name_out <span class="ot">&lt;-</span> <span class="fu">str_c</span>(</span>
+<span id="cb3-9"><a href="segmentation.html#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">&#39;grm_&#39;</span>,</span>
+<span id="cb3-10"><a href="segmentation.html#cb3-10" aria-hidden="true" tabindex="-1"></a>  thresh,</span>
+<span id="cb3-11"><a href="segmentation.html#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">&#39;_&#39;</span>,</span>
+<span id="cb3-12"><a href="segmentation.html#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gsub</span>(<span class="st">&quot;.&quot;</span>, <span class="st">&quot;&quot;</span>, spec, <span class="at">fixed =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb3-13"><a href="segmentation.html#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="st">&#39;_&#39;</span>,</span>
+<span id="cb3-14"><a href="segmentation.html#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gsub</span>(<span class="st">&quot;.&quot;</span>, <span class="st">&quot;&quot;</span>, spat, <span class="at">fixed =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-15"><a href="segmentation.html#cb3-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-16"><a href="segmentation.html#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="segmentation.html#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co"># create function to run generic region merging</span></span>
+<span id="cb3-18"><a href="segmentation.html#cb3-18" aria-hidden="true" tabindex="-1"></a>grm_otb <span class="ot">&lt;-</span></span>
+<span id="cb3-19"><a href="segmentation.html#cb3-19" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(<span class="at">otb_path =</span> <span class="st">&quot;&quot;</span>,</span>
+<span id="cb3-20"><a href="segmentation.html#cb3-20" aria-hidden="true" tabindex="-1"></a>           <span class="at">raster_in =</span> <span class="st">&quot;&quot;</span>,</span>
+<span id="cb3-21"><a href="segmentation.html#cb3-21" aria-hidden="true" tabindex="-1"></a>           <span class="at">out_path =</span> <span class="st">&quot;&quot;</span>,</span>
+<span id="cb3-22"><a href="segmentation.html#cb3-22" aria-hidden="true" tabindex="-1"></a>           <span class="at">name =</span> <span class="st">&quot;&quot;</span>,</span>
+<span id="cb3-23"><a href="segmentation.html#cb3-23" aria-hidden="true" tabindex="-1"></a>           <span class="at">method =</span> <span class="st">&quot;bs&quot;</span>,</span>
+<span id="cb3-24"><a href="segmentation.html#cb3-24" aria-hidden="true" tabindex="-1"></a>           <span class="at">thresh =</span> <span class="st">&quot;&quot;</span>,</span>
+<span id="cb3-25"><a href="segmentation.html#cb3-25" aria-hidden="true" tabindex="-1"></a>           <span class="at">spec =</span> <span class="st">&quot;0.5&quot;</span>,</span>
+<span id="cb3-26"><a href="segmentation.html#cb3-26" aria-hidden="true" tabindex="-1"></a>           <span class="at">spat =</span> <span class="st">&quot;0.5&quot;</span>) {</span>
+<span id="cb3-27"><a href="segmentation.html#cb3-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Set configuration</span></span>
+<span id="cb3-28"><a href="segmentation.html#cb3-28" aria-hidden="true" tabindex="-1"></a>    conf <span class="ot">&lt;-</span></span>
+<span id="cb3-29"><a href="segmentation.html#cb3-29" aria-hidden="true" tabindex="-1"></a>      <span class="fu">paste</span>(</span>
+<span id="cb3-30"><a href="segmentation.html#cb3-30" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;-in&quot;</span>,</span>
+<span id="cb3-31"><a href="segmentation.html#cb3-31" aria-hidden="true" tabindex="-1"></a>        raster_in,</span>
+<span id="cb3-32"><a href="segmentation.html#cb3-32" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;-out&quot;</span>,</span>
+<span id="cb3-33"><a href="segmentation.html#cb3-33" aria-hidden="true" tabindex="-1"></a>        <span class="fu">paste</span>(out_path, <span class="st">&quot;/&quot;</span>, name, <span class="st">&quot;.tif&quot;</span>, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>),</span>
+<span id="cb3-34"><a href="segmentation.html#cb3-34" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;-criterion&quot;</span>,</span>
+<span id="cb3-35"><a href="segmentation.html#cb3-35" aria-hidden="true" tabindex="-1"></a>        method,</span>
+<span id="cb3-36"><a href="segmentation.html#cb3-36" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;-threshold&quot;</span>,</span>
+<span id="cb3-37"><a href="segmentation.html#cb3-37" aria-hidden="true" tabindex="-1"></a>        thresh,</span>
+<span id="cb3-38"><a href="segmentation.html#cb3-38" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;-cw&quot;</span>,</span>
+<span id="cb3-39"><a href="segmentation.html#cb3-39" aria-hidden="true" tabindex="-1"></a>        spec,</span>
+<span id="cb3-40"><a href="segmentation.html#cb3-40" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;-sw&quot;</span>,</span>
+<span id="cb3-41"><a href="segmentation.html#cb3-41" aria-hidden="true" tabindex="-1"></a>        spat</span>
+<span id="cb3-42"><a href="segmentation.html#cb3-42" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb3-43"><a href="segmentation.html#cb3-43" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-44"><a href="segmentation.html#cb3-44" aria-hidden="true" tabindex="-1"></a>    <span class="co"># apply function in command line</span></span>
+<span id="cb3-45"><a href="segmentation.html#cb3-45" aria-hidden="true" tabindex="-1"></a>    <span class="fu">system</span>(<span class="fu">paste</span>(otb_path, <span class="st">&quot;/otbcli_GenericRegionMerging&quot;</span>, <span class="st">&quot; &quot;</span>, conf, <span class="at">sep =</span></span>
+<span id="cb3-46"><a href="segmentation.html#cb3-46" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;&quot;</span>))</span>
+<span id="cb3-47"><a href="segmentation.html#cb3-47" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-48"><a href="segmentation.html#cb3-48" aria-hidden="true" tabindex="-1"></a>    <span class="co"># save configuration for further use</span></span>
+<span id="cb3-49"><a href="segmentation.html#cb3-49" aria-hidden="true" tabindex="-1"></a>    <span class="fu">write.table</span>(</span>
+<span id="cb3-50"><a href="segmentation.html#cb3-50" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> conf,</span>
+<span id="cb3-51"><a href="segmentation.html#cb3-51" aria-hidden="true" tabindex="-1"></a>      <span class="at">file =</span> <span class="fu">paste</span>(out_path, <span class="st">&quot;/&quot;</span>, name, <span class="st">&quot;_conf.txt&quot;</span>, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>),</span>
+<span id="cb3-52"><a href="segmentation.html#cb3-52" aria-hidden="true" tabindex="-1"></a>      <span class="at">row.names =</span> F,</span>
+<span id="cb3-53"><a href="segmentation.html#cb3-53" aria-hidden="true" tabindex="-1"></a>      <span class="at">col.names =</span> F</span>
+<span id="cb3-54"><a href="segmentation.html#cb3-54" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb3-55"><a href="segmentation.html#cb3-55" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-56"><a href="segmentation.html#cb3-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-57"><a href="segmentation.html#cb3-57" aria-hidden="true" tabindex="-1"></a><span class="co"># run grm</span></span>
+<span id="cb3-58"><a href="segmentation.html#cb3-58" aria-hidden="true" tabindex="-1"></a><span class="fu">grm_otb</span>(</span>
+<span id="cb3-59"><a href="segmentation.html#cb3-59" aria-hidden="true" tabindex="-1"></a>  <span class="at">otb_path =</span> otb_dir,</span>
+<span id="cb3-60"><a href="segmentation.html#cb3-60" aria-hidden="true" tabindex="-1"></a>  <span class="at">raster_in =</span> rast_in,</span>
+<span id="cb3-61"><a href="segmentation.html#cb3-61" aria-hidden="true" tabindex="-1"></a>  <span class="at">out_path =</span> out_p,</span>
+<span id="cb3-62"><a href="segmentation.html#cb3-62" aria-hidden="true" tabindex="-1"></a>  <span class="at">name =</span> name_out,</span>
+<span id="cb3-63"><a href="segmentation.html#cb3-63" aria-hidden="true" tabindex="-1"></a>  <span class="at">thresh =</span> thresh,</span>
+<span id="cb3-64"><a href="segmentation.html#cb3-64" aria-hidden="true" tabindex="-1"></a>  <span class="at">spec =</span> spec,</span>
+<span id="cb3-65"><a href="segmentation.html#cb3-65" aria-hidden="true" tabindex="-1"></a>  <span class="at">spat =</span> spat</span>
+<span id="cb3-66"><a href="segmentation.html#cb3-66" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+</div>
+<div id="segmentation47" class="section level2 unnumbered hasAnchor">
+<h2><strong>4.7</strong> Post-processing<a href="segmentation.html#segmentation47" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Before examining results, we mask missing values in the segmentation output, re-add water and road polygons (that were masked from input raster), and add landcover values. We use landcover to calculate two attributes:</p>
+<ol style="list-style-type: decimal">
+<li><p>The dominant landcover type in each polygon (mode)</p></li>
+<li><p>Whether each polygon is considered forested (&gt; 50% landcover is forest).</p></li>
+</ol>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="segmentation.html#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="do">###########################</span></span>
+<span id="cb4-2"><a href="segmentation.html#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="do">### MASK MISSING VALUES </span><span class="al">###</span></span>
+<span id="cb4-3"><a href="segmentation.html#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="do">###########################</span></span>
+<span id="cb4-4"><a href="segmentation.html#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="segmentation.html#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># load grm raster</span></span>
+<span id="cb4-6"><a href="segmentation.html#cb4-6" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">rast</span>(<span class="fu">str_c</span>(out_p, <span class="st">&quot;/&quot;</span>, name_out, <span class="st">&quot;.tif&quot;</span>))</span>
+<span id="cb4-7"><a href="segmentation.html#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="segmentation.html#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co"># load seg raster</span></span>
+<span id="cb4-9"><a href="segmentation.html#cb4-9" aria-hidden="true" tabindex="-1"></a>mask <span class="ot">&lt;-</span> <span class="fu">rast</span>(rast_in) <span class="sc">%&gt;%</span> .[[<span class="dv">1</span>]]</span>
+<span id="cb4-10"><a href="segmentation.html#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="segmentation.html#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co"># mask grm raster</span></span>
+<span id="cb4-12"><a href="segmentation.html#cb4-12" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">mask</span>(p, mask)</span>
+<span id="cb4-13"><a href="segmentation.html#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="segmentation.html#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co"># write grm raster</span></span>
+<span id="cb4-15"><a href="segmentation.html#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="fu">writeRaster</span>(p, <span class="fu">paste</span>(out_p, <span class="st">&quot;/&quot;</span>, name_out, <span class="st">&quot;.tif&quot;</span>, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>),</span>
+<span id="cb4-16"><a href="segmentation.html#cb4-16" aria-hidden="true" tabindex="-1"></a>            <span class="at">overwrite =</span> T)</span>
+<span id="cb4-17"><a href="segmentation.html#cb4-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-18"><a href="segmentation.html#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co"># convert to vector based on cell value</span></span>
+<span id="cb4-19"><a href="segmentation.html#cb4-19" aria-hidden="true" tabindex="-1"></a>vec <span class="ot">&lt;-</span> <span class="fu">as.polygons</span>(p)</span>
+<span id="cb4-20"><a href="segmentation.html#cb4-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-21"><a href="segmentation.html#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co"># create table of number of pixels in each polygon</span></span>
+<span id="cb4-22"><a href="segmentation.html#cb4-22" aria-hidden="true" tabindex="-1"></a>num <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(<span class="fu">values</span>(p))</span>
+<span id="cb4-23"><a href="segmentation.html#cb4-23" aria-hidden="true" tabindex="-1"></a>num_pix <span class="ot">&lt;-</span> <span class="fu">tabyl</span>(num)</span>
+<span id="cb4-24"><a href="segmentation.html#cb4-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-25"><a href="segmentation.html#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="co"># drop na row</span></span>
+<span id="cb4-26"><a href="segmentation.html#cb4-26" aria-hidden="true" tabindex="-1"></a>num_pix <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(num_pix)</span>
+<span id="cb4-27"><a href="segmentation.html#cb4-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-28"><a href="segmentation.html#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="co"># get pixel ids from vector</span></span>
+<span id="cb4-29"><a href="segmentation.html#cb4-29" aria-hidden="true" tabindex="-1"></a>vec_dat <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">id =</span> <span class="fu">values</span>(vec)[, <span class="dv">1</span>])</span>
+<span id="cb4-30"><a href="segmentation.html#cb4-30" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(vec_dat) <span class="ot">&lt;-</span> <span class="st">&#39;id&#39;</span></span>
+<span id="cb4-31"><a href="segmentation.html#cb4-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-32"><a href="segmentation.html#cb4-32" aria-hidden="true" tabindex="-1"></a><span class="co"># loop through values and add to vector data</span></span>
+<span id="cb4-33"><a href="segmentation.html#cb4-33" aria-hidden="true" tabindex="-1"></a>vec_dat<span class="sc">$</span>nbPixels <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb4-34"><a href="segmentation.html#cb4-34" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">NROW</span>(vec_dat)) {</span>
+<span id="cb4-35"><a href="segmentation.html#cb4-35" aria-hidden="true" tabindex="-1"></a>  vec_dat<span class="sc">$</span>nbPixels[i] <span class="ot">&lt;-</span> num_pix<span class="sc">$</span>n[num_pix<span class="sc">$</span>num <span class="sc">==</span> vec_dat<span class="sc">$</span>id[i]]</span>
+<span id="cb4-36"><a href="segmentation.html#cb4-36" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-37"><a href="segmentation.html#cb4-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-38"><a href="segmentation.html#cb4-38" aria-hidden="true" tabindex="-1"></a><span class="co"># remove current column of data and add id</span></span>
+<span id="cb4-39"><a href="segmentation.html#cb4-39" aria-hidden="true" tabindex="-1"></a><span class="co"># add nbPixels to vector</span></span>
+<span id="cb4-40"><a href="segmentation.html#cb4-40" aria-hidden="true" tabindex="-1"></a>vec <span class="ot">&lt;-</span> vec[, <span class="sc">-</span><span class="dv">1</span>]</span>
+<span id="cb4-41"><a href="segmentation.html#cb4-41" aria-hidden="true" tabindex="-1"></a>vec<span class="sc">$</span>id <span class="ot">&lt;-</span> vec_dat<span class="sc">$</span>id</span>
+<span id="cb4-42"><a href="segmentation.html#cb4-42" aria-hidden="true" tabindex="-1"></a>vec<span class="sc">$</span>nbPixels <span class="ot">&lt;-</span> vec_dat<span class="sc">$</span>nbPixels</span>
+<span id="cb4-43"><a href="segmentation.html#cb4-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-44"><a href="segmentation.html#cb4-44" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb4-45"><a href="segmentation.html#cb4-45" aria-hidden="true" tabindex="-1"></a><span class="do">### ADD PRE-ALLOCATED POLYGONS </span><span class="al">###</span></span>
+<span id="cb4-46"><a href="segmentation.html#cb4-46" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb4-47"><a href="segmentation.html#cb4-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-48"><a href="segmentation.html#cb4-48" aria-hidden="true" tabindex="-1"></a><span class="co"># load polygon dataset</span></span>
+<span id="cb4-49"><a href="segmentation.html#cb4-49" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> vec</span>
+<span id="cb4-50"><a href="segmentation.html#cb4-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-51"><a href="segmentation.html#cb4-51" aria-hidden="true" tabindex="-1"></a><span class="co"># reproject segmented polygons to ensure same crs</span></span>
+<span id="cb4-52"><a href="segmentation.html#cb4-52" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">project</span>(p, spl_pt)</span>
+<span id="cb4-53"><a href="segmentation.html#cb4-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-54"><a href="segmentation.html#cb4-54" aria-hidden="true" tabindex="-1"></a><span class="co"># add non-FOR POLYTYPE polygons back in</span></span>
+<span id="cb4-55"><a href="segmentation.html#cb4-55" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">rbind</span>(p, spl_pt)</span>
+<span id="cb4-56"><a href="segmentation.html#cb4-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-57"><a href="segmentation.html#cb4-57" aria-hidden="true" tabindex="-1"></a><span class="do">#####################</span></span>
+<span id="cb4-58"><a href="segmentation.html#cb4-58" aria-hidden="true" tabindex="-1"></a><span class="do">### ADD LANDCOVER </span><span class="al">###</span></span>
+<span id="cb4-59"><a href="segmentation.html#cb4-59" aria-hidden="true" tabindex="-1"></a><span class="do">#####################</span></span>
+<span id="cb4-60"><a href="segmentation.html#cb4-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-61"><a href="segmentation.html#cb4-61" aria-hidden="true" tabindex="-1"></a><span class="co"># load VLCE 2.0 landcover dataset</span></span>
+<span id="cb4-62"><a href="segmentation.html#cb4-62" aria-hidden="true" tabindex="-1"></a>lc <span class="ot">&lt;-</span> <span class="fu">rast</span>(lc_f)</span>
+<span id="cb4-63"><a href="segmentation.html#cb4-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-64"><a href="segmentation.html#cb4-64" aria-hidden="true" tabindex="-1"></a><span class="co"># project polygons to CRS of raster</span></span>
+<span id="cb4-65"><a href="segmentation.html#cb4-65" aria-hidden="true" tabindex="-1"></a>p_lc <span class="ot">&lt;-</span> <span class="fu">project</span>(p2, lc)</span>
+<span id="cb4-66"><a href="segmentation.html#cb4-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-67"><a href="segmentation.html#cb4-67" aria-hidden="true" tabindex="-1"></a><span class="co"># crop raster</span></span>
+<span id="cb4-68"><a href="segmentation.html#cb4-68" aria-hidden="true" tabindex="-1"></a>lc <span class="ot">&lt;-</span> <span class="fu">crop</span>(lc, p_lc)</span>
+<span id="cb4-69"><a href="segmentation.html#cb4-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-70"><a href="segmentation.html#cb4-70" aria-hidden="true" tabindex="-1"></a><span class="co"># convert to sf</span></span>
+<span id="cb4-71"><a href="segmentation.html#cb4-71" aria-hidden="true" tabindex="-1"></a>p_lcsf <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(p_lc)</span>
+<span id="cb4-72"><a href="segmentation.html#cb4-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-73"><a href="segmentation.html#cb4-73" aria-hidden="true" tabindex="-1"></a><span class="co"># extract landcover values</span></span>
+<span id="cb4-74"><a href="segmentation.html#cb4-74" aria-hidden="true" tabindex="-1"></a>lc_vals <span class="ot">&lt;-</span> <span class="fu">exact_extract</span>(lc, p_lcsf)</span>
+<span id="cb4-75"><a href="segmentation.html#cb4-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-76"><a href="segmentation.html#cb4-76" aria-hidden="true" tabindex="-1"></a><span class="co"># set landcover class key</span></span>
+<span id="cb4-77"><a href="segmentation.html#cb4-77" aria-hidden="true" tabindex="-1"></a>lc_key <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">`</span><span class="at">0</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;NA&#39;</span>,</span>
+<span id="cb4-78"><a href="segmentation.html#cb4-78" aria-hidden="true" tabindex="-1"></a>            <span class="st">`</span><span class="at">20</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;Water&#39;</span>,</span>
+<span id="cb4-79"><a href="segmentation.html#cb4-79" aria-hidden="true" tabindex="-1"></a>            <span class="st">`</span><span class="at">31</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;Snow/Ice&#39;</span>,</span>
+<span id="cb4-80"><a href="segmentation.html#cb4-80" aria-hidden="true" tabindex="-1"></a>            <span class="st">`</span><span class="at">32</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;Rock/Rubble&#39;</span>,</span>
+<span id="cb4-81"><a href="segmentation.html#cb4-81" aria-hidden="true" tabindex="-1"></a>            <span class="st">`</span><span class="at">33</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;Exposed/Barren Land&#39;</span>,</span>
+<span id="cb4-82"><a href="segmentation.html#cb4-82" aria-hidden="true" tabindex="-1"></a>            <span class="st">`</span><span class="at">40</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;Bryoids&#39;</span>,</span>
+<span id="cb4-83"><a href="segmentation.html#cb4-83" aria-hidden="true" tabindex="-1"></a>            <span class="st">`</span><span class="at">50</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;Shrubland&#39;</span>,</span>
+<span id="cb4-84"><a href="segmentation.html#cb4-84" aria-hidden="true" tabindex="-1"></a>            <span class="st">`</span><span class="at">80</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;Wetland&#39;</span>,</span>
+<span id="cb4-85"><a href="segmentation.html#cb4-85" aria-hidden="true" tabindex="-1"></a>            <span class="st">`</span><span class="at">81</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;Wetland-Treed&#39;</span>,</span>
+<span id="cb4-86"><a href="segmentation.html#cb4-86" aria-hidden="true" tabindex="-1"></a>            <span class="st">`</span><span class="at">100</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;Herbs&#39;</span>,</span>
+<span id="cb4-87"><a href="segmentation.html#cb4-87" aria-hidden="true" tabindex="-1"></a>            <span class="st">`</span><span class="at">210</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;Coniferous&#39;</span>,</span>
+<span id="cb4-88"><a href="segmentation.html#cb4-88" aria-hidden="true" tabindex="-1"></a>            <span class="st">`</span><span class="at">220</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;Broadleaf&#39;</span>,</span>
+<span id="cb4-89"><a href="segmentation.html#cb4-89" aria-hidden="true" tabindex="-1"></a>            <span class="st">`</span><span class="at">230</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;Mixed Wood&#39;</span>)</span>
+<span id="cb4-90"><a href="segmentation.html#cb4-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-91"><a href="segmentation.html#cb4-91" aria-hidden="true" tabindex="-1"></a><span class="co"># find dominant lc type in each polygon</span></span>
+<span id="cb4-92"><a href="segmentation.html#cb4-92" aria-hidden="true" tabindex="-1"></a><span class="co"># if there are multiple modes keep them</span></span>
+<span id="cb4-93"><a href="segmentation.html#cb4-93" aria-hidden="true" tabindex="-1"></a><span class="co"># apply over list</span></span>
+<span id="cb4-94"><a href="segmentation.html#cb4-94" aria-hidden="true" tabindex="-1"></a>lc_mode <span class="ot">&lt;-</span> <span class="fu">sapply</span>(lc_vals, <span class="cf">function</span>(x){</span>
+<span id="cb4-95"><a href="segmentation.html#cb4-95" aria-hidden="true" tabindex="-1"></a>  x<span class="sc">$</span>value <span class="ot">&lt;-</span> <span class="fu">recode</span>(x<span class="sc">$</span>value, <span class="sc">!!!</span>lc_key)</span>
+<span id="cb4-96"><a href="segmentation.html#cb4-96" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> x <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(value) <span class="sc">%&gt;%</span> <span class="fu">summarize</span>(<span class="at">sum =</span> <span class="fu">sum</span>(coverage_fraction))</span>
+<span id="cb4-97"><a href="segmentation.html#cb4-97" aria-hidden="true" tabindex="-1"></a>  m <span class="ot">&lt;-</span> x<span class="sc">$</span>value[<span class="fu">which</span>(x<span class="sc">$</span>sum <span class="sc">==</span> <span class="fu">max</span>(x<span class="sc">$</span>sum))]</span>
+<span id="cb4-98"><a href="segmentation.html#cb4-98" aria-hidden="true" tabindex="-1"></a>  <span class="co"># m &lt;- get_mode2(x$value[x$coverage_fraction &gt;= cov_frac])</span></span>
+<span id="cb4-99"><a href="segmentation.html#cb4-99" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">paste</span>(m, <span class="at">collapse =</span> <span class="st">&quot; &quot;</span>))</span>
+<span id="cb4-100"><a href="segmentation.html#cb4-100" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb4-101"><a href="segmentation.html#cb4-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-102"><a href="segmentation.html#cb4-102" aria-hidden="true" tabindex="-1"></a><span class="co"># add to polygon dataset</span></span>
+<span id="cb4-103"><a href="segmentation.html#cb4-103" aria-hidden="true" tabindex="-1"></a>p2<span class="sc">$</span>dom_lc <span class="ot">&lt;-</span> lc_mode</span>
+<span id="cb4-104"><a href="segmentation.html#cb4-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-105"><a href="segmentation.html#cb4-105" aria-hidden="true" tabindex="-1"></a><span class="co"># set landcover class key with single forested class</span></span>
+<span id="cb4-106"><a href="segmentation.html#cb4-106" aria-hidden="true" tabindex="-1"></a>lc_key_for <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">`</span><span class="at">0</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;NA&#39;</span>,</span>
+<span id="cb4-107"><a href="segmentation.html#cb4-107" aria-hidden="true" tabindex="-1"></a>                <span class="st">`</span><span class="at">20</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;Water&#39;</span>,</span>
+<span id="cb4-108"><a href="segmentation.html#cb4-108" aria-hidden="true" tabindex="-1"></a>                <span class="st">`</span><span class="at">31</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;Snow/Ice&#39;</span>,</span>
+<span id="cb4-109"><a href="segmentation.html#cb4-109" aria-hidden="true" tabindex="-1"></a>                <span class="st">`</span><span class="at">32</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;Rock/Rubble&#39;</span>,</span>
+<span id="cb4-110"><a href="segmentation.html#cb4-110" aria-hidden="true" tabindex="-1"></a>                <span class="st">`</span><span class="at">33</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;Exposed/Barren Land&#39;</span>,</span>
+<span id="cb4-111"><a href="segmentation.html#cb4-111" aria-hidden="true" tabindex="-1"></a>                <span class="st">`</span><span class="at">40</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;Bryoids&#39;</span>,</span>
+<span id="cb4-112"><a href="segmentation.html#cb4-112" aria-hidden="true" tabindex="-1"></a>                <span class="st">`</span><span class="at">50</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;Shrubland&#39;</span>,</span>
+<span id="cb4-113"><a href="segmentation.html#cb4-113" aria-hidden="true" tabindex="-1"></a>                <span class="st">`</span><span class="at">80</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;Wetland&#39;</span>,</span>
+<span id="cb4-114"><a href="segmentation.html#cb4-114" aria-hidden="true" tabindex="-1"></a>                <span class="st">`</span><span class="at">81</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;Forest&#39;</span>,</span>
+<span id="cb4-115"><a href="segmentation.html#cb4-115" aria-hidden="true" tabindex="-1"></a>                <span class="st">`</span><span class="at">100</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;Herbs&#39;</span>,</span>
+<span id="cb4-116"><a href="segmentation.html#cb4-116" aria-hidden="true" tabindex="-1"></a>                <span class="st">`</span><span class="at">210</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;Forest&#39;</span>,</span>
+<span id="cb4-117"><a href="segmentation.html#cb4-117" aria-hidden="true" tabindex="-1"></a>                <span class="st">`</span><span class="at">220</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;Forest&#39;</span>,</span>
+<span id="cb4-118"><a href="segmentation.html#cb4-118" aria-hidden="true" tabindex="-1"></a>                <span class="st">`</span><span class="at">230</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&#39;Forest&#39;</span>)</span>
+<span id="cb4-119"><a href="segmentation.html#cb4-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-120"><a href="segmentation.html#cb4-120" aria-hidden="true" tabindex="-1"></a><span class="co"># find pixels with forest at least 50% of pixel</span></span>
+<span id="cb4-121"><a href="segmentation.html#cb4-121" aria-hidden="true" tabindex="-1"></a><span class="co"># apply over list</span></span>
+<span id="cb4-122"><a href="segmentation.html#cb4-122" aria-hidden="true" tabindex="-1"></a>lc_dom_for <span class="ot">&lt;-</span> <span class="fu">sapply</span>(lc_vals, <span class="cf">function</span>(x){</span>
+<span id="cb4-123"><a href="segmentation.html#cb4-123" aria-hidden="true" tabindex="-1"></a>  x<span class="sc">$</span>value <span class="ot">&lt;-</span> <span class="fu">recode</span>(x<span class="sc">$</span>value, <span class="sc">!!!</span>lc_key_for)</span>
+<span id="cb4-124"><a href="segmentation.html#cb4-124" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> x <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(value) <span class="sc">%&gt;%</span> <span class="fu">summarize</span>(<span class="at">sum =</span> <span class="fu">sum</span>(coverage_fraction))</span>
+<span id="cb4-125"><a href="segmentation.html#cb4-125" aria-hidden="true" tabindex="-1"></a>  m <span class="ot">&lt;-</span> x<span class="sc">$</span>value[<span class="fu">which</span>(x<span class="sc">$</span>sum <span class="sc">==</span> <span class="fu">max</span>(x<span class="sc">$</span>sum))]</span>
+<span id="cb4-126"><a href="segmentation.html#cb4-126" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>((<span class="fu">length</span>(m) <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">&amp;</span> (m <span class="sc">==</span> <span class="st">&#39;Forest&#39;</span>)[<span class="dv">1</span>]){</span>
+<span id="cb4-127"><a href="segmentation.html#cb4-127" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(x<span class="sc">$</span>sum[x<span class="sc">$</span>value <span class="sc">==</span> m]<span class="sc">/</span><span class="fu">sum</span>(x<span class="sc">$</span>sum) <span class="sc">&gt;=</span> <span class="fl">0.5</span>){</span>
+<span id="cb4-128"><a href="segmentation.html#cb4-128" aria-hidden="true" tabindex="-1"></a>      <span class="fu">return</span>(<span class="st">&#39;Yes&#39;</span>)</span>
+<span id="cb4-129"><a href="segmentation.html#cb4-129" aria-hidden="true" tabindex="-1"></a>    }<span class="cf">else</span>{<span class="fu">return</span>(<span class="st">&#39;No&#39;</span>)}</span>
+<span id="cb4-130"><a href="segmentation.html#cb4-130" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span>{<span class="fu">return</span>(<span class="st">&#39;No&#39;</span>)}</span>
+<span id="cb4-131"><a href="segmentation.html#cb4-131" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb4-132"><a href="segmentation.html#cb4-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-133"><a href="segmentation.html#cb4-133" aria-hidden="true" tabindex="-1"></a><span class="co"># add to polygon dataset</span></span>
+<span id="cb4-134"><a href="segmentation.html#cb4-134" aria-hidden="true" tabindex="-1"></a>p2<span class="sc">$</span>dom_for <span class="ot">&lt;-</span> lc_dom_for</span></code></pre></div>
+</div>
+<div id="segmentation48" class="section level2 unnumbered hasAnchor">
+<h2><strong>4.8</strong> Performance Analysis<a href="segmentation.html#segmentation48" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>To compare newly segmented forest stand polygons to those from the FRI, we calculate a full suite of summary and performance metrics including:</p>
+<ol style="list-style-type: decimal">
+<li>Minimum, maximum, mean, and median polygon size</li>
+<li>Total number of polygons</li>
+<li>Mean, standard error, and standard deviation of polygon area, perimeter, perimeter to area ratio and shape index</li>
+<li>R2 to assess the performance of segmentation outputs in explaining variation in the input variables: P95 height, canopy cover, and coefficient of variation</li>
+</ol>
+<p>The details pertaining to the derivation of these metrics are included in a forthcoming journal article. The following code chunk calculates stats for both the GRM output and the FRI polygons, outputting them together in a file titled “summary_stats.csv”.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="segmentation.html#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="do">##############################</span></span>
+<span id="cb5-2"><a href="segmentation.html#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="do">### ADD AREA AND PERIMETER </span><span class="al">###</span></span>
+<span id="cb5-3"><a href="segmentation.html#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="do">##############################</span></span>
+<span id="cb5-4"><a href="segmentation.html#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="segmentation.html#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># convert to sf</span></span>
+<span id="cb5-6"><a href="segmentation.html#cb5-6" aria-hidden="true" tabindex="-1"></a>p2_sf <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(p2)</span>
+<span id="cb5-7"><a href="segmentation.html#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="segmentation.html#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate perimeter</span></span>
+<span id="cb5-9"><a href="segmentation.html#cb5-9" aria-hidden="true" tabindex="-1"></a>p2<span class="sc">$</span>perim <span class="ot">&lt;-</span> <span class="fu">st_perimeter</span>(p2_sf) <span class="sc">%&gt;%</span> as.numeric</span>
+<span id="cb5-10"><a href="segmentation.html#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="segmentation.html#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate area</span></span>
+<span id="cb5-12"><a href="segmentation.html#cb5-12" aria-hidden="true" tabindex="-1"></a>p2<span class="sc">$</span>area <span class="ot">&lt;-</span> <span class="fu">st_area</span>(p2_sf) <span class="sc">%&gt;%</span> as.numeric</span>
+<span id="cb5-13"><a href="segmentation.html#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-14"><a href="segmentation.html#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co"># write to file</span></span>
+<span id="cb5-15"><a href="segmentation.html#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="fu">writeVector</span>(p2, <span class="fu">str_c</span>(out_dir, <span class="st">&quot;/&quot;</span>, name_out, <span class="st">&quot;.shp&quot;</span>),</span>
+<span id="cb5-16"><a href="segmentation.html#cb5-16" aria-hidden="true" tabindex="-1"></a>            <span class="at">overwrite =</span> T)</span>
+<span id="cb5-17"><a href="segmentation.html#cb5-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-18"><a href="segmentation.html#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="do">###########################################</span></span>
+<span id="cb5-19"><a href="segmentation.html#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="do">### EXTRACT FINAL POLYGON SUMMARY STATS </span><span class="al">###</span></span>
+<span id="cb5-20"><a href="segmentation.html#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="do">###########################################</span></span>
+<span id="cb5-21"><a href="segmentation.html#cb5-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-22"><a href="segmentation.html#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="co"># create list of polygon files, names and parameters</span></span>
+<span id="cb5-23"><a href="segmentation.html#cb5-23" aria-hidden="true" tabindex="-1"></a>file <span class="ot">&lt;-</span> <span class="fu">str_c</span>(out_dir, <span class="st">&quot;/&quot;</span>, name_out, <span class="st">&quot;.shp&quot;</span>)</span>
+<span id="cb5-24"><a href="segmentation.html#cb5-24" aria-hidden="true" tabindex="-1"></a>out_loc <span class="ot">&lt;-</span> out_dir</span>
+<span id="cb5-25"><a href="segmentation.html#cb5-25" aria-hidden="true" tabindex="-1"></a>grm_input <span class="ot">&lt;-</span> <span class="fu">str_c</span>(out_dir, <span class="st">&#39;/temp/spl_stack.tif&#39;</span>)</span>
+<span id="cb5-26"><a href="segmentation.html#cb5-26" aria-hidden="true" tabindex="-1"></a>name <span class="ot">&lt;-</span> name_out</span>
+<span id="cb5-27"><a href="segmentation.html#cb5-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-28"><a href="segmentation.html#cb5-28" aria-hidden="true" tabindex="-1"></a><span class="co"># create standard error function</span></span>
+<span id="cb5-29"><a href="segmentation.html#cb5-29" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> <span class="cf">function</span>(x)</span>
+<span id="cb5-30"><a href="segmentation.html#cb5-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sd</span>(x) <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">length</span>(x))</span>
+<span id="cb5-31"><a href="segmentation.html#cb5-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-32"><a href="segmentation.html#cb5-32" aria-hidden="true" tabindex="-1"></a><span class="co"># load file</span></span>
+<span id="cb5-33"><a href="segmentation.html#cb5-33" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">vect</span>(file)</span>
+<span id="cb5-34"><a href="segmentation.html#cb5-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-35"><a href="segmentation.html#cb5-35" aria-hidden="true" tabindex="-1"></a><span class="co"># convert to sf</span></span>
+<span id="cb5-36"><a href="segmentation.html#cb5-36" aria-hidden="true" tabindex="-1"></a>p_sf <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(p)</span>
+<span id="cb5-37"><a href="segmentation.html#cb5-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-38"><a href="segmentation.html#cb5-38" aria-hidden="true" tabindex="-1"></a><span class="co"># subset non masked WAT and RD polygons</span></span>
+<span id="cb5-39"><a href="segmentation.html#cb5-39" aria-hidden="true" tabindex="-1"></a>p2_sf <span class="ot">&lt;-</span> p[<span class="fu">is.na</span>(p<span class="sc">$</span>POLYTYPE)] <span class="sc">%&gt;%</span> st_as_sf</span>
+<span id="cb5-40"><a href="segmentation.html#cb5-40" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> p[<span class="fu">is.na</span>(p<span class="sc">$</span>POLYTYPE)] <span class="sc">%&gt;%</span> as.data.frame</span>
+<span id="cb5-41"><a href="segmentation.html#cb5-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-42"><a href="segmentation.html#cb5-42" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate perimeter to area ratio</span></span>
+<span id="cb5-43"><a href="segmentation.html#cb5-43" aria-hidden="true" tabindex="-1"></a>p2<span class="sc">$</span>p_to_a <span class="ot">&lt;-</span> p2<span class="sc">$</span>perim <span class="sc">/</span> p2<span class="sc">$</span>area</span>
+<span id="cb5-44"><a href="segmentation.html#cb5-44" aria-hidden="true" tabindex="-1"></a>p2<span class="sc">$</span>p_to_a <span class="ot">&lt;-</span> <span class="fu">round</span>(p2<span class="sc">$</span>p_to_a, <span class="dv">3</span>)</span>
+<span id="cb5-45"><a href="segmentation.html#cb5-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-46"><a href="segmentation.html#cb5-46" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate msi</span></span>
+<span id="cb5-47"><a href="segmentation.html#cb5-47" aria-hidden="true" tabindex="-1"></a>p2<span class="sc">$</span>msi <span class="ot">&lt;-</span> p2<span class="sc">$</span>perim <span class="sc">/</span> <span class="fu">sqrt</span>(pi <span class="sc">*</span> p2<span class="sc">$</span>area)</span>
+<span id="cb5-48"><a href="segmentation.html#cb5-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-49"><a href="segmentation.html#cb5-49" aria-hidden="true" tabindex="-1"></a><span class="co"># load original raster input file</span></span>
+<span id="cb5-50"><a href="segmentation.html#cb5-50" aria-hidden="true" tabindex="-1"></a>ras <span class="ot">&lt;-</span> <span class="fu">rast</span>(grm_input)</span>
+<span id="cb5-51"><a href="segmentation.html#cb5-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-52"><a href="segmentation.html#cb5-52" aria-hidden="true" tabindex="-1"></a><span class="co"># rename bands</span></span>
+<span id="cb5-53"><a href="segmentation.html#cb5-53" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(ras) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;p95&#39;</span>, <span class="st">&#39;cc&#39;</span>, <span class="st">&#39;cv&#39;</span>)</span>
+<span id="cb5-54"><a href="segmentation.html#cb5-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-55"><a href="segmentation.html#cb5-55" aria-hidden="true" tabindex="-1"></a><span class="co"># extract pixel values</span></span>
+<span id="cb5-56"><a href="segmentation.html#cb5-56" aria-hidden="true" tabindex="-1"></a>pvals <span class="ot">&lt;-</span> <span class="fu">exact_extract</span>(ras, p2_sf)</span>
+<span id="cb5-57"><a href="segmentation.html#cb5-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-58"><a href="segmentation.html#cb5-58" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate SSE</span></span>
+<span id="cb5-59"><a href="segmentation.html#cb5-59" aria-hidden="true" tabindex="-1"></a>sse <span class="ot">&lt;-</span> <span class="fu">sapply</span>(</span>
+<span id="cb5-60"><a href="segmentation.html#cb5-60" aria-hidden="true" tabindex="-1"></a>  pvals,</span>
+<span id="cb5-61"><a href="segmentation.html#cb5-61" aria-hidden="true" tabindex="-1"></a>  <span class="at">FUN =</span> <span class="cf">function</span>(x) {</span>
+<span id="cb5-62"><a href="segmentation.html#cb5-62" aria-hidden="true" tabindex="-1"></a>    p95_mean <span class="ot">&lt;-</span> <span class="fu">mean</span>(x<span class="sc">$</span>p95, <span class="at">na.rm =</span> T)</span>
+<span id="cb5-63"><a href="segmentation.html#cb5-63" aria-hidden="true" tabindex="-1"></a>    cc_mean <span class="ot">&lt;-</span> <span class="fu">mean</span>(x<span class="sc">$</span>cc, <span class="at">na.rm =</span> T)</span>
+<span id="cb5-64"><a href="segmentation.html#cb5-64" aria-hidden="true" tabindex="-1"></a>    cv_mean <span class="ot">&lt;-</span> <span class="fu">mean</span>(x<span class="sc">$</span>cv, <span class="at">na.rm =</span> T)</span>
+<span id="cb5-65"><a href="segmentation.html#cb5-65" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-66"><a href="segmentation.html#cb5-66" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">c</span>(<span class="fu">sum</span>((x<span class="sc">$</span>p95 <span class="sc">-</span> p95_mean) <span class="sc">^</span> <span class="dv">2</span>, <span class="at">na.rm =</span> T),</span>
+<span id="cb5-67"><a href="segmentation.html#cb5-67" aria-hidden="true" tabindex="-1"></a>             <span class="fu">sum</span>((x<span class="sc">$</span>cc <span class="sc">-</span> cc_mean) <span class="sc">^</span> <span class="dv">2</span>, <span class="at">na.rm =</span> T),</span>
+<span id="cb5-68"><a href="segmentation.html#cb5-68" aria-hidden="true" tabindex="-1"></a>             <span class="fu">sum</span>((x<span class="sc">$</span>cv <span class="sc">-</span> cv_mean) <span class="sc">^</span> <span class="dv">2</span>, <span class="at">na.rm =</span> T)))</span>
+<span id="cb5-69"><a href="segmentation.html#cb5-69" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-70"><a href="segmentation.html#cb5-70" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-71"><a href="segmentation.html#cb5-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-72"><a href="segmentation.html#cb5-72" aria-hidden="true" tabindex="-1"></a><span class="co"># transpose</span></span>
+<span id="cb5-73"><a href="segmentation.html#cb5-73" aria-hidden="true" tabindex="-1"></a>sse <span class="ot">&lt;-</span> <span class="fu">t</span>(sse)</span>
+<span id="cb5-74"><a href="segmentation.html#cb5-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-75"><a href="segmentation.html#cb5-75" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate final sums</span></span>
+<span id="cb5-76"><a href="segmentation.html#cb5-76" aria-hidden="true" tabindex="-1"></a>sse <span class="ot">&lt;-</span> <span class="fu">colSums</span>(sse)</span>
+<span id="cb5-77"><a href="segmentation.html#cb5-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-78"><a href="segmentation.html#cb5-78" aria-hidden="true" tabindex="-1"></a><span class="co"># unlist values</span></span>
+<span id="cb5-79"><a href="segmentation.html#cb5-79" aria-hidden="true" tabindex="-1"></a>pvals2 <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, pvals)</span>
+<span id="cb5-80"><a href="segmentation.html#cb5-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-81"><a href="segmentation.html#cb5-81" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate global mean values</span></span>
+<span id="cb5-82"><a href="segmentation.html#cb5-82" aria-hidden="true" tabindex="-1"></a>p95_mean <span class="ot">&lt;-</span> <span class="fu">mean</span>(pvals2<span class="sc">$</span>p95, <span class="at">na.rm =</span> T)</span>
+<span id="cb5-83"><a href="segmentation.html#cb5-83" aria-hidden="true" tabindex="-1"></a>cc_mean <span class="ot">&lt;-</span> <span class="fu">mean</span>(pvals2<span class="sc">$</span>cc, <span class="at">na.rm =</span> T)</span>
+<span id="cb5-84"><a href="segmentation.html#cb5-84" aria-hidden="true" tabindex="-1"></a>cv_mean <span class="ot">&lt;-</span> <span class="fu">mean</span>(pvals2<span class="sc">$</span>cv, <span class="at">na.rm =</span> T)</span>
+<span id="cb5-85"><a href="segmentation.html#cb5-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-86"><a href="segmentation.html#cb5-86" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(pvals2)</span>
+<span id="cb5-87"><a href="segmentation.html#cb5-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-88"><a href="segmentation.html#cb5-88" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate SST</span></span>
+<span id="cb5-89"><a href="segmentation.html#cb5-89" aria-hidden="true" tabindex="-1"></a>sst <span class="ot">&lt;-</span> <span class="fu">sapply</span>(</span>
+<span id="cb5-90"><a href="segmentation.html#cb5-90" aria-hidden="true" tabindex="-1"></a>  pvals,</span>
+<span id="cb5-91"><a href="segmentation.html#cb5-91" aria-hidden="true" tabindex="-1"></a>  <span class="at">FUN =</span> <span class="cf">function</span>(x) {</span>
+<span id="cb5-92"><a href="segmentation.html#cb5-92" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">c</span>(<span class="fu">sum</span>((x<span class="sc">$</span>p95 <span class="sc">-</span> p95_mean) <span class="sc">^</span> <span class="dv">2</span>, <span class="at">na.rm =</span> T),</span>
+<span id="cb5-93"><a href="segmentation.html#cb5-93" aria-hidden="true" tabindex="-1"></a>             <span class="fu">sum</span>((x<span class="sc">$</span>cc <span class="sc">-</span> cc_mean) <span class="sc">^</span> <span class="dv">2</span>, <span class="at">na.rm =</span> T),</span>
+<span id="cb5-94"><a href="segmentation.html#cb5-94" aria-hidden="true" tabindex="-1"></a>             <span class="fu">sum</span>((x<span class="sc">$</span>cv <span class="sc">-</span> cv_mean) <span class="sc">^</span> <span class="dv">2</span>, <span class="at">na.rm =</span> T)))</span>
+<span id="cb5-95"><a href="segmentation.html#cb5-95" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-96"><a href="segmentation.html#cb5-96" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-97"><a href="segmentation.html#cb5-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-98"><a href="segmentation.html#cb5-98" aria-hidden="true" tabindex="-1"></a><span class="co"># transpose</span></span>
+<span id="cb5-99"><a href="segmentation.html#cb5-99" aria-hidden="true" tabindex="-1"></a>sst <span class="ot">&lt;-</span> <span class="fu">t</span>(sst)</span>
+<span id="cb5-100"><a href="segmentation.html#cb5-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-101"><a href="segmentation.html#cb5-101" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate final sums</span></span>
+<span id="cb5-102"><a href="segmentation.html#cb5-102" aria-hidden="true" tabindex="-1"></a>sst <span class="ot">&lt;-</span> <span class="fu">colSums</span>(sst)</span>
+<span id="cb5-103"><a href="segmentation.html#cb5-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-104"><a href="segmentation.html#cb5-104" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate r2 values</span></span>
+<span id="cb5-105"><a href="segmentation.html#cb5-105" aria-hidden="true" tabindex="-1"></a>r2_p95 <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> (sse[<span class="dv">1</span>] <span class="sc">/</span> sst[<span class="dv">1</span>]) <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="dv">3</span>)</span>
+<span id="cb5-106"><a href="segmentation.html#cb5-106" aria-hidden="true" tabindex="-1"></a>r2_cc <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> (sse[<span class="dv">2</span>] <span class="sc">/</span> sst[<span class="dv">2</span>]) <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="dv">3</span>)</span>
+<span id="cb5-107"><a href="segmentation.html#cb5-107" aria-hidden="true" tabindex="-1"></a>r2_cv <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> (sse[<span class="dv">3</span>] <span class="sc">/</span> sst[<span class="dv">3</span>]) <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="dv">3</span>)</span>
+<span id="cb5-108"><a href="segmentation.html#cb5-108" aria-hidden="true" tabindex="-1"></a>r2_all <span class="ot">&lt;-</span> (<span class="fu">sum</span>(r2_p95, r2_cc, r2_cv) <span class="sc">/</span> <span class="dv">3</span>) <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="dv">3</span>)</span>
+<span id="cb5-109"><a href="segmentation.html#cb5-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-110"><a href="segmentation.html#cb5-110" aria-hidden="true" tabindex="-1"></a><span class="co"># create dataframe with values wanted</span></span>
+<span id="cb5-111"><a href="segmentation.html#cb5-111" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb5-112"><a href="segmentation.html#cb5-112" aria-hidden="true" tabindex="-1"></a>  <span class="at">alg =</span> name,</span>
+<span id="cb5-113"><a href="segmentation.html#cb5-113" aria-hidden="true" tabindex="-1"></a>  <span class="at">min_pix =</span> (<span class="fu">min</span>(p2<span class="sc">$</span>nbPixels)),</span>
+<span id="cb5-114"><a href="segmentation.html#cb5-114" aria-hidden="true" tabindex="-1"></a>  <span class="at">max_pix =</span> (<span class="fu">max</span>(p2<span class="sc">$</span>nbPixels)),</span>
+<span id="cb5-115"><a href="segmentation.html#cb5-115" aria-hidden="true" tabindex="-1"></a>  <span class="at">mean_pix =</span> (<span class="fu">mean</span>(p2<span class="sc">$</span>nbPixels)),</span>
+<span id="cb5-116"><a href="segmentation.html#cb5-116" aria-hidden="true" tabindex="-1"></a>  <span class="at">med_pix =</span> (<span class="fu">median</span>(p2<span class="sc">$</span>nbPixels)),</span>
+<span id="cb5-117"><a href="segmentation.html#cb5-117" aria-hidden="true" tabindex="-1"></a>  <span class="at">num_poly =</span> <span class="fu">NROW</span>(p2),</span>
+<span id="cb5-118"><a href="segmentation.html#cb5-118" aria-hidden="true" tabindex="-1"></a>  <span class="at">mean_area =</span> <span class="fu">mean</span>(p2<span class="sc">$</span>area),</span>
+<span id="cb5-119"><a href="segmentation.html#cb5-119" aria-hidden="true" tabindex="-1"></a>  <span class="at">se_area =</span> <span class="fu">se</span>(p2<span class="sc">$</span>area),</span>
+<span id="cb5-120"><a href="segmentation.html#cb5-120" aria-hidden="true" tabindex="-1"></a>  <span class="at">sd_area =</span> <span class="fu">sd</span>(p2<span class="sc">$</span>area),</span>
+<span id="cb5-121"><a href="segmentation.html#cb5-121" aria-hidden="true" tabindex="-1"></a>  <span class="at">mean_perim =</span> <span class="fu">mean</span>(p2<span class="sc">$</span>perim),</span>
+<span id="cb5-122"><a href="segmentation.html#cb5-122" aria-hidden="true" tabindex="-1"></a>  <span class="at">se_perim =</span> <span class="fu">se</span>(p2<span class="sc">$</span>perim),</span>
+<span id="cb5-123"><a href="segmentation.html#cb5-123" aria-hidden="true" tabindex="-1"></a>  <span class="at">sd_perim =</span> <span class="fu">sd</span>(p2<span class="sc">$</span>perim),</span>
+<span id="cb5-124"><a href="segmentation.html#cb5-124" aria-hidden="true" tabindex="-1"></a>  <span class="at">mean_p_a =</span> <span class="fu">mean</span>(p2<span class="sc">$</span>p_to_a),</span>
+<span id="cb5-125"><a href="segmentation.html#cb5-125" aria-hidden="true" tabindex="-1"></a>  <span class="at">se_p_a =</span> <span class="fu">se</span>(p2<span class="sc">$</span>p_to_a),</span>
+<span id="cb5-126"><a href="segmentation.html#cb5-126" aria-hidden="true" tabindex="-1"></a>  <span class="at">sd_p_a =</span> <span class="fu">sd</span>(p2<span class="sc">$</span>p_to_a),</span>
+<span id="cb5-127"><a href="segmentation.html#cb5-127" aria-hidden="true" tabindex="-1"></a>  <span class="at">mean_msi =</span> <span class="fu">mean</span>(p2<span class="sc">$</span>msi),</span>
+<span id="cb5-128"><a href="segmentation.html#cb5-128" aria-hidden="true" tabindex="-1"></a>  <span class="at">se_msi =</span> <span class="fu">se</span>(p2<span class="sc">$</span>msi),</span>
+<span id="cb5-129"><a href="segmentation.html#cb5-129" aria-hidden="true" tabindex="-1"></a>  <span class="at">sd_msi =</span> <span class="fu">sd</span>(p2<span class="sc">$</span>msi),</span>
+<span id="cb5-130"><a href="segmentation.html#cb5-130" aria-hidden="true" tabindex="-1"></a>  <span class="at">r2_p95 =</span> r2_p95,</span>
+<span id="cb5-131"><a href="segmentation.html#cb5-131" aria-hidden="true" tabindex="-1"></a>  <span class="at">r2_cc =</span> r2_cc,</span>
+<span id="cb5-132"><a href="segmentation.html#cb5-132" aria-hidden="true" tabindex="-1"></a>  <span class="at">r2_cv =</span> r2_cv,</span>
+<span id="cb5-133"><a href="segmentation.html#cb5-133" aria-hidden="true" tabindex="-1"></a>  <span class="at">r2_all =</span> r2_all</span>
+<span id="cb5-134"><a href="segmentation.html#cb5-134" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-135"><a href="segmentation.html#cb5-135" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-136"><a href="segmentation.html#cb5-136" aria-hidden="true" tabindex="-1"></a><span class="co"># round numeric columns</span></span>
+<span id="cb5-137"><a href="segmentation.html#cb5-137" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&lt;&gt;%</span></span>
+<span id="cb5-138"><a href="segmentation.html#cb5-138" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_at</span>(<span class="fu">c</span>(</span>
+<span id="cb5-139"><a href="segmentation.html#cb5-139" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;min_pix&#39;</span>,</span>
+<span id="cb5-140"><a href="segmentation.html#cb5-140" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;max_pix&#39;</span>,</span>
+<span id="cb5-141"><a href="segmentation.html#cb5-141" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;mean_pix&#39;</span>,</span>
+<span id="cb5-142"><a href="segmentation.html#cb5-142" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;med_pix&#39;</span>,</span>
+<span id="cb5-143"><a href="segmentation.html#cb5-143" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;mean_area&#39;</span>,</span>
+<span id="cb5-144"><a href="segmentation.html#cb5-144" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;se_area&#39;</span>,</span>
+<span id="cb5-145"><a href="segmentation.html#cb5-145" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;sd_area&#39;</span>,</span>
+<span id="cb5-146"><a href="segmentation.html#cb5-146" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;mean_perim&#39;</span>,</span>
+<span id="cb5-147"><a href="segmentation.html#cb5-147" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;se_perim&#39;</span>,</span>
+<span id="cb5-148"><a href="segmentation.html#cb5-148" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;sd_perim&#39;</span></span>
+<span id="cb5-149"><a href="segmentation.html#cb5-149" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb5-150"><a href="segmentation.html#cb5-150" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(x)</span>
+<span id="cb5-151"><a href="segmentation.html#cb5-151" aria-hidden="true" tabindex="-1"></a>    <span class="fu">round</span>(x, <span class="dv">2</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb5-152"><a href="segmentation.html#cb5-152" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_at</span>(<span class="fu">c</span>(<span class="st">&#39;mean_p_a&#39;</span>,</span>
+<span id="cb5-153"><a href="segmentation.html#cb5-153" aria-hidden="true" tabindex="-1"></a>              <span class="st">&#39;se_p_a&#39;</span>,</span>
+<span id="cb5-154"><a href="segmentation.html#cb5-154" aria-hidden="true" tabindex="-1"></a>              <span class="st">&#39;sd_p_a&#39;</span>,</span>
+<span id="cb5-155"><a href="segmentation.html#cb5-155" aria-hidden="true" tabindex="-1"></a>              <span class="st">&#39;mean_msi&#39;</span>,</span>
+<span id="cb5-156"><a href="segmentation.html#cb5-156" aria-hidden="true" tabindex="-1"></a>              <span class="st">&#39;se_msi&#39;</span>,</span>
+<span id="cb5-157"><a href="segmentation.html#cb5-157" aria-hidden="true" tabindex="-1"></a>              <span class="st">&#39;sd_msi&#39;</span>),</span>
+<span id="cb5-158"><a href="segmentation.html#cb5-158" aria-hidden="true" tabindex="-1"></a>            <span class="cf">function</span>(x)</span>
+<span id="cb5-159"><a href="segmentation.html#cb5-159" aria-hidden="true" tabindex="-1"></a>              <span class="fu">round</span>(x, <span class="dv">4</span>))</span>
+<span id="cb5-160"><a href="segmentation.html#cb5-160" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-161"><a href="segmentation.html#cb5-161" aria-hidden="true" tabindex="-1"></a><span class="do">#####################</span></span>
+<span id="cb5-162"><a href="segmentation.html#cb5-162" aria-hidden="true" tabindex="-1"></a><span class="do">### ADD FRI STATS </span><span class="al">###</span></span>
+<span id="cb5-163"><a href="segmentation.html#cb5-163" aria-hidden="true" tabindex="-1"></a><span class="do">#####################</span></span>
+<span id="cb5-164"><a href="segmentation.html#cb5-164" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-165"><a href="segmentation.html#cb5-165" aria-hidden="true" tabindex="-1"></a><span class="co"># load interpreter derived polygons to extract statistics</span></span>
+<span id="cb5-166"><a href="segmentation.html#cb5-166" aria-hidden="true" tabindex="-1"></a>pfri <span class="ot">&lt;-</span> <span class="fu">vect</span>(fri)</span>
+<span id="cb5-167"><a href="segmentation.html#cb5-167" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-168"><a href="segmentation.html#cb5-168" aria-hidden="true" tabindex="-1"></a><span class="co"># convert to sf</span></span>
+<span id="cb5-169"><a href="segmentation.html#cb5-169" aria-hidden="true" tabindex="-1"></a>pfri_sf <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(pfri)</span>
+<span id="cb5-170"><a href="segmentation.html#cb5-170" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-171"><a href="segmentation.html#cb5-171" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate perimeter</span></span>
+<span id="cb5-172"><a href="segmentation.html#cb5-172" aria-hidden="true" tabindex="-1"></a>pfri<span class="sc">$</span>perim <span class="ot">&lt;-</span> <span class="fu">st_perimeter</span>(pfri_sf) <span class="sc">%&gt;%</span> as.numeric</span>
+<span id="cb5-173"><a href="segmentation.html#cb5-173" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-174"><a href="segmentation.html#cb5-174" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate area</span></span>
+<span id="cb5-175"><a href="segmentation.html#cb5-175" aria-hidden="true" tabindex="-1"></a>pfri<span class="sc">$</span>area <span class="ot">&lt;-</span> <span class="fu">st_area</span>(pfri_sf) <span class="sc">%&gt;%</span> as.numeric</span>
+<span id="cb5-176"><a href="segmentation.html#cb5-176" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-177"><a href="segmentation.html#cb5-177" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate nbPixels</span></span>
+<span id="cb5-178"><a href="segmentation.html#cb5-178" aria-hidden="true" tabindex="-1"></a>pfri<span class="sc">$</span>nbPixels <span class="ot">&lt;-</span> pfri<span class="sc">$</span>area <span class="sc">/</span> <span class="dv">400</span></span>
+<span id="cb5-179"><a href="segmentation.html#cb5-179" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-180"><a href="segmentation.html#cb5-180" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate perimeter to area ratio</span></span>
+<span id="cb5-181"><a href="segmentation.html#cb5-181" aria-hidden="true" tabindex="-1"></a>pfri<span class="sc">$</span>p_to_a <span class="ot">&lt;-</span> pfri<span class="sc">$</span>perim <span class="sc">/</span> pfri<span class="sc">$</span>area</span>
+<span id="cb5-182"><a href="segmentation.html#cb5-182" aria-hidden="true" tabindex="-1"></a>pfri<span class="sc">$</span>p_to_a <span class="ot">&lt;-</span> <span class="fu">round</span>(pfri<span class="sc">$</span>p_to_a, <span class="dv">3</span>)</span>
+<span id="cb5-183"><a href="segmentation.html#cb5-183" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-184"><a href="segmentation.html#cb5-184" aria-hidden="true" tabindex="-1"></a><span class="co"># subset all non water/ucl polygons</span></span>
+<span id="cb5-185"><a href="segmentation.html#cb5-185" aria-hidden="true" tabindex="-1"></a>p2fri_sf <span class="ot">&lt;-</span> pfri[<span class="sc">!</span>(pfri<span class="sc">$</span>POLYTYPE <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&#39;WAT&#39;</span>, <span class="st">&#39;UCL&#39;</span>))] <span class="sc">%&gt;%</span> st_as_sf</span>
+<span id="cb5-186"><a href="segmentation.html#cb5-186" aria-hidden="true" tabindex="-1"></a>p2fri <span class="ot">&lt;-</span> pfri[<span class="sc">!</span>(pfri<span class="sc">$</span>POLYTYPE <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&#39;WAT&#39;</span>, <span class="st">&#39;UCL&#39;</span>))] <span class="sc">%&gt;%</span> as.data.frame</span>
+<span id="cb5-187"><a href="segmentation.html#cb5-187" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-188"><a href="segmentation.html#cb5-188" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate msi</span></span>
+<span id="cb5-189"><a href="segmentation.html#cb5-189" aria-hidden="true" tabindex="-1"></a>p2fri<span class="sc">$</span>msi <span class="ot">&lt;-</span> p2fri<span class="sc">$</span>perim <span class="sc">/</span> <span class="fu">sqrt</span>(pi <span class="sc">*</span> p2fri<span class="sc">$</span>area)</span>
+<span id="cb5-190"><a href="segmentation.html#cb5-190" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-191"><a href="segmentation.html#cb5-191" aria-hidden="true" tabindex="-1"></a><span class="co"># load original raster input file</span></span>
+<span id="cb5-192"><a href="segmentation.html#cb5-192" aria-hidden="true" tabindex="-1"></a>ras <span class="ot">&lt;-</span> <span class="fu">rast</span>(grm_input)</span>
+<span id="cb5-193"><a href="segmentation.html#cb5-193" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-194"><a href="segmentation.html#cb5-194" aria-hidden="true" tabindex="-1"></a><span class="co"># rename bands</span></span>
+<span id="cb5-195"><a href="segmentation.html#cb5-195" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(ras) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;p95&#39;</span>, <span class="st">&#39;cc&#39;</span>, <span class="st">&#39;cv&#39;</span>)</span>
+<span id="cb5-196"><a href="segmentation.html#cb5-196" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-197"><a href="segmentation.html#cb5-197" aria-hidden="true" tabindex="-1"></a><span class="co"># extract pixel values</span></span>
+<span id="cb5-198"><a href="segmentation.html#cb5-198" aria-hidden="true" tabindex="-1"></a>pvals <span class="ot">&lt;-</span> <span class="fu">exact_extract</span>(ras, p2fri_sf)</span>
+<span id="cb5-199"><a href="segmentation.html#cb5-199" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-200"><a href="segmentation.html#cb5-200" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate SSE</span></span>
+<span id="cb5-201"><a href="segmentation.html#cb5-201" aria-hidden="true" tabindex="-1"></a>sse <span class="ot">&lt;-</span> <span class="fu">sapply</span>(</span>
+<span id="cb5-202"><a href="segmentation.html#cb5-202" aria-hidden="true" tabindex="-1"></a>  pvals,</span>
+<span id="cb5-203"><a href="segmentation.html#cb5-203" aria-hidden="true" tabindex="-1"></a>  <span class="at">FUN =</span> <span class="cf">function</span>(x) {</span>
+<span id="cb5-204"><a href="segmentation.html#cb5-204" aria-hidden="true" tabindex="-1"></a>    <span class="co"># subset values based on coverage fraction</span></span>
+<span id="cb5-205"><a href="segmentation.html#cb5-205" aria-hidden="true" tabindex="-1"></a>    x <span class="sc">%&lt;&gt;%</span> <span class="fu">filter</span>(coverage_fraction <span class="sc">&gt;=</span> <span class="fl">0.5</span>)</span>
+<span id="cb5-206"><a href="segmentation.html#cb5-206" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-207"><a href="segmentation.html#cb5-207" aria-hidden="true" tabindex="-1"></a>    p95_mean <span class="ot">&lt;-</span> <span class="fu">mean</span>(x<span class="sc">$</span>p95, <span class="at">na.rm =</span> T)</span>
+<span id="cb5-208"><a href="segmentation.html#cb5-208" aria-hidden="true" tabindex="-1"></a>    cc_mean <span class="ot">&lt;-</span> <span class="fu">mean</span>(x<span class="sc">$</span>cc, <span class="at">na.rm =</span> T)</span>
+<span id="cb5-209"><a href="segmentation.html#cb5-209" aria-hidden="true" tabindex="-1"></a>    cv_mean <span class="ot">&lt;-</span> <span class="fu">mean</span>(x<span class="sc">$</span>cv, <span class="at">na.rm =</span> T)</span>
+<span id="cb5-210"><a href="segmentation.html#cb5-210" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-211"><a href="segmentation.html#cb5-211" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">c</span>(<span class="fu">sum</span>((x<span class="sc">$</span>p95 <span class="sc">-</span> p95_mean) <span class="sc">^</span> <span class="dv">2</span>, <span class="at">na.rm =</span> T),</span>
+<span id="cb5-212"><a href="segmentation.html#cb5-212" aria-hidden="true" tabindex="-1"></a>             <span class="fu">sum</span>((x<span class="sc">$</span>cc <span class="sc">-</span> cc_mean) <span class="sc">^</span> <span class="dv">2</span>, <span class="at">na.rm =</span> T),</span>
+<span id="cb5-213"><a href="segmentation.html#cb5-213" aria-hidden="true" tabindex="-1"></a>             <span class="fu">sum</span>((x<span class="sc">$</span>cv <span class="sc">-</span> cv_mean) <span class="sc">^</span> <span class="dv">2</span>, <span class="at">na.rm =</span> T)))</span>
+<span id="cb5-214"><a href="segmentation.html#cb5-214" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-215"><a href="segmentation.html#cb5-215" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-216"><a href="segmentation.html#cb5-216" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-217"><a href="segmentation.html#cb5-217" aria-hidden="true" tabindex="-1"></a><span class="co"># transpose</span></span>
+<span id="cb5-218"><a href="segmentation.html#cb5-218" aria-hidden="true" tabindex="-1"></a>sse <span class="ot">&lt;-</span> <span class="fu">t</span>(sse)</span>
+<span id="cb5-219"><a href="segmentation.html#cb5-219" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-220"><a href="segmentation.html#cb5-220" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate final sums</span></span>
+<span id="cb5-221"><a href="segmentation.html#cb5-221" aria-hidden="true" tabindex="-1"></a>sse <span class="ot">&lt;-</span> <span class="fu">colSums</span>(sse)</span>
+<span id="cb5-222"><a href="segmentation.html#cb5-222" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-223"><a href="segmentation.html#cb5-223" aria-hidden="true" tabindex="-1"></a><span class="co"># unlist values</span></span>
+<span id="cb5-224"><a href="segmentation.html#cb5-224" aria-hidden="true" tabindex="-1"></a>pvals2 <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, pvals)</span>
+<span id="cb5-225"><a href="segmentation.html#cb5-225" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-226"><a href="segmentation.html#cb5-226" aria-hidden="true" tabindex="-1"></a><span class="co"># subset values based on coverage fraction</span></span>
+<span id="cb5-227"><a href="segmentation.html#cb5-227" aria-hidden="true" tabindex="-1"></a>pvals2 <span class="sc">%&lt;&gt;%</span> <span class="fu">filter</span>(coverage_fraction <span class="sc">&gt;=</span> <span class="fl">0.5</span>)</span>
+<span id="cb5-228"><a href="segmentation.html#cb5-228" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-229"><a href="segmentation.html#cb5-229" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate global mean values</span></span>
+<span id="cb5-230"><a href="segmentation.html#cb5-230" aria-hidden="true" tabindex="-1"></a>p95_mean <span class="ot">&lt;-</span> <span class="fu">mean</span>(pvals2<span class="sc">$</span>p95, <span class="at">na.rm =</span> T)</span>
+<span id="cb5-231"><a href="segmentation.html#cb5-231" aria-hidden="true" tabindex="-1"></a>cc_mean <span class="ot">&lt;-</span> <span class="fu">mean</span>(pvals2<span class="sc">$</span>cc, <span class="at">na.rm =</span> T)</span>
+<span id="cb5-232"><a href="segmentation.html#cb5-232" aria-hidden="true" tabindex="-1"></a>cv_mean <span class="ot">&lt;-</span> <span class="fu">mean</span>(pvals2<span class="sc">$</span>cv, <span class="at">na.rm =</span> T)</span>
+<span id="cb5-233"><a href="segmentation.html#cb5-233" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-234"><a href="segmentation.html#cb5-234" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(pvals2)</span>
+<span id="cb5-235"><a href="segmentation.html#cb5-235" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-236"><a href="segmentation.html#cb5-236" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate SST</span></span>
+<span id="cb5-237"><a href="segmentation.html#cb5-237" aria-hidden="true" tabindex="-1"></a>sst <span class="ot">&lt;-</span> <span class="fu">sapply</span>(</span>
+<span id="cb5-238"><a href="segmentation.html#cb5-238" aria-hidden="true" tabindex="-1"></a>  pvals,</span>
+<span id="cb5-239"><a href="segmentation.html#cb5-239" aria-hidden="true" tabindex="-1"></a>  <span class="at">FUN =</span> <span class="cf">function</span>(x) {</span>
+<span id="cb5-240"><a href="segmentation.html#cb5-240" aria-hidden="true" tabindex="-1"></a>    <span class="co"># subset values based on coverage fraction</span></span>
+<span id="cb5-241"><a href="segmentation.html#cb5-241" aria-hidden="true" tabindex="-1"></a>    x <span class="sc">%&lt;&gt;%</span> <span class="fu">filter</span>(coverage_fraction <span class="sc">&gt;=</span> <span class="fl">0.5</span>)</span>
+<span id="cb5-242"><a href="segmentation.html#cb5-242" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-243"><a href="segmentation.html#cb5-243" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">c</span>(<span class="fu">sum</span>((x<span class="sc">$</span>p95 <span class="sc">-</span> p95_mean) <span class="sc">^</span> <span class="dv">2</span>, <span class="at">na.rm =</span> T),</span>
+<span id="cb5-244"><a href="segmentation.html#cb5-244" aria-hidden="true" tabindex="-1"></a>             <span class="fu">sum</span>((x<span class="sc">$</span>cc <span class="sc">-</span> cc_mean) <span class="sc">^</span> <span class="dv">2</span>, <span class="at">na.rm =</span> T),</span>
+<span id="cb5-245"><a href="segmentation.html#cb5-245" aria-hidden="true" tabindex="-1"></a>             <span class="fu">sum</span>((x<span class="sc">$</span>cv <span class="sc">-</span> cv_mean) <span class="sc">^</span> <span class="dv">2</span>, <span class="at">na.rm =</span> T)))</span>
+<span id="cb5-246"><a href="segmentation.html#cb5-246" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-247"><a href="segmentation.html#cb5-247" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-248"><a href="segmentation.html#cb5-248" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-249"><a href="segmentation.html#cb5-249" aria-hidden="true" tabindex="-1"></a><span class="co"># transpose</span></span>
+<span id="cb5-250"><a href="segmentation.html#cb5-250" aria-hidden="true" tabindex="-1"></a>sst <span class="ot">&lt;-</span> <span class="fu">t</span>(sst)</span>
+<span id="cb5-251"><a href="segmentation.html#cb5-251" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-252"><a href="segmentation.html#cb5-252" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate final sums</span></span>
+<span id="cb5-253"><a href="segmentation.html#cb5-253" aria-hidden="true" tabindex="-1"></a>sst <span class="ot">&lt;-</span> <span class="fu">colSums</span>(sst)</span>
+<span id="cb5-254"><a href="segmentation.html#cb5-254" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-255"><a href="segmentation.html#cb5-255" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate r2 values</span></span>
+<span id="cb5-256"><a href="segmentation.html#cb5-256" aria-hidden="true" tabindex="-1"></a>r2_p95 <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> (sse[<span class="dv">1</span>] <span class="sc">/</span> sst[<span class="dv">1</span>]) <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="dv">3</span>)</span>
+<span id="cb5-257"><a href="segmentation.html#cb5-257" aria-hidden="true" tabindex="-1"></a>r2_cc <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> (sse[<span class="dv">2</span>] <span class="sc">/</span> sst[<span class="dv">2</span>]) <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="dv">3</span>)</span>
+<span id="cb5-258"><a href="segmentation.html#cb5-258" aria-hidden="true" tabindex="-1"></a>r2_cv <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> (sse[<span class="dv">3</span>] <span class="sc">/</span> sst[<span class="dv">3</span>]) <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="dv">3</span>)</span>
+<span id="cb5-259"><a href="segmentation.html#cb5-259" aria-hidden="true" tabindex="-1"></a>r2_all <span class="ot">&lt;-</span> (<span class="fu">sum</span>(r2_p95, r2_cc, r2_cv) <span class="sc">/</span> <span class="dv">3</span>) <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="dv">3</span>)</span>
+<span id="cb5-260"><a href="segmentation.html#cb5-260" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-261"><a href="segmentation.html#cb5-261" aria-hidden="true" tabindex="-1"></a><span class="co"># create dataframe with values wanted</span></span>
+<span id="cb5-262"><a href="segmentation.html#cb5-262" aria-hidden="true" tabindex="-1"></a>ms_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb5-263"><a href="segmentation.html#cb5-263" aria-hidden="true" tabindex="-1"></a>  <span class="at">alg =</span> <span class="st">&#39;FRI&#39;</span>,</span>
+<span id="cb5-264"><a href="segmentation.html#cb5-264" aria-hidden="true" tabindex="-1"></a>  <span class="at">min_pix =</span> (<span class="fu">min</span>(p2fri<span class="sc">$</span>area <span class="sc">/</span> <span class="dv">400</span>)),</span>
+<span id="cb5-265"><a href="segmentation.html#cb5-265" aria-hidden="true" tabindex="-1"></a>  <span class="at">max_pix =</span> (<span class="fu">max</span>(p2fri<span class="sc">$</span>area <span class="sc">/</span> <span class="dv">400</span>)),</span>
+<span id="cb5-266"><a href="segmentation.html#cb5-266" aria-hidden="true" tabindex="-1"></a>  <span class="at">mean_pix =</span> (<span class="fu">mean</span>(p2fri<span class="sc">$</span>area <span class="sc">/</span> <span class="dv">400</span>)),</span>
+<span id="cb5-267"><a href="segmentation.html#cb5-267" aria-hidden="true" tabindex="-1"></a>  <span class="at">med_pix =</span> (<span class="fu">median</span>(p2fri<span class="sc">$</span>area <span class="sc">/</span> <span class="dv">400</span>)),</span>
+<span id="cb5-268"><a href="segmentation.html#cb5-268" aria-hidden="true" tabindex="-1"></a>  <span class="at">num_poly =</span> <span class="fu">NROW</span>(p2fri),</span>
+<span id="cb5-269"><a href="segmentation.html#cb5-269" aria-hidden="true" tabindex="-1"></a>  <span class="at">mean_area =</span> <span class="fu">mean</span>(p2fri<span class="sc">$</span>area),</span>
+<span id="cb5-270"><a href="segmentation.html#cb5-270" aria-hidden="true" tabindex="-1"></a>  <span class="at">se_area =</span> <span class="fu">se</span>(p2fri<span class="sc">$</span>area),</span>
+<span id="cb5-271"><a href="segmentation.html#cb5-271" aria-hidden="true" tabindex="-1"></a>  <span class="at">sd_area =</span> <span class="fu">sd</span>(p2fri<span class="sc">$</span>area),</span>
+<span id="cb5-272"><a href="segmentation.html#cb5-272" aria-hidden="true" tabindex="-1"></a>  <span class="at">mean_perim =</span> <span class="fu">mean</span>(p2fri<span class="sc">$</span>perim),</span>
+<span id="cb5-273"><a href="segmentation.html#cb5-273" aria-hidden="true" tabindex="-1"></a>  <span class="at">se_perim =</span> <span class="fu">se</span>(p2fri<span class="sc">$</span>perim),</span>
+<span id="cb5-274"><a href="segmentation.html#cb5-274" aria-hidden="true" tabindex="-1"></a>  <span class="at">sd_perim =</span> <span class="fu">sd</span>(p2fri<span class="sc">$</span>perim),</span>
+<span id="cb5-275"><a href="segmentation.html#cb5-275" aria-hidden="true" tabindex="-1"></a>  <span class="at">mean_p_a =</span> <span class="fu">mean</span>(p2fri<span class="sc">$</span>p_to_a),</span>
+<span id="cb5-276"><a href="segmentation.html#cb5-276" aria-hidden="true" tabindex="-1"></a>  <span class="at">se_p_a =</span> <span class="fu">se</span>(p2fri<span class="sc">$</span>p_to_a),</span>
+<span id="cb5-277"><a href="segmentation.html#cb5-277" aria-hidden="true" tabindex="-1"></a>  <span class="at">sd_p_a =</span> <span class="fu">sd</span>(p2fri<span class="sc">$</span>p_to_a),</span>
+<span id="cb5-278"><a href="segmentation.html#cb5-278" aria-hidden="true" tabindex="-1"></a>  <span class="at">mean_msi =</span> <span class="fu">mean</span>(p2fri<span class="sc">$</span>msi),</span>
+<span id="cb5-279"><a href="segmentation.html#cb5-279" aria-hidden="true" tabindex="-1"></a>  <span class="at">se_msi =</span> <span class="fu">se</span>(p2fri<span class="sc">$</span>msi),</span>
+<span id="cb5-280"><a href="segmentation.html#cb5-280" aria-hidden="true" tabindex="-1"></a>  <span class="at">sd_msi =</span> <span class="fu">sd</span>(p2fri<span class="sc">$</span>msi),</span>
+<span id="cb5-281"><a href="segmentation.html#cb5-281" aria-hidden="true" tabindex="-1"></a>  <span class="at">r2_p95 =</span> r2_p95,</span>
+<span id="cb5-282"><a href="segmentation.html#cb5-282" aria-hidden="true" tabindex="-1"></a>  <span class="at">r2_cc =</span> r2_cc,</span>
+<span id="cb5-283"><a href="segmentation.html#cb5-283" aria-hidden="true" tabindex="-1"></a>  <span class="at">r2_cv =</span> r2_cv,</span>
+<span id="cb5-284"><a href="segmentation.html#cb5-284" aria-hidden="true" tabindex="-1"></a>  <span class="at">r2_all =</span> r2_all</span>
+<span id="cb5-285"><a href="segmentation.html#cb5-285" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-286"><a href="segmentation.html#cb5-286" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-287"><a href="segmentation.html#cb5-287" aria-hidden="true" tabindex="-1"></a><span class="co"># round numeric columns</span></span>
+<span id="cb5-288"><a href="segmentation.html#cb5-288" aria-hidden="true" tabindex="-1"></a>ms_df <span class="sc">%&lt;&gt;%</span></span>
+<span id="cb5-289"><a href="segmentation.html#cb5-289" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_at</span>(<span class="fu">c</span>(<span class="st">&#39;min_pix&#39;</span>,</span>
+<span id="cb5-290"><a href="segmentation.html#cb5-290" aria-hidden="true" tabindex="-1"></a>              <span class="st">&#39;max_pix&#39;</span>,</span>
+<span id="cb5-291"><a href="segmentation.html#cb5-291" aria-hidden="true" tabindex="-1"></a>              <span class="st">&#39;mean_pix&#39;</span>,</span>
+<span id="cb5-292"><a href="segmentation.html#cb5-292" aria-hidden="true" tabindex="-1"></a>              <span class="st">&#39;med_pix&#39;</span>),</span>
+<span id="cb5-293"><a href="segmentation.html#cb5-293" aria-hidden="true" tabindex="-1"></a>            <span class="cf">function</span>(x)</span>
+<span id="cb5-294"><a href="segmentation.html#cb5-294" aria-hidden="true" tabindex="-1"></a>              <span class="fu">round</span>(x)) <span class="sc">%&gt;%</span></span>
+<span id="cb5-295"><a href="segmentation.html#cb5-295" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_at</span>(<span class="fu">c</span>(</span>
+<span id="cb5-296"><a href="segmentation.html#cb5-296" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;mean_area&#39;</span>,</span>
+<span id="cb5-297"><a href="segmentation.html#cb5-297" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;se_area&#39;</span>,</span>
+<span id="cb5-298"><a href="segmentation.html#cb5-298" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;sd_area&#39;</span>,</span>
+<span id="cb5-299"><a href="segmentation.html#cb5-299" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;mean_perim&#39;</span>,</span>
+<span id="cb5-300"><a href="segmentation.html#cb5-300" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;se_perim&#39;</span>,</span>
+<span id="cb5-301"><a href="segmentation.html#cb5-301" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;sd_perim&#39;</span></span>
+<span id="cb5-302"><a href="segmentation.html#cb5-302" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb5-303"><a href="segmentation.html#cb5-303" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(x)</span>
+<span id="cb5-304"><a href="segmentation.html#cb5-304" aria-hidden="true" tabindex="-1"></a>    <span class="fu">round</span>(x, <span class="dv">2</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb5-305"><a href="segmentation.html#cb5-305" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_at</span>(<span class="fu">c</span>(<span class="st">&#39;mean_p_a&#39;</span>,</span>
+<span id="cb5-306"><a href="segmentation.html#cb5-306" aria-hidden="true" tabindex="-1"></a>              <span class="st">&#39;se_p_a&#39;</span>,</span>
+<span id="cb5-307"><a href="segmentation.html#cb5-307" aria-hidden="true" tabindex="-1"></a>              <span class="st">&#39;sd_p_a&#39;</span>,</span>
+<span id="cb5-308"><a href="segmentation.html#cb5-308" aria-hidden="true" tabindex="-1"></a>              <span class="st">&#39;mean_msi&#39;</span>,</span>
+<span id="cb5-309"><a href="segmentation.html#cb5-309" aria-hidden="true" tabindex="-1"></a>              <span class="st">&#39;se_msi&#39;</span>,</span>
+<span id="cb5-310"><a href="segmentation.html#cb5-310" aria-hidden="true" tabindex="-1"></a>              <span class="st">&#39;sd_msi&#39;</span>),</span>
+<span id="cb5-311"><a href="segmentation.html#cb5-311" aria-hidden="true" tabindex="-1"></a>            <span class="cf">function</span>(x)</span>
+<span id="cb5-312"><a href="segmentation.html#cb5-312" aria-hidden="true" tabindex="-1"></a>              <span class="fu">round</span>(x, <span class="dv">4</span>))</span>
+<span id="cb5-313"><a href="segmentation.html#cb5-313" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-314"><a href="segmentation.html#cb5-314" aria-hidden="true" tabindex="-1"></a><span class="co"># bind df</span></span>
+<span id="cb5-315"><a href="segmentation.html#cb5-315" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">rbind</span>(df, ms_df)</span>
+<span id="cb5-316"><a href="segmentation.html#cb5-316" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-317"><a href="segmentation.html#cb5-317" aria-hidden="true" tabindex="-1"></a><span class="co"># write df as csv</span></span>
+<span id="cb5-318"><a href="segmentation.html#cb5-318" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(df,</span>
+<span id="cb5-319"><a href="segmentation.html#cb5-319" aria-hidden="true" tabindex="-1"></a>          <span class="at">file =</span> <span class="fu">str_c</span>(out_loc, <span class="st">&#39;/summary_stats.csv&#39;</span>),</span>
+<span id="cb5-320"><a href="segmentation.html#cb5-320" aria-hidden="true" tabindex="-1"></a>          <span class="at">row.names =</span> F)</span></code></pre></div>
+</div>
+<div id="segmentation49" class="section level2 unnumbered hasAnchor">
+<h2><strong>4.9</strong> Results: GRM Algorithm<a href="segmentation.html#segmentation49" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We tested many iterations of the GRM algorithm, manipulating parameters and assessing outputs. GRM consistently resulted in high R2 values across ALS metrics. We have showcased here the optimal output in terms of visual polygon shape and size as well as R2 values. The parameters used were a threshold of 10, spatial homogeneity of 0.1, and spectral homogeneity of 0.5. We found changes in the spectral homogeneity parameter to highly influence output polygon shape, and found the value of 0.1 (low spectral homogeneity weight) to result in a better visual output while still resulting in high R2 values. A spatial homogeneity value of 0.5 resulted in a good balance between compactness and smoothness and a threshold of 10 resulted in ~111,000 polygons total. The GRM output polygons are the most consistently compact, of uniform shape, and of a medium size. This output strikes the best balance between shape consistency, linework and distinguishing landcover.</p>
+</div>
+<div id="segmentation410" class="section level2 unnumbered hasAnchor">
+<h2><strong>4.10</strong> Results: Summary Statisics<a href="segmentation.html#segmentation410" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>First we will examine polygon size statistics of the GRM output compared to the FRI.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="segmentation.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="do">###########################################</span></span>
+<span id="cb6-2"><a href="segmentation.html#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="do">### Summary Stats and Additional Tables </span><span class="al">###</span></span>
+<span id="cb6-3"><a href="segmentation.html#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="do">###########################################</span></span>
+<span id="cb6-4"><a href="segmentation.html#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="segmentation.html#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Size</span></span>
+<span id="cb6-6"><a href="segmentation.html#cb6-6" aria-hidden="true" tabindex="-1"></a>t1 <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(df[, <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>])</span>
+<span id="cb6-7"><a href="segmentation.html#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="segmentation.html#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co"># change to ha</span></span>
+<span id="cb6-9"><a href="segmentation.html#cb6-9" aria-hidden="true" tabindex="-1"></a>t1[, <span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>] <span class="ot">&lt;-</span> <span class="fu">round</span>(t1[, <span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>] <span class="sc">/</span> <span class="dv">25</span>, <span class="dv">2</span>)</span>
+<span id="cb6-10"><a href="segmentation.html#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="segmentation.html#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(t1) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;Dataset&#39;</span>, <span class="st">&quot;Min Ha&quot;</span>, <span class="st">&#39;Max Ha&#39;</span>, <span class="st">&quot;Mean Ha&quot;</span>,</span>
+<span id="cb6-12"><a href="segmentation.html#cb6-12" aria-hidden="true" tabindex="-1"></a>               <span class="st">&quot;Median Ha&quot;</span>, <span class="st">&quot;Number of Polygons&quot;</span>)</span>
+<span id="cb6-13"><a href="segmentation.html#cb6-13" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(t1, <span class="at">caption =</span> <span class="st">&quot;Table 1: Polygon Size Stats&quot;</span>, <span class="at">label =</span> <span class="cn">NA</span>)</span></code></pre></div>
+<table>
+<caption>Table 1: Polygon Size Stats</caption>
+<thead>
+<tr class="header">
+<th align="left">Dataset</th>
+<th align="right">Min Ha</th>
+<th align="right">Max Ha</th>
+<th align="right">Mean Ha</th>
+<th align="right">Median Ha</th>
+<th align="right">Number of Polygons</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">grm_10_01_05</td>
+<td align="right">0.04</td>
+<td align="right">43.56</td>
+<td align="right">4.78</td>
+<td align="right">3.96</td>
+<td align="right">111881</td>
+</tr>
+<tr class="even">
+<td align="left">FRI</td>
+<td align="right">0.00</td>
+<td align="right">547.24</td>
+<td align="right">7.80</td>
+<td align="right">4.04</td>
+<td align="right">74662</td>
+</tr>
+</tbody>
+</table>
+<p>Table 1 shows Polygon size stats. The median values are very close, but the mean GRM polygon size is smaller, as is the maximum polygon size. Thus, the GRM output has more polygons overall than the FRI.</p>
+<p>Next we will look at area and perimeter.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="segmentation.html#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Area and Perim</span></span>
+<span id="cb7-2"><a href="segmentation.html#cb7-2" aria-hidden="true" tabindex="-1"></a>t2 <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(df[, <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">7</span><span class="sc">:</span><span class="dv">12</span>)])</span>
+<span id="cb7-3"><a href="segmentation.html#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="segmentation.html#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># change area to Ha</span></span>
+<span id="cb7-5"><a href="segmentation.html#cb7-5" aria-hidden="true" tabindex="-1"></a>t2[,<span class="dv">2</span><span class="sc">:</span><span class="dv">4</span>] <span class="ot">&lt;-</span> <span class="fu">round</span>(t2[,<span class="dv">2</span><span class="sc">:</span><span class="dv">4</span>] <span class="sc">/</span> <span class="dv">10000</span>, <span class="dv">2</span>)</span>
+<span id="cb7-6"><a href="segmentation.html#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="segmentation.html#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(t2) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Dataset&quot;</span>, <span class="st">&quot;Mean Area (Ha)&quot;</span>, <span class="st">&quot;SE Area&quot;</span>, <span class="st">&quot;SD Area&quot;</span>,</span>
+<span id="cb7-8"><a href="segmentation.html#cb7-8" aria-hidden="true" tabindex="-1"></a>               <span class="st">&quot;Mean Perimeter (m)&quot;</span>, <span class="st">&quot;SE Perimeter&quot;</span>, <span class="st">&quot;SD Perimeter&quot;</span>)</span>
+<span id="cb7-9"><a href="segmentation.html#cb7-9" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(t2, <span class="at">caption =</span> <span class="st">&quot;Table 2: Polygon Area and Perimeter Stats&quot;</span>, <span class="at">label =</span> <span class="cn">NA</span>)</span></code></pre></div>
+<table>
+<caption>Table 2: Polygon Area and Perimeter Stats</caption>
+<colgroup>
+<col width="14%" />
+<col width="16%" />
+<col width="8%" />
+<col width="8%" />
+<col width="21%" />
+<col width="14%" />
+<col width="14%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Dataset</th>
+<th align="right">Mean Area (Ha)</th>
+<th align="right">SE Area</th>
+<th align="right">SD Area</th>
+<th align="right">Mean Perimeter (m)</th>
+<th align="right">SE Perimeter</th>
+<th align="right">SD Perimeter</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">grm_10_01_05</td>
+<td align="right">4.78</td>
+<td align="right">0.01</td>
+<td align="right">3.29</td>
+<td align="right">1118.99</td>
+<td align="right">1.11</td>
+<td align="right">369.66</td>
+</tr>
+<tr class="even">
+<td align="left">FRI</td>
+<td align="right">7.80</td>
+<td align="right">0.05</td>
+<td align="right">12.66</td>
+<td align="right">1723.23</td>
+<td align="right">6.37</td>
+<td align="right">1741.25</td>
+</tr>
+</tbody>
+</table>
+<p>Table 2 shows area and perimeter stats. The mean area and perimeter of GRM polygons are smaller than the FRI. The variation is also smaller, since the GRM polygons are more uniform.</p>
+<p>Next we will look at shape index, which is an indication of the regularity of polygon shape. Values of 1 represent perfect circles, with values increasing without maximum as shape complexity increases.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="segmentation.html#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Mean Shape Index</span></span>
+<span id="cb8-2"><a href="segmentation.html#cb8-2" aria-hidden="true" tabindex="-1"></a>t3 <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(df[, <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">16</span><span class="sc">:</span><span class="dv">18</span>)])</span>
+<span id="cb8-3"><a href="segmentation.html#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(t3) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Dataset&quot;</span>, <span class="st">&quot;Mean Shape Index&quot;</span>, <span class="st">&quot;SE Shape Index&quot;</span>, <span class="st">&quot;SD Shape Index&quot;</span>)</span>
+<span id="cb8-4"><a href="segmentation.html#cb8-4" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(t3, <span class="at">caption =</span> <span class="st">&quot;Table 3: Polygon Shape Index Stats&quot;</span>, <span class="at">label =</span> <span class="cn">NA</span>)</span></code></pre></div>
+<table>
+<caption>Table 3: Polygon Shape Index Stats</caption>
+<thead>
+<tr class="header">
+<th align="left">Dataset</th>
+<th align="right">Mean Shape Index</th>
+<th align="right">SE Shape Index</th>
+<th align="right">SD Shape Index</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">grm_10_01_05</td>
+<td align="right">3.0737</td>
+<td align="right">0.0014</td>
+<td align="right">0.4557</td>
+</tr>
+<tr class="even">
+<td align="left">FRI</td>
+<td align="right">3.8667</td>
+<td align="right">0.0052</td>
+<td align="right">1.4111</td>
+</tr>
+</tbody>
+</table>
+<p>We can see that GRM polygons are less complex (more compact) than FRI polygons and that shape varies less in the GRM output.</p>
+<p>The last table will show R2 values, which give an indication of how well the segmentation output is explaining the variation among ALS input variables.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="segmentation.html#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># R2</span></span>
+<span id="cb9-2"><a href="segmentation.html#cb9-2" aria-hidden="true" tabindex="-1"></a>t4 <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(df[,<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">19</span><span class="sc">:</span><span class="dv">22</span>)])</span>
+<span id="cb9-3"><a href="segmentation.html#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="segmentation.html#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># round</span></span>
+<span id="cb9-5"><a href="segmentation.html#cb9-5" aria-hidden="true" tabindex="-1"></a>t4[,<span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>] <span class="ot">&lt;-</span> <span class="fu">round</span>(t4[,<span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>], <span class="dv">2</span>)</span>
+<span id="cb9-6"><a href="segmentation.html#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="segmentation.html#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(t4) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;Dataset&#39;</span>, <span class="st">&#39;R2 P95&#39;</span>, <span class="st">&#39;R2 Can Cov&#39;</span>, <span class="st">&#39;R2 Coeff Var&#39;</span>, <span class="st">&#39;R2 Overall&#39;</span>)</span>
+<span id="cb9-8"><a href="segmentation.html#cb9-8" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(t4, <span class="at">caption =</span> <span class="st">&quot;Table 4: Polygon R2 Stats&quot;</span>, <span class="at">label =</span> <span class="cn">NA</span>)</span></code></pre></div>
+<table>
+<caption>Table 4: Polygon R2 Stats</caption>
+<thead>
+<tr class="header">
+<th align="left">Dataset</th>
+<th align="right">R2 P95</th>
+<th align="right">R2 Can Cov</th>
+<th align="right">R2 Coeff Var</th>
+<th align="right">R2 Overall</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">grm_10_01_05</td>
+<td align="right">0.90</td>
+<td align="right">0.93</td>
+<td align="right">0.85</td>
+<td align="right">0.89</td>
+</tr>
+<tr class="even">
+<td align="left">FRI</td>
+<td align="right">0.84</td>
+<td align="right">0.85</td>
+<td align="right">0.72</td>
+<td align="right">0.80</td>
+</tr>
+</tbody>
+</table>
+<p>We can see that the GRM output has a high R2 value of 0.89 (overall R2), which is a strong indicator that the segmentation algorithm is effectively explaining structural differences between polygons. The manually segmented FRI polygons also have a very good R2 value, indicating the skill of interpreters in delineating forest structure.</p>
+</div>
+<div id="segmentation411" class="section level2 unnumbered hasAnchor">
+<h2><strong>4.11</strong> Results: Visual examples of GRM and FRI Polygons<a href="segmentation.html#segmentation411" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The following code chunk loads a base image from part of the RMF to give an example of the forest stand polygon delineation. As the GRM algorithm outputs shapefiles, assessing the visual quality of the segmentation is best done in QGIS (or other GIS software). Note that we also don’t go into detail assessing the landcover attributes in this example. The landcover attributes are included in the output shapefile and can also be assessed in a GIS software.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="segmentation.html#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load base imagery</span></span>
+<span id="cb10-2"><a href="segmentation.html#cb10-2" aria-hidden="true" tabindex="-1"></a>base <span class="ot">&lt;-</span> <span class="fu">rast</span>(<span class="st">&#39;D:/ontario_inventory/romeo/RMF_Sample_Base.tif&#39;</span>)</span>
+<span id="cb10-3"><a href="segmentation.html#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="segmentation.html#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># load FRI and change to raster proj</span></span>
+<span id="cb10-5"><a href="segmentation.html#cb10-5" aria-hidden="true" tabindex="-1"></a>fri_poly <span class="ot">&lt;-</span> <span class="fu">vect</span>(fri) <span class="sc">%&gt;%</span></span>
+<span id="cb10-6"><a href="segmentation.html#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">project</span>(., base) <span class="sc">%&gt;%</span> <span class="fu">crop</span>(., base)</span>
+<span id="cb10-7"><a href="segmentation.html#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="segmentation.html#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co"># load GRM polygons and change to raster proj</span></span>
+<span id="cb10-9"><a href="segmentation.html#cb10-9" aria-hidden="true" tabindex="-1"></a>grm_poly <span class="ot">&lt;-</span> <span class="fu">vect</span>(file) <span class="sc">%&gt;%</span></span>
+<span id="cb10-10"><a href="segmentation.html#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">project</span>(., base) <span class="sc">%&gt;%</span> <span class="fu">crop</span>(., base)</span>
+<span id="cb10-11"><a href="segmentation.html#cb10-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-12"><a href="segmentation.html#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="co"># plot base imagery with GRM polygons</span></span>
+<span id="cb10-13"><a href="segmentation.html#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(grm_poly)</span>
+<span id="cb10-14"><a href="segmentation.html#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="fu">plotRGB</span>(base, <span class="at">stretch =</span> <span class="st">&#39;lin&#39;</span>, <span class="at">add =</span> T)</span>
+<span id="cb10-15"><a href="segmentation.html#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(grm_poly, <span class="at">border =</span> <span class="st">&#39;red2&#39;</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">add =</span> T)</span>
+<span id="cb10-16"><a href="segmentation.html#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="at">main =</span> <span class="st">&#39;GRM Polygons Overlaid on True Color Image&#39;</span>, <span class="at">line =</span> <span class="sc">-</span><span class="dv">2</span>, <span class="at">cex.main =</span> <span class="dv">3</span>)</span></code></pre></div>
+<p><img src="04-Segmentation_files/figure-html/segmentation4111-1.png" width="1728" /></p>
+<p>The above plot shows the GRM derived polygons in part of the sample area. Note that the automated segmentation has clean edges around water and road features, since these features were masked in the first step, and the polygons re-added after segmentation. The GRM polygons are also much more compact and uniform than the FRI polygons, and generally do not have issues with the line-work (overlapping and parallel lines), which was an important point mentioned by project partners.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="segmentation.html#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># plot base imagery with FRI polygons</span></span>
+<span id="cb11-2"><a href="segmentation.html#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fri_poly)</span>
+<span id="cb11-3"><a href="segmentation.html#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plotRGB</span>(base, <span class="at">stretch =</span> <span class="st">&#39;lin&#39;</span>, <span class="at">add =</span> T)</span>
+<span id="cb11-4"><a href="segmentation.html#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fri_poly, <span class="at">border =</span> <span class="st">&#39;mediumvioletred&#39;</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">add =</span> T)</span>
+<span id="cb11-5"><a href="segmentation.html#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="at">main =</span> <span class="st">&#39;FRI Polygons Overlaid on True Color Image&#39;</span>, <span class="at">line =</span> <span class="sc">-</span><span class="dv">2</span>, <span class="at">cex.main =</span> <span class="dv">3</span>)</span></code></pre></div>
+<p><img src="04-Segmentation_files/figure-html/segmentation4112-1.png" width="1728" /></p>
+<p>The above plot shows the FRI polygons in part of the sample area, overlaid on recent true color imagery. Note the clean edges around water bodies, rivers/streams, and road features.</p>
+</div>
+<div id="segmentation412" class="section level2 unnumbered hasAnchor">
+<h2><strong>4.12</strong> Results: Distribution Plots<a href="segmentation.html#segmentation412" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The last results we will show are plots of the distribution of various performance metrics. First will be density plots of polygon size.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="segmentation.html#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># plot density GRM in ha</span></span>
+<span id="cb12-2"><a href="segmentation.html#cb12-2" aria-hidden="true" tabindex="-1"></a>g1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">nbPixels =</span> p2<span class="sc">$</span>nbPixels <span class="sc">/</span> <span class="dv">25</span>), <span class="fu">aes</span>(<span class="at">x =</span> nbPixels)) <span class="sc">+</span></span>
+<span id="cb12-3"><a href="segmentation.html#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">fill =</span> <span class="st">&#39;grey&#39;</span>) <span class="sc">+</span></span>
+<span id="cb12-4"><a href="segmentation.html#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">500</span><span class="sc">/</span><span class="dv">25</span>)) <span class="sc">+</span></span>
+<span id="cb12-5"><a href="segmentation.html#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.20</span>)) <span class="sc">+</span></span>
+<span id="cb12-6"><a href="segmentation.html#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept =</span> <span class="fu">median</span>(nbPixels)),</span>
+<span id="cb12-7"><a href="segmentation.html#cb12-7" aria-hidden="true" tabindex="-1"></a>             <span class="at">linetype =</span> <span class="st">&quot;dashed&quot;</span>,</span>
+<span id="cb12-8"><a href="segmentation.html#cb12-8" aria-hidden="true" tabindex="-1"></a>             <span class="at">linewidth =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb12-9"><a href="segmentation.html#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb12-10"><a href="segmentation.html#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">&#39;Number of Hectares&#39;</span>) <span class="sc">+</span></span>
+<span id="cb12-11"><a href="segmentation.html#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&#39;Density&#39;</span>) <span class="sc">+</span></span>
+<span id="cb12-12"><a href="segmentation.html#cb12-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&#39;GRM Distribution of Polygon Size&#39;</span>) <span class="sc">+</span></span>
+<span id="cb12-13"><a href="segmentation.html#cb12-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">25</span>))</span>
+<span id="cb12-14"><a href="segmentation.html#cb12-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-15"><a href="segmentation.html#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="co"># plot density FRI in ha</span></span>
+<span id="cb12-16"><a href="segmentation.html#cb12-16" aria-hidden="true" tabindex="-1"></a>g2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">nbPixels =</span> p2fri<span class="sc">$</span>nbPixels <span class="sc">/</span> <span class="dv">25</span>), <span class="fu">aes</span>(<span class="at">x =</span> nbPixels)) <span class="sc">+</span></span>
+<span id="cb12-17"><a href="segmentation.html#cb12-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">fill =</span> <span class="st">&#39;grey&#39;</span>) <span class="sc">+</span></span>
+<span id="cb12-18"><a href="segmentation.html#cb12-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">500</span><span class="sc">/</span><span class="dv">25</span>)) <span class="sc">+</span></span>
+<span id="cb12-19"><a href="segmentation.html#cb12-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.20</span>)) <span class="sc">+</span></span>
+<span id="cb12-20"><a href="segmentation.html#cb12-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept =</span> <span class="fu">median</span>(nbPixels)),</span>
+<span id="cb12-21"><a href="segmentation.html#cb12-21" aria-hidden="true" tabindex="-1"></a>             <span class="at">linetype =</span> <span class="st">&quot;dashed&quot;</span>,</span>
+<span id="cb12-22"><a href="segmentation.html#cb12-22" aria-hidden="true" tabindex="-1"></a>             <span class="at">linewidth =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb12-23"><a href="segmentation.html#cb12-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb12-24"><a href="segmentation.html#cb12-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">&#39;Number of Hectares&#39;</span>) <span class="sc">+</span></span>
+<span id="cb12-25"><a href="segmentation.html#cb12-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&#39;Density&#39;</span>) <span class="sc">+</span></span>
+<span id="cb12-26"><a href="segmentation.html#cb12-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&#39;FRI Distribution of Polygon Size&#39;</span>) <span class="sc">+</span></span>
+<span id="cb12-27"><a href="segmentation.html#cb12-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">25</span>))</span>
+<span id="cb12-28"><a href="segmentation.html#cb12-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-29"><a href="segmentation.html#cb12-29" aria-hidden="true" tabindex="-1"></a><span class="co"># plot together</span></span>
+<span id="cb12-30"><a href="segmentation.html#cb12-30" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(g1, g2)</span></code></pre></div>
+<p><img src="04-Segmentation_files/figure-html/segmentation4121-1.png" width="1728" /></p>
+<p>Above is the distribution of polygon size within the sample area. The dotted line denotes the median values, which are very close between the FRI and GRM polygons. Both distributions have a long tail toward large polygons, but the GRM polygons have a more uniform size and less large polygons. Water and Unclassified polygons are not included.</p>
+<p>Lastly we plot the distribution of shape index.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="segmentation.html#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># plot shape index GRM</span></span>
+<span id="cb13-2"><a href="segmentation.html#cb13-2" aria-hidden="true" tabindex="-1"></a>g1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">msi =</span> <span class="fu">as.numeric</span>(p2<span class="sc">$</span>msi)), <span class="fu">aes</span>(<span class="at">x =</span> msi)) <span class="sc">+</span></span>
+<span id="cb13-3"><a href="segmentation.html#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">fill =</span> <span class="st">&#39;grey&#39;</span>) <span class="sc">+</span></span>
+<span id="cb13-4"><a href="segmentation.html#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">8</span>)) <span class="sc">+</span></span>
+<span id="cb13-5"><a href="segmentation.html#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">1.5</span>)) <span class="sc">+</span></span>
+<span id="cb13-6"><a href="segmentation.html#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept =</span> <span class="fu">median</span>(msi)),</span>
+<span id="cb13-7"><a href="segmentation.html#cb13-7" aria-hidden="true" tabindex="-1"></a>             <span class="at">linetype =</span> <span class="st">&quot;dashed&quot;</span>,</span>
+<span id="cb13-8"><a href="segmentation.html#cb13-8" aria-hidden="true" tabindex="-1"></a>             <span class="at">linewidth =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb13-9"><a href="segmentation.html#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb13-10"><a href="segmentation.html#cb13-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">&#39;Shape Index&#39;</span>) <span class="sc">+</span></span>
+<span id="cb13-11"><a href="segmentation.html#cb13-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&#39;Density&#39;</span>) <span class="sc">+</span></span>
+<span id="cb13-12"><a href="segmentation.html#cb13-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&#39;GRM Distribution of Shape Index&#39;</span>) <span class="sc">+</span></span>
+<span id="cb13-13"><a href="segmentation.html#cb13-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">25</span>))</span>
+<span id="cb13-14"><a href="segmentation.html#cb13-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-15"><a href="segmentation.html#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="co"># plot shape index FRI</span></span>
+<span id="cb13-16"><a href="segmentation.html#cb13-16" aria-hidden="true" tabindex="-1"></a>g2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">msi =</span> <span class="fu">as.numeric</span>(p2fri<span class="sc">$</span>msi)), <span class="fu">aes</span>(<span class="at">x =</span> msi)) <span class="sc">+</span></span>
+<span id="cb13-17"><a href="segmentation.html#cb13-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">fill =</span> <span class="st">&#39;grey&#39;</span>) <span class="sc">+</span></span>
+<span id="cb13-18"><a href="segmentation.html#cb13-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">8</span>)) <span class="sc">+</span></span>
+<span id="cb13-19"><a href="segmentation.html#cb13-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">1.5</span>)) <span class="sc">+</span></span>
+<span id="cb13-20"><a href="segmentation.html#cb13-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept =</span> <span class="fu">median</span>(msi)),</span>
+<span id="cb13-21"><a href="segmentation.html#cb13-21" aria-hidden="true" tabindex="-1"></a>             <span class="at">linetype =</span> <span class="st">&quot;dashed&quot;</span>,</span>
+<span id="cb13-22"><a href="segmentation.html#cb13-22" aria-hidden="true" tabindex="-1"></a>             <span class="at">linewidth =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb13-23"><a href="segmentation.html#cb13-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb13-24"><a href="segmentation.html#cb13-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">&#39;Shape Index&#39;</span>) <span class="sc">+</span></span>
+<span id="cb13-25"><a href="segmentation.html#cb13-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&#39;Density&#39;</span>) <span class="sc">+</span></span>
+<span id="cb13-26"><a href="segmentation.html#cb13-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&#39;FRI Distribution of Shape Index&#39;</span>) <span class="sc">+</span></span>
+<span id="cb13-27"><a href="segmentation.html#cb13-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">25</span>))</span>
+<span id="cb13-28"><a href="segmentation.html#cb13-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-29"><a href="segmentation.html#cb13-29" aria-hidden="true" tabindex="-1"></a><span class="co"># plot together</span></span>
+<span id="cb13-30"><a href="segmentation.html#cb13-30" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(g1, g2)</span></code></pre></div>
+<p><img src="04-Segmentation_files/figure-html/segmentation4122-1.png" width="1728" /></p>
+<p>The above plots show Shape Index for FRI and GRM polygons in the sample area (Water and Unclassified polygons are not included). The dotted line is the median value. Shape Index has a value of 1 for circular objects and increases without limits with increased complexity and irregularity. The GRM polygons have a much more compact shape (lower Shape Index) as well as a more uniform and tight distribution. These characteristics are visible in the above plots of the polygons.</p>
+</div>
+<div id="segmentation413" class="section level2 unnumbered hasAnchor">
+<h2><strong>4.13</strong> Caveats<a href="segmentation.html#segmentation413" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>This work showcases promising results for forest inventory users wishing to leverage new ALS data yet continue to work in a familiar polygonal framework, though there are still challenges and constraints. Automated segmentation outputs tend to feature more uniform segment shapes and sizes, that is to say the algorithms do not have to ability to consider a broad range of cues, whether conceptual or structural, and balance a range of needs regarding the utility of forest inventory polygons. The segments output from gridded ALS metrics do not always feature smooth transitions between segments, such as river banks, road edges, and forest/non-forest boundaries, due to the fact that the output segments, although in vector format, were delineated from raster data. This also creates complex segments and shapes in areas of spectral heterogeneity. Whereas an interpreter can conceptualize broader dynamics to delineate changes in landscape features, the segmentation algorithms are limited by applying the same region growing approach across the landscape, and cannot break apart or reconstruct segments to simplify the geometry throughout the process. The gridded ALS metrics we used were also not effective at delineating small and/or linear features, such as lakes, rivers, and roads. With input data at 20 m spatial resolution, and further smoothed using a 5x5 neighborhood, these features tend to get lost and therefore must be masked from the data before processing and readded as individual polygons after segmentation. Automated outputs cannot replace the expertise of forest interpreters but should rather be seen and used as complimentary (Wulder et al., 2008) or a substitution with a different set of inherent strengths and weaknesses.</p>
+</div>
+<div id="segmentation414" class="section level2 unnumbered hasAnchor">
+<h2><strong>4.14</strong> Future Work<a href="segmentation.html#segmentation414" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>There are several future pathways to further understand and utilize an automated segmentation approach in a forest inventory context. Although this work provides an example of an open-source segmentation approach available for forest inventory applications, there is a need to further explore the performance and utility of this approach across a range of ecosystems and diverse forested regions. In a large operational context, it may not be practical to manually conduct a sensitivity analysis and manipulate parameters to derive a satisfactory output, but rather build a system to optimize parameters automatically (Pukkala, 2020). Additionally, multi-spectral optical imagery has shown promise in distinguishing characteristics of forest stands and could be assessed for its utility as a guiding segmentation parameter in this methodology (Dechesne et al., 2017).</p>
+</div>
+<div id="segmentation415" class="section level2 unnumbered hasAnchor">
+<h2><strong>4.15</strong> Summary<a href="segmentation.html#segmentation415" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We effectively applied segmentation over the Romeo Malette forest management unit (~630,000 ha) and described how algorithm parameters influence output polygon size, shape, and radiometric consistency, and can be manipulated to meet the needs of forest managers and other users of forest inventory data. In addition, we applied segmentation on ALS metrics that do not require substantial ground calibration and validation, which makes this approach feasible to use in difficult to reach regions that may or may not have been inventoried in the past, or in which EFIs have not yet been generated. The second step in this project is to impute age and species attributes from the FRI into newly-segmented polygons. This will help to bridge the gap between old and new forest inventories, while keeping forest attributes essential to forest management applications.</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="project-details.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="imputation.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

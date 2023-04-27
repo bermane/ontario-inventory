@@ -25,4 +25,3 @@ White, J.C., Coops, N.C., Wulder, M.A., Vastaranta, M., Hilker, T., Tompalski, P
 Woods, M., Pitt, D., Penner, M., Lim, K., Nesbitt, D., Etheridge, D., Treitz, P., 2011. Operational implementation of a LiDAR inventory in Boreal Ontario.
 
 Wulder, M.A., White, J.C., Hay, G.J., Castilla, G., 2008. Towards automated segmentation of forest inventory polygons on high spatial resolution satellite imagery. Forestry Chronicle 84, 221–230. https://doi.org/10.5558/tfc84221-2
- 

@@ -22,7 +22,7 @@
 
 
 
-<meta name="date" content="2023-04-25" />
+<meta name="date" content="2023-04-27" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -135,10 +135,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="./">Integration of Photo Interpreted and LiDAR Attributes Into a Polygonal Forest Inventory Framework</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><strong>1</strong> Introduction</a>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><strong>1</strong> Introduction</a>
 <ul>
-<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#summary"><i class="fa fa-check"></i><strong>1.1</strong> Project Summary</a></li>
-<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#partners"><i class="fa fa-check"></i><strong>1.2</strong> Project Partners</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#summary"><i class="fa fa-check"></i><strong>1.1</strong> Project Summary</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#partners"><i class="fa fa-check"></i><strong>1.2</strong> Project Partners</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="people.html"><a href="people.html"><i class="fa fa-check"></i><strong>2</strong> People</a>
 <ul>
@@ -2045,7 +2045,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb28-52"><a href="imputation.html#cb28-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span>
 <span id="cb28-53"><a href="imputation.html#cb28-53" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb28-54"><a href="imputation.html#cb28-54" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(p1, p2, <span class="at">ncol =</span> <span class="dv">1</span>)</span></code></pre></div>
-<p><img src="05-Imputation_files/figure-html/imputationp5121-1.png" width="1728" /></p>
+<p><img src="05-imputation_files/figure-html/imputationp5121-1.png" width="1728" /></p>
 <p>Imputed age values show a similar spatial distribution to observed age values at a broad scale. Of course, the values should be scrutinized on a fine scale in specific areas. This task is much easier to do in a GIS software using the output shapefiles.</p>
 <p>We next generate density plots of stand age.</p>
 <div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="imputation.html#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># density plots of age</span></span>
@@ -2078,7 +2078,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb29-28"><a href="imputation.html#cb29-28" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">30</span>))</span>
 <span id="cb29-29"><a href="imputation.html#cb29-29" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb29-30"><a href="imputation.html#cb29-30" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(p1, p2, <span class="at">ncol =</span> <span class="dv">1</span>)</span></code></pre></div>
-<p><img src="05-Imputation_files/figure-html/imputationp5122-1.png" width="1728" /></p>
+<p><img src="05-imputation_files/figure-html/imputationp5122-1.png" width="1728" /></p>
 <p>The distribution of imputed age in GRM polygons closely matches that of observed age in FRI polygons. The median age values (dotted lines) are 78 (GRM) and 83 (FRI).</p>
 </div>
 <div id="imputation513" class="section level2 unnumbered hasAnchor">
@@ -2104,7 +2104,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb30-18"><a href="imputation.html#cb30-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span>
 <span id="cb30-19"><a href="imputation.html#cb30-19" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb30-20"><a href="imputation.html#cb30-20" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(p1, p2, <span class="at">ncol =</span> <span class="dv">1</span>)</span></code></pre></div>
-<p><img src="05-Imputation_files/figure-html/imputationp5131-1.png" width="1728" /></p>
+<p><img src="05-imputation_files/figure-html/imputationp5131-1.png" width="1728" /></p>
 <p>We can observe a similar distribution of species classes.</p>
 <p>Five functional group classification:</p>
 <div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="imputation.html#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># plot five func group classification</span></span>
@@ -2129,7 +2129,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb31-20"><a href="imputation.html#cb31-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span>
 <span id="cb31-21"><a href="imputation.html#cb31-21" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb31-22"><a href="imputation.html#cb31-22" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(p1, p2, <span class="at">ncol =</span> <span class="dv">1</span>)</span></code></pre></div>
-<p><img src="05-Imputation_files/figure-html/imputationp5132-1.png" width="1728" /></p>
+<p><img src="05-imputation_files/figure-html/imputationp5132-1.png" width="1728" /></p>
 <p>Overall distribution of three functional group classification:</p>
 <div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="imputation.html#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create data frame for GRM 3 classes</span></span>
 <span id="cb32-2"><a href="imputation.html#cb32-2" aria-hidden="true" tabindex="-1"></a>dat_grm_c3 <span class="ot">&lt;-</span> dat_grm <span class="sc">%&gt;%</span> </span>
@@ -2177,7 +2177,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb32-44"><a href="imputation.html#cb32-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Three Functional Group </span><span class="sc">\n</span><span class="st">Classification (FRI)&quot;</span>)</span>
 <span id="cb32-45"><a href="imputation.html#cb32-45" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb32-46"><a href="imputation.html#cb32-46" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(p1, p2, <span class="at">ncol =</span> <span class="dv">2</span>)</span></code></pre></div>
-<p><img src="05-Imputation_files/figure-html/imputationp5133-1.png" width="1728" /></p>
+<p><img src="05-imputation_files/figure-html/imputationp5133-1.png" width="1728" /></p>
 <p>The distribution of three functional groups is very similar with slightly more softwood in the imputed data.</p>
 <p>Five functional group classification:</p>
 <div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="imputation.html#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># distribution of 5 species classes</span></span>
@@ -2229,7 +2229,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb33-47"><a href="imputation.html#cb33-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Five Functional Group </span><span class="sc">\n</span><span class="st">Classification (FRI)&quot;</span>)</span>
 <span id="cb33-48"><a href="imputation.html#cb33-48" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb33-49"><a href="imputation.html#cb33-49" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(p1, p2, <span class="at">ncol =</span> <span class="dv">2</span>)</span></code></pre></div>
-<p><img src="05-Imputation_files/figure-html/imputationp5134-1.png" width="1728" /></p>
+<p><img src="05-imputation_files/figure-html/imputationp5134-1.png" width="1728" /></p>
 <p>The distribution of imputed five classes of species is also very similar to the FRI distribution. The imputed values contain slightly more black spruce dominated stands (2% more than the FRI), hardwood stands (1% more than the FRI), and less jack pine dominated and mixed conifer stands.</p>
 </div>
 <div id="imputation516" class="section level2 unnumbered hasAnchor">

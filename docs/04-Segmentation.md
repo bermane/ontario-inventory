@@ -966,7 +966,7 @@ plot(grm_poly, border = 'red2', lwd = 2, add = T)
 title(main = 'GRM Polygons Overlaid on True Color Image', line = -2, cex.main = 3)
 ```
 
-<img src="04-Segmentation_files/figure-html/segmentation4111-1.png" width="1728" />
+<img src="04-segmentation_files/figure-html/segmentation4111-1.png" width="1728" />
 
 The above plot shows the GRM derived polygons in part of the sample area. Note that the automated segmentation has clean edges around water and road features, since these features were masked in the first step, and the polygons re-added after segmentation. The GRM polygons are also much more compact and uniform than the FRI polygons, and generally do not have issues with the line-work (overlapping and parallel lines), which was an important point mentioned by project partners.
 
@@ -979,7 +979,7 @@ plot(fri_poly, border = 'mediumvioletred', lwd = 2, add = T)
 title(main = 'FRI Polygons Overlaid on True Color Image', line = -2, cex.main = 3)
 ```
 
-<img src="04-Segmentation_files/figure-html/segmentation4112-1.png" width="1728" />
+<img src="04-segmentation_files/figure-html/segmentation4112-1.png" width="1728" />
 
 The above plot shows the FRI polygons in part of the sample area, overlaid on recent true color imagery. Note the clean edges around water bodies, rivers/streams, and road features.
 
@@ -1021,7 +1021,7 @@ g2 <- ggplot(data.frame(nbPixels = p2fri$nbPixels / 25), aes(x = nbPixels)) +
 grid.arrange(g1, g2)
 ```
 
-<img src="04-Segmentation_files/figure-html/segmentation4121-1.png" width="1728" />
+<img src="04-segmentation_files/figure-html/segmentation4121-1.png" width="1728" />
 
 Above is the distribution of polygon size within the sample area. The dotted line denotes the median values, which are very close between the FRI and GRM polygons. Both distributions have a long tail toward large polygons, but the GRM polygons have a more uniform size and less large polygons. Water and Unclassified polygons are not included.
 
@@ -1061,7 +1061,7 @@ g2 <- ggplot(data.frame(msi = as.numeric(p2fri$msi)), aes(x = msi)) +
 grid.arrange(g1, g2)
 ```
 
-<img src="04-Segmentation_files/figure-html/segmentation4122-1.png" width="1728" />
+<img src="04-segmentation_files/figure-html/segmentation4122-1.png" width="1728" />
 
 The above plots show Shape Index for FRI and GRM polygons in the sample area (Water and Unclassified polygons are not included). The dotted line is the median value. Shape Index has a value of 1 for circular objects and increases without limits with increased complexity and irregularity. The GRM polygons have a much more compact shape (lower Shape Index) as well as a more uniform and tight distribution. These characteristics are visible in the above plots of the polygons.
 

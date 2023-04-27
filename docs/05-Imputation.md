@@ -1293,7 +1293,7 @@ p2 <- ggplot(fri_sf) +
 grid.arrange(p1, p2, ncol = 1)
 ```
 
-<img src="05-Imputation_files/figure-html/imputationp5121-1.png" width="1728" />
+<img src="05-imputation_files/figure-html/imputationp5121-1.png" width="1728" />
 
 Imputed age values show a similar spatial distribution to observed age values at a broad scale. Of course, the values should be scrutinized on a fine scale in specific areas. This task is much easier to do in a GIS software using the output shapefiles.
 
@@ -1333,7 +1333,7 @@ p2 <- ggplot(as.data.frame(poly_fri), aes(x = AGE2018)) +
 grid.arrange(p1, p2, ncol = 1)
 ```
 
-<img src="05-Imputation_files/figure-html/imputationp5122-1.png" width="1728" />
+<img src="05-imputation_files/figure-html/imputationp5122-1.png" width="1728" />
 
 The distribution of imputed age in GRM polygons closely matches that of observed age in FRI polygons. The median age values (dotted lines) are 78 (GRM) and 83 (FRI).
 
@@ -1365,7 +1365,7 @@ p2 <- ggplot(fri_sf) +
 grid.arrange(p1, p2, ncol = 1)
 ```
 
-<img src="05-Imputation_files/figure-html/imputationp5131-1.png" width="1728" />
+<img src="05-imputation_files/figure-html/imputationp5131-1.png" width="1728" />
 
 We can observe a similar distribution of species classes.
 
@@ -1397,7 +1397,7 @@ p2 <- ggplot(fri_sf) +
 grid.arrange(p1, p2, ncol = 1)
 ```
 
-<img src="05-Imputation_files/figure-html/imputationp5132-1.png" width="1728" />
+<img src="05-imputation_files/figure-html/imputationp5132-1.png" width="1728" />
 
 Overall distribution of three functional group classification:
 
@@ -1451,7 +1451,7 @@ p2 <- ggplot(dat_fri_c3, aes(x = "", y = prop, fill = class3)) +
 grid.arrange(p1, p2, ncol = 2)
 ```
 
-<img src="05-Imputation_files/figure-html/imputationp5133-1.png" width="1728" />
+<img src="05-imputation_files/figure-html/imputationp5133-1.png" width="1728" />
 
 The distribution of three functional groups is very similar with slightly more softwood in the imputed data.
 
@@ -1510,7 +1510,7 @@ p2 <- ggplot(dat_fri_c5, aes(x = "", y = prop, fill = class5)) +
 grid.arrange(p1, p2, ncol = 2)
 ```
 
-<img src="05-Imputation_files/figure-html/imputationp5134-1.png" width="1728" />
+<img src="05-imputation_files/figure-html/imputationp5134-1.png" width="1728" />
 
 The distribution of imputed five classes of species is also very similar to the FRI distribution. The imputed values contain slightly more black spruce dominated stands (2% more than the FRI), hardwood stands (1% more than the FRI), and less jack pine dominated and mixed conifer stands.
 

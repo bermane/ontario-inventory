@@ -22,7 +22,7 @@
 
 
 
-<meta name="date" content="2023-04-25" />
+<meta name="date" content="2023-04-27" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -135,10 +135,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="./">Integration of Photo Interpreted and LiDAR Attributes Into a Polygonal Forest Inventory Framework</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><strong>1</strong> Introduction</a>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><strong>1</strong> Introduction</a>
 <ul>
-<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#summary"><i class="fa fa-check"></i><strong>1.1</strong> Project Summary</a></li>
-<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#partners"><i class="fa fa-check"></i><strong>1.2</strong> Project Partners</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#summary"><i class="fa fa-check"></i><strong>1.1</strong> Project Summary</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#partners"><i class="fa fa-check"></i><strong>1.2</strong> Project Partners</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="people.html"><a href="people.html"><i class="fa fa-check"></i><strong>2</strong> People</a>
 <ul>
@@ -1235,14 +1235,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb10-14"><a href="segmentation.html#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="fu">plotRGB</span>(base, <span class="at">stretch =</span> <span class="st">&#39;lin&#39;</span>, <span class="at">add =</span> T)</span>
 <span id="cb10-15"><a href="segmentation.html#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(grm_poly, <span class="at">border =</span> <span class="st">&#39;red2&#39;</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">add =</span> T)</span>
 <span id="cb10-16"><a href="segmentation.html#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="at">main =</span> <span class="st">&#39;GRM Polygons Overlaid on True Color Image&#39;</span>, <span class="at">line =</span> <span class="sc">-</span><span class="dv">2</span>, <span class="at">cex.main =</span> <span class="dv">3</span>)</span></code></pre></div>
-<p><img src="04-Segmentation_files/figure-html/segmentation4111-1.png" width="1728" /></p>
+<p><img src="04-segmentation_files/figure-html/segmentation4111-1.png" width="1728" /></p>
 <p>The above plot shows the GRM derived polygons in part of the sample area. Note that the automated segmentation has clean edges around water and road features, since these features were masked in the first step, and the polygons re-added after segmentation. The GRM polygons are also much more compact and uniform than the FRI polygons, and generally do not have issues with the line-work (overlapping and parallel lines), which was an important point mentioned by project partners.</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="segmentation.html#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># plot base imagery with FRI polygons</span></span>
 <span id="cb11-2"><a href="segmentation.html#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fri_poly)</span>
 <span id="cb11-3"><a href="segmentation.html#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plotRGB</span>(base, <span class="at">stretch =</span> <span class="st">&#39;lin&#39;</span>, <span class="at">add =</span> T)</span>
 <span id="cb11-4"><a href="segmentation.html#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fri_poly, <span class="at">border =</span> <span class="st">&#39;mediumvioletred&#39;</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">add =</span> T)</span>
 <span id="cb11-5"><a href="segmentation.html#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="at">main =</span> <span class="st">&#39;FRI Polygons Overlaid on True Color Image&#39;</span>, <span class="at">line =</span> <span class="sc">-</span><span class="dv">2</span>, <span class="at">cex.main =</span> <span class="dv">3</span>)</span></code></pre></div>
-<p><img src="04-Segmentation_files/figure-html/segmentation4112-1.png" width="1728" /></p>
+<p><img src="04-segmentation_files/figure-html/segmentation4112-1.png" width="1728" /></p>
 <p>The above plot shows the FRI polygons in part of the sample area, overlaid on recent true color imagery. Note the clean edges around water bodies, rivers/streams, and road features.</p>
 </div>
 <div id="segmentation412" class="section level2 unnumbered hasAnchor">
@@ -1278,7 +1278,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb12-28"><a href="segmentation.html#cb12-28" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-29"><a href="segmentation.html#cb12-29" aria-hidden="true" tabindex="-1"></a><span class="co"># plot together</span></span>
 <span id="cb12-30"><a href="segmentation.html#cb12-30" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(g1, g2)</span></code></pre></div>
-<p><img src="04-Segmentation_files/figure-html/segmentation4121-1.png" width="1728" /></p>
+<p><img src="04-segmentation_files/figure-html/segmentation4121-1.png" width="1728" /></p>
 <p>Above is the distribution of polygon size within the sample area. The dotted line denotes the median values, which are very close between the FRI and GRM polygons. Both distributions have a long tail toward large polygons, but the GRM polygons have a more uniform size and less large polygons. Water and Unclassified polygons are not included.</p>
 <p>Lastly we plot the distribution of shape index.</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="segmentation.html#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># plot shape index GRM</span></span>
@@ -1311,7 +1311,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb13-28"><a href="segmentation.html#cb13-28" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb13-29"><a href="segmentation.html#cb13-29" aria-hidden="true" tabindex="-1"></a><span class="co"># plot together</span></span>
 <span id="cb13-30"><a href="segmentation.html#cb13-30" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(g1, g2)</span></code></pre></div>
-<p><img src="04-Segmentation_files/figure-html/segmentation4122-1.png" width="1728" /></p>
+<p><img src="04-segmentation_files/figure-html/segmentation4122-1.png" width="1728" /></p>
 <p>The above plots show Shape Index for FRI and GRM polygons in the sample area (Water and Unclassified polygons are not included). The dotted line is the median value. Shape Index has a value of 1 for circular objects and increases without limits with increased complexity and irregularity. The GRM polygons have a much more compact shape (lower Shape Index) as well as a more uniform and tight distribution. These characteristics are visible in the above plots of the polygons.</p>
 </div>
 <div id="segmentation413" class="section level2 unnumbered hasAnchor">

@@ -52,7 +52,7 @@ Sinclair and Robere-McGugan have significant expertise in the FRI mapping proces
 
 ## **2.4** Laval University {-#laval}
 
-### Alexis Achim, *advisor* {-$aachim}
+### Alexis Achim, *advisor* {-#aachim}
 
 [Alexis Achim](https://www.sbf.ulaval.ca/alexis-achim) is a professor in the Faculty of Forestry, Geography and Geomatics at Laval University. His research interests are at the interface between forest management and wood science. He specializes in modelling the effects of forest management practices on wood fibre attributes. He was the scientific leader of the research theme on wood properties modelling within ForValueNet, the NSERC strategic Network on forest management for value-added products.
 

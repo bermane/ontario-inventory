@@ -34,7 +34,7 @@ We propose two forest management units as focus sites for this research.
 
 The Romeo Malette Forest, which is an actively managed forest by GreenFirst Forest Products and is a typical example of a boreal forest management unit in this region. Forest harvesting practices result in an array of stand development stages which are associated with a range of vegetation structures. 
 
-A second focus site will be French Severn forest. This area has a distinct and complementary ecology, resulting in a range of species and structures not evident in the northern boreal.
+A second focus site will be French-Severn Forest. This area has a distinct and complementary ecology, resulting in a range of species and structures not evident in the northern boreal.
 
 ## **3.5** Methodology {-#methodology}
 
@@ -50,7 +50,7 @@ This work is guided by the need to present the forest management community with 
 
 ## **3.6** Knowledge & Technology Transfer {-#knowledge-transfer}
 
-This project is designed to support research, development and technology transfer in the use of transformation technologies such as innovative remote sensing and environmental datasets such as ALS for forest management across Canada’s forest sector. Specifically this project is designed to support the Provincial government of Ontario to improve the accuracy of the forest inventory through the innovative use of ALS data, as well as exploiting the available information on species and age in the current FRI. By undertaking these activities we contribute to the ongoing transformation of the forest sector through the development and adoption of innovative science-based solutions in particular by linking to the new Ontario governments Forest Sector Strategy. 
+This project is designed to support research, development and technology transfer in the use of transformation technologies such as innovative remote sensing and environmental datasets such as ALS for forest management across Canada’s forest sector. Specifically this project is designed to support the Provincial government of Ontario to improve the accuracy of the forest inventory through the innovative use of ALS data, as well as exploiting the available information on species and age in the current FRI. By undertaking these activities we contribute to the ongoing transformation of the forest sector through the development and adoption of innovative science-based solutions in particular by linking to the new Ontario government's Forest Sector Strategy. 
 
 As the application of ALS and other 3-dimensional data to forest inventories becomes more common, the need for joint projects with industry is required to communicate the successes and caveats of these technologies and their appropriate application across Canada. The ultimate outcomes of this project will be a workforce that is more informed on the use of remote sensing technologies for next generation forest inventory applications.
 
@@ -64,6 +64,6 @@ We will work with Ontario FRI staff and GreenFirst Forest Products managers on a
 
 * Open access to R and other developed programming scripts to undertake the modelling and comparisons. 
 
-More broadly key outputs of this project will be an increased awareness and capacity building of operational forest managers on the use of these technologies for next generation forest inventory which will lead to an increased ability to dissolve current boundaries between operational (tactical) and strategic (forest level) inventories.
+More broadly key outputs of this project will be an increased awareness and capacity building of operational forest managers on the use of these technologies for next generation forest inventory, which will lead to an increased ability to dissolve current boundaries between operational (tactical) and strategic (forest level) inventories.
 
 In addition, more thorough adoption of ALS technologies as a critical component of forest inventories will benefit other Canadian industries such as survey providers and technology developers by increasing the market and consolidating their international competitiveness, key goals of the Ontario Forest Sector strategy.

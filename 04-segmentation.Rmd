@@ -64,7 +64,8 @@ knitr::opts_chunk$set(fig.width=18, fig.height=12)
 #                    'berryFunctions',
 #                    'lwgeom',
 #                    'magrittr',
-#                    'gridExtra'))
+#                    'gridExtra',
+#                    'knitr'))
 
 # make sure to have OTB installed from here:
 # https://www.orfeo-toolbox.org/
@@ -83,6 +84,7 @@ library(berryFunctions)
 library(lwgeom)
 library(magrittr)
 library(gridExtra)
+library(knitr)
 
 ####################################
 ### SET CODE AND FILE PARAMETERS ###

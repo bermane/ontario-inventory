@@ -51,6 +51,8 @@
 <link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
 <link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
 
 <style type="text/css">
@@ -159,7 +161,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="" data-path="people.html"><a href="people.html#laval"><i class="fa fa-check"></i><strong>2.4</strong> Laval University</a>
 <ul>
-<li class="chapter" data-level="0.0.1" data-path="people.html"><a href="people.html#alexis-achim-advisor--aachim"><i class="fa fa-check"></i><b>0.0.1</b> Alexis Achim, <em>advisor</em> {-$aachim}</a></li>
+<li class="chapter" data-level="" data-path="people.html"><a href="people.html#aachim"><i class="fa fa-check"></i>Alexis Achim, <em>advisor</em></a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="project-details.html"><a href="project-details.html"><i class="fa fa-check"></i><strong>3</strong> Project Details</a>
@@ -240,13 +242,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="imputation52" class="section level2 unnumbered hasAnchor">
 <h2><strong>5.2</strong> Imputation Parameters<a href="imputation.html#imputation52" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The kNN algorithm functions by minimizing the Euclidean distance, without weights, between n X-variables in a target observation (in this case a forested polygon) and k-reference observations. We tested combinations of n = 3/5/7 and use n = 7 in this example. In our testing, n = 7 performed slightly better than n = 5 and much better than n = 3.</p>
-<p>When k = 1, values from reference observations (X and Y-variables) are directly joined to the target observation. When k &gt; 1, reference values are averaged using either the mean (for numeric variables) or mode (for categorical values). All Y-variables are imputed together, maintaining the relationship between variables in the reference observations. We tested combinations of k = 1/3/5 and use k = 5 in this example as it produced optimal results. In general, larger values of k lead to higher performance but more averaging of estimated attributes, which decreases variability.</p>
+<p>When k = 1, values from the nearest reference observation (X and Y-variables) are directly joined to the target observation. When k &gt; 1, values from the nearest reference observations are averaged using either the mean (for numeric variables) or mode (for categorical values). All Y-variables are imputed together, maintaining the relationship between variables in the reference observations. We tested combinations of k = 1/3/5 and use k = 5 in this example as it produced optimal results. In general, larger values of k lead to higher performance but more averaging of estimated attributes, which decreases variability.</p>
 </div>
 <div id="imputation53" class="section level2 unnumbered hasAnchor">
 <h2><strong>5.3</strong> Data Requirements<a href="imputation.html#imputation53" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The GRM segmentation workflow requires the following data layers, which are input into the algorithm at the beginning of the code:</p>
 <ol style="list-style-type: decimal">
-<li>Gridded raster layers of the following ALS metrics and Sentinel 2 imagery, which are used as imputation X-variables as well as for polygon data screening:</li>
+<li>Gridded raster layers of the following ALS metrics and Sentinel-2 imagery, which are used as imputation X-variables as well as for polygon data screening:</li>
 </ol>
 <p>Imputation X-variables:</p>
 <ul>
@@ -254,7 +256,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>rumple: Ratio of canopy outer surface area to ground surface area</li>
 <li>pcum8: Cumulative percentage of returns found in 80th percentile of returns height</li>
 <li>sd: Standard deviation of returns height &gt; 1.3 m classified as vegetation</li>
-<li>b6: Cloud-free composite of Sentinel 2 band 6 (740 nm) surface reflectance</li>
+<li>b6: Cloud-free composite of Sentinel-2 red-edge 2 (band 6; 740 nm) surface reflectance</li>
 </ul>
 <p>These five attributes comprise the optimal imputation X-variables from our performance analysis. The additional two variables used are the x and y coordinates of each polygon centroid, and are calculated automatically in the code. In our analysis, we found that these attributes derived directly from the ALS point cloud performed slightly better than modeled attributes from the EFI. Many of the ALS/EFI attributes are highly correlated and thus yield similar imputation results.</p>
 <p>Variables for polygon data screening:</p>
@@ -294,62 +296,64 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb14-12"><a href="imputation.html#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="co">#                    &#39;reshape2&#39;,</span></span>
 <span id="cb14-13"><a href="imputation.html#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="co">#                    &#39;viridis&#39;,</span></span>
 <span id="cb14-14"><a href="imputation.html#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="co">#                    &#39;scales&#39;,</span></span>
-<span id="cb14-15"><a href="imputation.html#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="co">#                    &#39;janitor&#39;))</span></span>
-<span id="cb14-16"><a href="imputation.html#cb14-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-17"><a href="imputation.html#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="co"># make sure to have OTB installed from here:</span></span>
-<span id="cb14-18"><a href="imputation.html#cb14-18" aria-hidden="true" tabindex="-1"></a><span class="co"># https://www.orfeo-toolbox.org/</span></span>
-<span id="cb14-19"><a href="imputation.html#cb14-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-20"><a href="imputation.html#cb14-20" aria-hidden="true" tabindex="-1"></a><span class="do">#####################</span></span>
-<span id="cb14-21"><a href="imputation.html#cb14-21" aria-hidden="true" tabindex="-1"></a><span class="do">### LOAD PACKAGES </span><span class="al">###</span></span>
-<span id="cb14-22"><a href="imputation.html#cb14-22" aria-hidden="true" tabindex="-1"></a><span class="do">#####################</span></span>
-<span id="cb14-23"><a href="imputation.html#cb14-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-24"><a href="imputation.html#cb14-24" aria-hidden="true" tabindex="-1"></a><span class="co"># load packages</span></span>
-<span id="cb14-25"><a href="imputation.html#cb14-25" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra)</span>
-<span id="cb14-26"><a href="imputation.html#cb14-26" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb14-27"><a href="imputation.html#cb14-27" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(exactextractr)</span>
-<span id="cb14-28"><a href="imputation.html#cb14-28" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
-<span id="cb14-29"><a href="imputation.html#cb14-29" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(magrittr)</span>
-<span id="cb14-30"><a href="imputation.html#cb14-30" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gridExtra)</span>
-<span id="cb14-31"><a href="imputation.html#cb14-31" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RANN)</span>
-<span id="cb14-32"><a href="imputation.html#cb14-32" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reshape2)</span>
-<span id="cb14-33"><a href="imputation.html#cb14-33" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(viridis)</span>
-<span id="cb14-34"><a href="imputation.html#cb14-34" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
-<span id="cb14-35"><a href="imputation.html#cb14-35" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
-<span id="cb14-36"><a href="imputation.html#cb14-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-37"><a href="imputation.html#cb14-37" aria-hidden="true" tabindex="-1"></a><span class="do">####################################</span></span>
-<span id="cb14-38"><a href="imputation.html#cb14-38" aria-hidden="true" tabindex="-1"></a><span class="do">### SET CODE AND FILE PARAMETERS </span><span class="al">###</span></span>
+<span id="cb14-15"><a href="imputation.html#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="co">#                    &#39;janitor&#39;,</span></span>
+<span id="cb14-16"><a href="imputation.html#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="co">#                    &#39;kableExtra&#39;))</span></span>
+<span id="cb14-17"><a href="imputation.html#cb14-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-18"><a href="imputation.html#cb14-18" aria-hidden="true" tabindex="-1"></a><span class="co"># make sure to have OTB installed from here:</span></span>
+<span id="cb14-19"><a href="imputation.html#cb14-19" aria-hidden="true" tabindex="-1"></a><span class="co"># https://www.orfeo-toolbox.org/</span></span>
+<span id="cb14-20"><a href="imputation.html#cb14-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-21"><a href="imputation.html#cb14-21" aria-hidden="true" tabindex="-1"></a><span class="do">#####################</span></span>
+<span id="cb14-22"><a href="imputation.html#cb14-22" aria-hidden="true" tabindex="-1"></a><span class="do">### LOAD PACKAGES </span><span class="al">###</span></span>
+<span id="cb14-23"><a href="imputation.html#cb14-23" aria-hidden="true" tabindex="-1"></a><span class="do">#####################</span></span>
+<span id="cb14-24"><a href="imputation.html#cb14-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-25"><a href="imputation.html#cb14-25" aria-hidden="true" tabindex="-1"></a><span class="co"># load packages</span></span>
+<span id="cb14-26"><a href="imputation.html#cb14-26" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra)</span>
+<span id="cb14-27"><a href="imputation.html#cb14-27" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb14-28"><a href="imputation.html#cb14-28" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(exactextractr)</span>
+<span id="cb14-29"><a href="imputation.html#cb14-29" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb14-30"><a href="imputation.html#cb14-30" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(magrittr)</span>
+<span id="cb14-31"><a href="imputation.html#cb14-31" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gridExtra)</span>
+<span id="cb14-32"><a href="imputation.html#cb14-32" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RANN)</span>
+<span id="cb14-33"><a href="imputation.html#cb14-33" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reshape2)</span>
+<span id="cb14-34"><a href="imputation.html#cb14-34" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(viridis)</span>
+<span id="cb14-35"><a href="imputation.html#cb14-35" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
+<span id="cb14-36"><a href="imputation.html#cb14-36" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
+<span id="cb14-37"><a href="imputation.html#cb14-37" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
+<span id="cb14-38"><a href="imputation.html#cb14-38" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-39"><a href="imputation.html#cb14-39" aria-hidden="true" tabindex="-1"></a><span class="do">####################################</span></span>
-<span id="cb14-40"><a href="imputation.html#cb14-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-41"><a href="imputation.html#cb14-41" aria-hidden="true" tabindex="-1"></a><span class="co"># set file names for ALS input variables</span></span>
+<span id="cb14-40"><a href="imputation.html#cb14-40" aria-hidden="true" tabindex="-1"></a><span class="do">### SET CODE AND FILE PARAMETERS </span><span class="al">###</span></span>
+<span id="cb14-41"><a href="imputation.html#cb14-41" aria-hidden="true" tabindex="-1"></a><span class="do">####################################</span></span>
 <span id="cb14-42"><a href="imputation.html#cb14-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-43"><a href="imputation.html#cb14-43" aria-hidden="true" tabindex="-1"></a><span class="co"># first set the imputation X-variables</span></span>
-<span id="cb14-44"><a href="imputation.html#cb14-44" aria-hidden="true" tabindex="-1"></a>lidar_imp <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;avg&#39;</span> <span class="ot">=</span> <span class="st">&#39;D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_avg.tif&#39;</span>,</span>
-<span id="cb14-45"><a href="imputation.html#cb14-45" aria-hidden="true" tabindex="-1"></a>               <span class="st">&#39;rumple&#39;</span> <span class="ot">=</span> <span class="st">&#39;D:/ontario_inventory/romeo/SPL metrics/Z_METRICS_MOSAIC/individual/RMF_RUMPLE_MOSAIC_r_rumple.tif&#39;</span>,</span>
-<span id="cb14-46"><a href="imputation.html#cb14-46" aria-hidden="true" tabindex="-1"></a>               <span class="st">&#39;pcum8&#39;</span> <span class="ot">=</span> <span class="st">&#39;D:/ontario_inventory/romeo/SPL metrics/Z_METRICS_MOSAIC/individual/RMF_Z_METRICS_MOSAIC_zpcum8.tif&#39;</span>,</span>
-<span id="cb14-47"><a href="imputation.html#cb14-47" aria-hidden="true" tabindex="-1"></a>               <span class="st">&#39;sd&#39;</span> <span class="ot">=</span> <span class="st">&#39;D:/ontario_inventory/romeo/SPL metrics/Z_METRICS_MOSAIC/individual/RMF_Z_METRICS_MOSAIC_zsd.tif&#39;</span>,</span>
-<span id="cb14-48"><a href="imputation.html#cb14-48" aria-hidden="true" tabindex="-1"></a>               <span class="st">&#39;b6&#39;</span> <span class="ot">=</span> <span class="st">&#39;D:/ontario_inventory/romeo/Sentinel/red_edge_2.tif&#39;</span>)</span>
-<span id="cb14-49"><a href="imputation.html#cb14-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-50"><a href="imputation.html#cb14-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-51"><a href="imputation.html#cb14-51" aria-hidden="true" tabindex="-1"></a><span class="co"># next set the data screening variables</span></span>
-<span id="cb14-52"><a href="imputation.html#cb14-52" aria-hidden="true" tabindex="-1"></a>lidar_scr <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;p95&#39;</span> <span class="ot">=</span> <span class="st">&#39;D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_p95.tif&#39;</span>,</span>
-<span id="cb14-53"><a href="imputation.html#cb14-53" aria-hidden="true" tabindex="-1"></a>               <span class="st">&#39;cc&#39;</span> <span class="ot">=</span> <span class="st">&#39;D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_2m_cov.tif&#39;</span>)</span>
-<span id="cb14-54"><a href="imputation.html#cb14-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-55"><a href="imputation.html#cb14-55" aria-hidden="true" tabindex="-1"></a><span class="co"># set file location of FRI polygons shape file</span></span>
-<span id="cb14-56"><a href="imputation.html#cb14-56" aria-hidden="true" tabindex="-1"></a>fri <span class="ot">&lt;-</span> <span class="st">&#39;D:/ontario_inventory/romeo/RMF_EFI_layers/Polygons Inventory/RMF_PolygonForest.shp&#39;</span></span>
-<span id="cb14-57"><a href="imputation.html#cb14-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-58"><a href="imputation.html#cb14-58" aria-hidden="true" tabindex="-1"></a><span class="co"># set file location of GRM polygons shape file</span></span>
-<span id="cb14-59"><a href="imputation.html#cb14-59" aria-hidden="true" tabindex="-1"></a>grm <span class="ot">&lt;-</span> <span class="st">&#39;C:/Users/bermane/Desktop/RMF/grm_10_01_05.shp&#39;</span></span>
-<span id="cb14-60"><a href="imputation.html#cb14-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-61"><a href="imputation.html#cb14-61" aria-hidden="true" tabindex="-1"></a><span class="co"># set output folder for files generated</span></span>
-<span id="cb14-62"><a href="imputation.html#cb14-62" aria-hidden="true" tabindex="-1"></a><span class="co"># make sure no &quot;/&quot; at end of folder location!</span></span>
-<span id="cb14-63"><a href="imputation.html#cb14-63" aria-hidden="true" tabindex="-1"></a>out_dir <span class="ot">&lt;-</span> <span class="st">&#39;C:/Users/bermane/Desktop/RMF&#39;</span></span>
-<span id="cb14-64"><a href="imputation.html#cb14-64" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-65"><a href="imputation.html#cb14-65" aria-hidden="true" tabindex="-1"></a><span class="co"># set file location of 2018 VLCE 2.0 landcover data</span></span>
-<span id="cb14-66"><a href="imputation.html#cb14-66" aria-hidden="true" tabindex="-1"></a><span class="co"># using 2018 because it is the year of Romeo ALS acquisition</span></span>
-<span id="cb14-67"><a href="imputation.html#cb14-67" aria-hidden="true" tabindex="-1"></a><span class="co"># can change based on ALS acquisition year</span></span>
-<span id="cb14-68"><a href="imputation.html#cb14-68" aria-hidden="true" tabindex="-1"></a><span class="co"># download here:</span></span>
-<span id="cb14-69"><a href="imputation.html#cb14-69" aria-hidden="true" tabindex="-1"></a><span class="co"># https://opendata.nfis.org/mapserver/nfis-change_eng.html</span></span>
-<span id="cb14-70"><a href="imputation.html#cb14-70" aria-hidden="true" tabindex="-1"></a>lc_f <span class="ot">&lt;-</span> <span class="st">&#39;D:/ontario_inventory/VLCE/CA_forest_VLCE2_2018.tif&#39;</span></span></code></pre></div>
+<span id="cb14-43"><a href="imputation.html#cb14-43" aria-hidden="true" tabindex="-1"></a><span class="co"># set file names for ALS input variables</span></span>
+<span id="cb14-44"><a href="imputation.html#cb14-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-45"><a href="imputation.html#cb14-45" aria-hidden="true" tabindex="-1"></a><span class="co"># first set the imputation X-variables</span></span>
+<span id="cb14-46"><a href="imputation.html#cb14-46" aria-hidden="true" tabindex="-1"></a>lidar_imp <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;avg&#39;</span> <span class="ot">=</span> <span class="st">&#39;D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_avg.tif&#39;</span>,</span>
+<span id="cb14-47"><a href="imputation.html#cb14-47" aria-hidden="true" tabindex="-1"></a>               <span class="st">&#39;rumple&#39;</span> <span class="ot">=</span> <span class="st">&#39;D:/ontario_inventory/romeo/SPL metrics/Z_METRICS_MOSAIC/individual/RMF_RUMPLE_MOSAIC_r_rumple.tif&#39;</span>,</span>
+<span id="cb14-48"><a href="imputation.html#cb14-48" aria-hidden="true" tabindex="-1"></a>               <span class="st">&#39;pcum8&#39;</span> <span class="ot">=</span> <span class="st">&#39;D:/ontario_inventory/romeo/SPL metrics/Z_METRICS_MOSAIC/individual/RMF_Z_METRICS_MOSAIC_zpcum8.tif&#39;</span>,</span>
+<span id="cb14-49"><a href="imputation.html#cb14-49" aria-hidden="true" tabindex="-1"></a>               <span class="st">&#39;sd&#39;</span> <span class="ot">=</span> <span class="st">&#39;D:/ontario_inventory/romeo/SPL metrics/Z_METRICS_MOSAIC/individual/RMF_Z_METRICS_MOSAIC_zsd.tif&#39;</span>,</span>
+<span id="cb14-50"><a href="imputation.html#cb14-50" aria-hidden="true" tabindex="-1"></a>               <span class="st">&#39;b6&#39;</span> <span class="ot">=</span> <span class="st">&#39;D:/ontario_inventory/romeo/Sentinel/red_edge_2.tif&#39;</span>)</span>
+<span id="cb14-51"><a href="imputation.html#cb14-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-52"><a href="imputation.html#cb14-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-53"><a href="imputation.html#cb14-53" aria-hidden="true" tabindex="-1"></a><span class="co"># next set the data screening variables</span></span>
+<span id="cb14-54"><a href="imputation.html#cb14-54" aria-hidden="true" tabindex="-1"></a>lidar_scr <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;p95&#39;</span> <span class="ot">=</span> <span class="st">&#39;D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_p95.tif&#39;</span>,</span>
+<span id="cb14-55"><a href="imputation.html#cb14-55" aria-hidden="true" tabindex="-1"></a>               <span class="st">&#39;cc&#39;</span> <span class="ot">=</span> <span class="st">&#39;D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_2m_cov.tif&#39;</span>)</span>
+<span id="cb14-56"><a href="imputation.html#cb14-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-57"><a href="imputation.html#cb14-57" aria-hidden="true" tabindex="-1"></a><span class="co"># set file location of FRI polygons shape file</span></span>
+<span id="cb14-58"><a href="imputation.html#cb14-58" aria-hidden="true" tabindex="-1"></a>fri <span class="ot">&lt;-</span> <span class="st">&#39;D:/ontario_inventory/romeo/RMF_EFI_layers/Polygons Inventory/RMF_PolygonForest.shp&#39;</span></span>
+<span id="cb14-59"><a href="imputation.html#cb14-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-60"><a href="imputation.html#cb14-60" aria-hidden="true" tabindex="-1"></a><span class="co"># set file location of GRM polygons shape file</span></span>
+<span id="cb14-61"><a href="imputation.html#cb14-61" aria-hidden="true" tabindex="-1"></a>grm <span class="ot">&lt;-</span> <span class="st">&#39;C:/Users/bermane/Desktop/RMF/grm_10_01_05.shp&#39;</span></span>
+<span id="cb14-62"><a href="imputation.html#cb14-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-63"><a href="imputation.html#cb14-63" aria-hidden="true" tabindex="-1"></a><span class="co"># set output folder for files generated</span></span>
+<span id="cb14-64"><a href="imputation.html#cb14-64" aria-hidden="true" tabindex="-1"></a><span class="co"># make sure no &quot;/&quot; at end of folder location!</span></span>
+<span id="cb14-65"><a href="imputation.html#cb14-65" aria-hidden="true" tabindex="-1"></a>out_dir <span class="ot">&lt;-</span> <span class="st">&#39;C:/Users/bermane/Desktop/RMF&#39;</span></span>
+<span id="cb14-66"><a href="imputation.html#cb14-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-67"><a href="imputation.html#cb14-67" aria-hidden="true" tabindex="-1"></a><span class="co"># set file location of 2018 VLCE 2.0 landcover data</span></span>
+<span id="cb14-68"><a href="imputation.html#cb14-68" aria-hidden="true" tabindex="-1"></a><span class="co"># using 2018 because it is the year of Romeo ALS acquisition</span></span>
+<span id="cb14-69"><a href="imputation.html#cb14-69" aria-hidden="true" tabindex="-1"></a><span class="co"># can change based on ALS acquisition year</span></span>
+<span id="cb14-70"><a href="imputation.html#cb14-70" aria-hidden="true" tabindex="-1"></a><span class="co"># download here:</span></span>
+<span id="cb14-71"><a href="imputation.html#cb14-71" aria-hidden="true" tabindex="-1"></a><span class="co"># https://opendata.nfis.org/mapserver/nfis-change_eng.html</span></span>
+<span id="cb14-72"><a href="imputation.html#cb14-72" aria-hidden="true" tabindex="-1"></a>lc_f <span class="ot">&lt;-</span> <span class="st">&#39;D:/ontario_inventory/VLCE/CA_forest_VLCE2_2018.tif&#39;</span></span></code></pre></div>
 </div>
 <div id="imputation55" class="section level2 unnumbered hasAnchor">
 <h2><strong>5.5</strong> Pre-processing: Extract Variables into Polygons<a href="imputation.html#imputation55" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -1091,117 +1095,221 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb22-19"><a href="imputation.html#cb22-19" aria-hidden="true" tabindex="-1"></a><span class="co"># display results</span></span>
 <span id="cb22-20"><a href="imputation.html#cb22-20" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(perf_cast, <span class="at">caption =</span> <span class="st">&quot;Imputation Performance of FRI Forest Stand Polygons&quot;</span>, <span class="at">label =</span> <span class="cn">NA</span>)</span></code></pre></div>
 <table>
-<caption>Imputation Performance of FRI Forest Stand Polygons</caption>
-<colgroup>
-<col width="26%" />
-<col width="12%" />
-<col width="11%" />
-<col width="11%" />
-<col width="15%" />
-<col width="11%" />
-<col width="10%" />
-</colgroup>
+<caption>
+Imputation Performance of FRI Forest Stand Polygons
+</caption>
 <thead>
-<tr class="header">
-<th align="left">variable</th>
-<th align="left">rmsd (yrs)</th>
-<th align="left">mbe (yrs)</th>
-<th align="left">mae (yrs)</th>
-<th align="left">accuracy (%)</th>
-<th align="left">rrmsd (%)</th>
-<th align="left">rmbe (%)</th>
+<tr>
+<th style="text-align:left;">
+variable
+</th>
+<th style="text-align:left;">
+rmsd (yrs)
+</th>
+<th style="text-align:left;">
+mbe (yrs)
+</th>
+<th style="text-align:left;">
+mae (yrs)
+</th>
+<th style="text-align:left;">
+accuracy (%)
+</th>
+<th style="text-align:left;">
+rrmsd (%)
+</th>
+<th style="text-align:left;">
+rmbe (%)
+</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td align="left">age</td>
-<td align="left">23.31</td>
-<td align="left">-0.14</td>
-<td align="left">16.06</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
+<tr>
+<td style="text-align:left;">
+age
+</td>
+<td style="text-align:left;">
+23.31
+</td>
+<td style="text-align:left;">
+-0.14
+</td>
+<td style="text-align:left;">
+16.06
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
 </tr>
-<tr class="even">
-<td align="left">leading species</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left">65.46</td>
-<td align="left"></td>
-<td align="left"></td>
+<tr>
+<td style="text-align:left;">
+leading species
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+65.46
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
 </tr>
-<tr class="odd">
-<td align="left">second species</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left">37.62</td>
-<td align="left"></td>
-<td align="left"></td>
+<tr>
+<td style="text-align:left;">
+second species
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+37.62
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
 </tr>
-<tr class="even">
-<td align="left">three func group class</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left">72.34</td>
-<td align="left"></td>
-<td align="left"></td>
+<tr>
+<td style="text-align:left;">
+three func group class
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+72.34
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
 </tr>
-<tr class="odd">
-<td align="left">five func group class</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left">60.73</td>
-<td align="left"></td>
-<td align="left"></td>
+<tr>
+<td style="text-align:left;">
+five func group class
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+60.73
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
 </tr>
-<tr class="even">
-<td align="left">avg</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left">3.6</td>
-<td align="left">0</td>
+<tr>
+<td style="text-align:left;">
+avg
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+3.6
+</td>
+<td style="text-align:left;">
+0
+</td>
 </tr>
-<tr class="odd">
-<td align="left">rumple</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left">2.54</td>
-<td align="left">0.01</td>
+<tr>
+<td style="text-align:left;">
+rumple
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+2.54
+</td>
+<td style="text-align:left;">
+0.01
+</td>
 </tr>
-<tr class="even">
-<td align="left">pcum8</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left">0.9</td>
-<td align="left">0.13</td>
+<tr>
+<td style="text-align:left;">
+pcum8
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+0.9
+</td>
+<td style="text-align:left;">
+0.13
+</td>
 </tr>
-<tr class="odd">
-<td align="left">sd</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left">3.88</td>
-<td align="left">-0.33</td>
+<tr>
+<td style="text-align:left;">
+sd
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+3.88
+</td>
+<td style="text-align:left;">
+-0.33
+</td>
 </tr>
-<tr class="even">
-<td align="left">b6</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left">2.15</td>
-<td align="left">-0.1</td>
+<tr>
+<td style="text-align:left;">
+b6
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+2.15
+</td>
+<td style="text-align:left;">
+-0.1
+</td>
 </tr>
 </tbody>
 </table>
@@ -1237,57 +1345,130 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb23-23"><a href="imputation.html#cb23-23" aria-hidden="true" tabindex="-1"></a><span class="co"># display results</span></span>
 <span id="cb23-24"><a href="imputation.html#cb23-24" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(accmat_ext <span class="sc">%&gt;%</span> round, <span class="at">caption =</span> <span class="st">&quot;Confusion matrix of imputed vs. observed three functional group classification over FRI polygons. Rows are imputed values and columns are observed values.&quot;</span>, <span class="at">label =</span> <span class="cn">NA</span>)</span></code></pre></div>
 <table>
-<caption>Confusion matrix of imputed vs. observed three functional group classification over FRI polygons. Rows are imputed values and columns are observed values.</caption>
+<caption>
+Confusion matrix of imputed vs. observed three functional group classification over FRI polygons. Rows are imputed values and columns are observed values.
+</caption>
 <thead>
-<tr class="header">
-<th align="left"></th>
-<th align="right">Hardwood</th>
-<th align="right">Mixedwood</th>
-<th align="right">Softwood</th>
-<th align="right">Sum</th>
-<th align="right">Users</th>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Hardwood
+</th>
+<th style="text-align:right;">
+Mixedwood
+</th>
+<th style="text-align:right;">
+Softwood
+</th>
+<th style="text-align:right;">
+Sum
+</th>
+<th style="text-align:right;">
+Users
+</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td align="left">Hardwood</td>
-<td align="right">6651</td>
-<td align="right">2448</td>
-<td align="right">1044</td>
-<td align="right">10143</td>
-<td align="right">66</td>
+<tr>
+<td style="text-align:left;">
+Hardwood
+</td>
+<td style="text-align:right;">
+6651
+</td>
+<td style="text-align:right;">
+2448
+</td>
+<td style="text-align:right;">
+1044
+</td>
+<td style="text-align:right;">
+10143
+</td>
+<td style="text-align:right;">
+66
+</td>
 </tr>
-<tr class="even">
-<td align="left">Mixedwood</td>
-<td align="right">2277</td>
-<td align="right">4426</td>
-<td align="right">2697</td>
-<td align="right">9400</td>
-<td align="right">47</td>
+<tr>
+<td style="text-align:left;">
+Mixedwood
+</td>
+<td style="text-align:right;">
+2277
+</td>
+<td style="text-align:right;">
+4426
+</td>
+<td style="text-align:right;">
+2697
+</td>
+<td style="text-align:right;">
+9400
+</td>
+<td style="text-align:right;">
+47
+</td>
 </tr>
-<tr class="odd">
-<td align="left">Softwood</td>
-<td align="right">1397</td>
-<td align="right">4363</td>
-<td align="right">26134</td>
-<td align="right">31894</td>
-<td align="right">82</td>
+<tr>
+<td style="text-align:left;">
+Softwood
+</td>
+<td style="text-align:right;">
+1397
+</td>
+<td style="text-align:right;">
+4363
+</td>
+<td style="text-align:right;">
+26134
+</td>
+<td style="text-align:right;">
+31894
+</td>
+<td style="text-align:right;">
+82
+</td>
 </tr>
-<tr class="even">
-<td align="left">Sum</td>
-<td align="right">10325</td>
-<td align="right">11237</td>
-<td align="right">29875</td>
-<td align="right">51437</td>
-<td align="right">NA</td>
+<tr>
+<td style="text-align:left;">
+Sum
+</td>
+<td style="text-align:right;">
+10325
+</td>
+<td style="text-align:right;">
+11237
+</td>
+<td style="text-align:right;">
+29875
+</td>
+<td style="text-align:right;">
+51437
+</td>
+<td style="text-align:right;">
+NA
+</td>
 </tr>
-<tr class="odd">
-<td align="left">Producers</td>
-<td align="right">64</td>
-<td align="right">39</td>
-<td align="right">87</td>
-<td align="right">NA</td>
-<td align="right">72</td>
+<tr>
+<td style="text-align:left;">
+Producers
+</td>
+<td style="text-align:right;">
+64
+</td>
+<td style="text-align:right;">
+39
+</td>
+<td style="text-align:right;">
+87
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+72
+</td>
 </tr>
 </tbody>
 </table>
@@ -1317,99 +1498,218 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb24-23"><a href="imputation.html#cb24-23" aria-hidden="true" tabindex="-1"></a><span class="co"># display results</span></span>
 <span id="cb24-24"><a href="imputation.html#cb24-24" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(accmat_ext <span class="sc">%&gt;%</span> round, <span class="at">caption =</span> <span class="st">&quot;Confusion matrix of imputed vs. observed five functional group classification over FRI polygons. Rows are imputed values and columns are observed values.&quot;</span>, <span class="at">label =</span> <span class="cn">NA</span>)</span></code></pre></div>
 <table>
-<caption>Confusion matrix of imputed vs. observed five functional group classification over FRI polygons. Rows are imputed values and columns are observed values.</caption>
-<colgroup>
-<col width="20%" />
-<col width="20%" />
-<col width="8%" />
-<col width="17%" />
-<col width="13%" />
-<col width="8%" />
-<col width="5%" />
-<col width="5%" />
-</colgroup>
+<caption>
+Confusion matrix of imputed vs. observed five functional group classification over FRI polygons. Rows are imputed values and columns are observed values.
+</caption>
 <thead>
-<tr class="header">
-<th align="left"></th>
-<th align="right">Black Spruce Dominated</th>
-<th align="right">Hardwood</th>
-<th align="right">Jack Pine Dominated</th>
-<th align="right">Mixed Conifers</th>
-<th align="right">Mixedwood</th>
-<th align="right">Sum</th>
-<th align="right">Users</th>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Black Spruce Dominated
+</th>
+<th style="text-align:right;">
+Hardwood
+</th>
+<th style="text-align:right;">
+Jack Pine Dominated
+</th>
+<th style="text-align:right;">
+Mixed Conifers
+</th>
+<th style="text-align:right;">
+Mixedwood
+</th>
+<th style="text-align:right;">
+Sum
+</th>
+<th style="text-align:right;">
+Users
+</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td align="left">Black Spruce Dominated</td>
-<td align="right">14832</td>
-<td align="right">575</td>
-<td align="right">618</td>
-<td align="right">2623</td>
-<td align="right">2664</td>
-<td align="right">21312</td>
-<td align="right">70</td>
+<tr>
+<td style="text-align:left;">
+Black Spruce Dominated
+</td>
+<td style="text-align:right;">
+14832
+</td>
+<td style="text-align:right;">
+575
+</td>
+<td style="text-align:right;">
+618
+</td>
+<td style="text-align:right;">
+2623
+</td>
+<td style="text-align:right;">
+2664
+</td>
+<td style="text-align:right;">
+21312
+</td>
+<td style="text-align:right;">
+70
+</td>
 </tr>
-<tr class="even">
-<td align="left">Hardwood</td>
-<td align="right">480</td>
-<td align="right">6744</td>
-<td align="right">323</td>
-<td align="right">283</td>
-<td align="right">2618</td>
-<td align="right">10448</td>
-<td align="right">65</td>
+<tr>
+<td style="text-align:left;">
+Hardwood
+</td>
+<td style="text-align:right;">
+480
+</td>
+<td style="text-align:right;">
+6744
+</td>
+<td style="text-align:right;">
+323
+</td>
+<td style="text-align:right;">
+283
+</td>
+<td style="text-align:right;">
+2618
+</td>
+<td style="text-align:right;">
+10448
+</td>
+<td style="text-align:right;">
+65
+</td>
 </tr>
-<tr class="odd">
-<td align="left">Jack Pine Dominated</td>
-<td align="right">366</td>
-<td align="right">218</td>
-<td align="right">2481</td>
-<td align="right">178</td>
-<td align="right">492</td>
-<td align="right">3735</td>
-<td align="right">66</td>
+<tr>
+<td style="text-align:left;">
+Jack Pine Dominated
+</td>
+<td style="text-align:right;">
+366
+</td>
+<td style="text-align:right;">
+218
+</td>
+<td style="text-align:right;">
+2481
+</td>
+<td style="text-align:right;">
+178
+</td>
+<td style="text-align:right;">
+492
+</td>
+<td style="text-align:right;">
+3735
+</td>
+<td style="text-align:right;">
+66
+</td>
 </tr>
-<tr class="even">
-<td align="left">Mixed Conifers</td>
-<td align="right">1325</td>
-<td align="right">186</td>
-<td align="right">112</td>
-<td align="right">1326</td>
-<td align="right">765</td>
-<td align="right">3714</td>
-<td align="right">36</td>
+<tr>
+<td style="text-align:left;">
+Mixed Conifers
+</td>
+<td style="text-align:right;">
+1325
+</td>
+<td style="text-align:right;">
+186
+</td>
+<td style="text-align:right;">
+112
+</td>
+<td style="text-align:right;">
+1326
+</td>
+<td style="text-align:right;">
+765
+</td>
+<td style="text-align:right;">
+3714
+</td>
+<td style="text-align:right;">
+36
+</td>
 </tr>
-<tr class="odd">
-<td align="left">Mixedwood</td>
-<td align="right">2064</td>
-<td align="right">2602</td>
-<td align="right">539</td>
-<td align="right">1169</td>
-<td align="right">5854</td>
-<td align="right">12228</td>
-<td align="right">48</td>
+<tr>
+<td style="text-align:left;">
+Mixedwood
+</td>
+<td style="text-align:right;">
+2064
+</td>
+<td style="text-align:right;">
+2602
+</td>
+<td style="text-align:right;">
+539
+</td>
+<td style="text-align:right;">
+1169
+</td>
+<td style="text-align:right;">
+5854
+</td>
+<td style="text-align:right;">
+12228
+</td>
+<td style="text-align:right;">
+48
+</td>
 </tr>
-<tr class="even">
-<td align="left">Sum</td>
-<td align="right">19067</td>
-<td align="right">10325</td>
-<td align="right">4073</td>
-<td align="right">5579</td>
-<td align="right">12393</td>
-<td align="right">51437</td>
-<td align="right">NA</td>
+<tr>
+<td style="text-align:left;">
+Sum
+</td>
+<td style="text-align:right;">
+19067
+</td>
+<td style="text-align:right;">
+10325
+</td>
+<td style="text-align:right;">
+4073
+</td>
+<td style="text-align:right;">
+5579
+</td>
+<td style="text-align:right;">
+12393
+</td>
+<td style="text-align:right;">
+51437
+</td>
+<td style="text-align:right;">
+NA
+</td>
 </tr>
-<tr class="odd">
-<td align="left">Producers</td>
-<td align="right">78</td>
-<td align="right">65</td>
-<td align="right">61</td>
-<td align="right">24</td>
-<td align="right">47</td>
-<td align="right">NA</td>
-<td align="right">61</td>
+<tr>
+<td style="text-align:left;">
+Producers
+</td>
+<td style="text-align:right;">
+78
+</td>
+<td style="text-align:right;">
+65
+</td>
+<td style="text-align:right;">
+61
+</td>
+<td style="text-align:right;">
+24
+</td>
+<td style="text-align:right;">
+47
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+61
+</td>
 </tr>
 </tbody>
 </table>
@@ -1448,391 +1748,1021 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb25-32"><a href="imputation.html#cb25-32" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(accmat_ext) <span class="ot">&lt;-</span> <span class="st">&quot;table&quot;</span></span>
 <span id="cb25-33"><a href="imputation.html#cb25-33" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb25-34"><a href="imputation.html#cb25-34" aria-hidden="true" tabindex="-1"></a><span class="co"># display results</span></span>
-<span id="cb25-35"><a href="imputation.html#cb25-35" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(accmat_ext <span class="sc">%&gt;%</span> round, <span class="at">caption =</span> <span class="st">&quot;Confusion matrix of imputed vs. observed leading species over FRI polygons. Rows are imputed values and columns are observed values.&quot;</span>, <span class="at">label =</span> <span class="cn">NA</span>)</span></code></pre></div>
-<table>
-<caption>Confusion matrix of imputed vs. observed leading species over FRI polygons. Rows are imputed values and columns are observed values.</caption>
-<colgroup>
-<col width="12%" />
-<col width="3%" />
-<col width="4%" />
-<col width="6%" />
-<col width="6%" />
-<col width="4%" />
-<col width="3%" />
-<col width="3%" />
-<col width="6%" />
-<col width="6%" />
-<col width="3%" />
-<col width="6%" />
-<col width="3%" />
-<col width="7%" />
-<col width="4%" />
-<col width="3%" />
-<col width="7%" />
-<col width="7%" />
-</colgroup>
+<span id="cb25-35"><a href="imputation.html#cb25-35" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(accmat_ext <span class="sc">%&gt;%</span> round, <span class="at">caption =</span> <span class="st">&quot;Confusion matrix of imputed vs. observed leading species over FRI polygons. Rows are imputed values and columns are observed values.&quot;</span>, <span class="at">label =</span> <span class="cn">NA</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb25-36"><a href="imputation.html#cb25-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options=</span><span class="st">&quot;scale_down&quot;</span>)</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+Confusion matrix of imputed vs. observed leading species over FRI polygons. Rows are imputed values and columns are observed values.
+</caption>
 <thead>
-<tr class="header">
-<th align="left"></th>
-<th align="right">AB</th>
-<th align="right">BF</th>
-<th align="right">BW</th>
-<th align="right">CE</th>
-<th align="right">LA</th>
-<th align="right">MR</th>
-<th align="right">PB</th>
-<th align="right">PJ</th>
-<th align="right">PO</th>
-<th align="right">PR</th>
-<th align="right">PT</th>
-<th align="right">PW</th>
-<th align="right">SB</th>
-<th align="right">SW</th>
-<th align="right">SX</th>
-<th align="right">Sum</th>
-<th align="right">Users</th>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+AB
+</th>
+<th style="text-align:right;">
+BF
+</th>
+<th style="text-align:right;">
+BW
+</th>
+<th style="text-align:right;">
+CE
+</th>
+<th style="text-align:right;">
+LA
+</th>
+<th style="text-align:right;">
+MR
+</th>
+<th style="text-align:right;">
+PB
+</th>
+<th style="text-align:right;">
+PJ
+</th>
+<th style="text-align:right;">
+PO
+</th>
+<th style="text-align:right;">
+PR
+</th>
+<th style="text-align:right;">
+PT
+</th>
+<th style="text-align:right;">
+PW
+</th>
+<th style="text-align:right;">
+SB
+</th>
+<th style="text-align:right;">
+SW
+</th>
+<th style="text-align:right;">
+SX
+</th>
+<th style="text-align:right;">
+Sum
+</th>
+<th style="text-align:right;">
+Users
+</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td align="left">AB</td>
-<td align="right">6</td>
-<td align="right">0</td>
-<td align="right">4</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">2</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">12</td>
-<td align="right">50</td>
+<tr>
+<td style="text-align:left;">
+AB
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+50
+</td>
 </tr>
-<tr class="even">
-<td align="left">BF</td>
-<td align="right">0</td>
-<td align="right">31</td>
-<td align="right">35</td>
-<td align="right">11</td>
-<td align="right">6</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">7</td>
-<td align="right">15</td>
-<td align="right">1</td>
-<td align="right">7</td>
-<td align="right">0</td>
-<td align="right">67</td>
-<td align="right">12</td>
-<td align="right">0</td>
-<td align="right">192</td>
-<td align="right">16</td>
+<tr>
+<td style="text-align:left;">
+BF
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+31
+</td>
+<td style="text-align:right;">
+35
+</td>
+<td style="text-align:right;">
+11
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+15
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+67
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+192
+</td>
+<td style="text-align:right;">
+16
+</td>
 </tr>
-<tr class="odd">
-<td align="left">BW</td>
-<td align="right">10</td>
-<td align="right">86</td>
-<td align="right">4248</td>
-<td align="right">320</td>
-<td align="right">33</td>
-<td align="right">0</td>
-<td align="right">15</td>
-<td align="right">228</td>
-<td align="right">401</td>
-<td align="right">1</td>
-<td align="right">1165</td>
-<td align="right">26</td>
-<td align="right">1333</td>
-<td align="right">166</td>
-<td align="right">0</td>
-<td align="right">8032</td>
-<td align="right">53</td>
+<tr>
+<td style="text-align:left;">
+BW
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+86
+</td>
+<td style="text-align:right;">
+4248
+</td>
+<td style="text-align:right;">
+320
+</td>
+<td style="text-align:right;">
+33
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+15
+</td>
+<td style="text-align:right;">
+228
+</td>
+<td style="text-align:right;">
+401
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1165
+</td>
+<td style="text-align:right;">
+26
+</td>
+<td style="text-align:right;">
+1333
+</td>
+<td style="text-align:right;">
+166
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+8032
+</td>
+<td style="text-align:right;">
+53
+</td>
 </tr>
-<tr class="even">
-<td align="left">CE</td>
-<td align="right">0</td>
-<td align="right">21</td>
-<td align="right">166</td>
-<td align="right">428</td>
-<td align="right">43</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">18</td>
-<td align="right">18</td>
-<td align="right">0</td>
-<td align="right">45</td>
-<td align="right">0</td>
-<td align="right">471</td>
-<td align="right">10</td>
-<td align="right">1</td>
-<td align="right">1221</td>
-<td align="right">35</td>
+<tr>
+<td style="text-align:left;">
+CE
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+21
+</td>
+<td style="text-align:right;">
+166
+</td>
+<td style="text-align:right;">
+428
+</td>
+<td style="text-align:right;">
+43
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+18
+</td>
+<td style="text-align:right;">
+18
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+45
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+471
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1221
+</td>
+<td style="text-align:right;">
+35
+</td>
 </tr>
-<tr class="odd">
-<td align="left">LA</td>
-<td align="right">0</td>
-<td align="right">2</td>
-<td align="right">16</td>
-<td align="right">19</td>
-<td align="right">57</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">11</td>
-<td align="right">9</td>
-<td align="right">0</td>
-<td align="right">15</td>
-<td align="right">0</td>
-<td align="right">165</td>
-<td align="right">5</td>
-<td align="right">0</td>
-<td align="right">299</td>
-<td align="right">19</td>
+<tr>
+<td style="text-align:left;">
+LA
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+16
+</td>
+<td style="text-align:right;">
+19
+</td>
+<td style="text-align:right;">
+57
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+11
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+15
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+165
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+299
+</td>
+<td style="text-align:right;">
+19
+</td>
 </tr>
-<tr class="even">
-<td align="left">MR</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">NaN</td>
+<tr>
+<td style="text-align:left;">
+MR
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+NaN
+</td>
 </tr>
-<tr class="odd">
-<td align="left">PB</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">5</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">4</td>
-<td align="right">0</td>
-<td align="right">2</td>
-<td align="right">0</td>
-<td align="right">9</td>
-<td align="right">0</td>
-<td align="right">4</td>
-<td align="right">2</td>
-<td align="right">0</td>
-<td align="right">27</td>
-<td align="right">15</td>
+<tr>
+<td style="text-align:left;">
+PB
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+27
+</td>
+<td style="text-align:right;">
+15
+</td>
 </tr>
-<tr class="even">
-<td align="left">PJ</td>
-<td align="right">2</td>
-<td align="right">8</td>
-<td align="right">185</td>
-<td align="right">18</td>
-<td align="right">43</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">3111</td>
-<td align="right">92</td>
-<td align="right">6</td>
-<td align="right">449</td>
-<td align="right">1</td>
-<td align="right">630</td>
-<td align="right">46</td>
-<td align="right">0</td>
-<td align="right">4591</td>
-<td align="right">68</td>
+<tr>
+<td style="text-align:left;">
+PJ
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+185
+</td>
+<td style="text-align:right;">
+18
+</td>
+<td style="text-align:right;">
+43
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+3111
+</td>
+<td style="text-align:right;">
+92
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+449
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+630
+</td>
+<td style="text-align:right;">
+46
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4591
+</td>
+<td style="text-align:right;">
+68
+</td>
 </tr>
-<tr class="odd">
-<td align="left">PO</td>
-<td align="right">5</td>
-<td align="right">21</td>
-<td align="right">248</td>
-<td align="right">17</td>
-<td align="right">16</td>
-<td align="right">0</td>
-<td align="right">5</td>
-<td align="right">88</td>
-<td align="right">876</td>
-<td align="right">1</td>
-<td align="right">290</td>
-<td align="right">4</td>
-<td align="right">155</td>
-<td align="right">21</td>
-<td align="right">0</td>
-<td align="right">1747</td>
-<td align="right">50</td>
+<tr>
+<td style="text-align:left;">
+PO
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+21
+</td>
+<td style="text-align:right;">
+248
+</td>
+<td style="text-align:right;">
+17
+</td>
+<td style="text-align:right;">
+16
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+88
+</td>
+<td style="text-align:right;">
+876
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+290
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+155
+</td>
+<td style="text-align:right;">
+21
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1747
+</td>
+<td style="text-align:right;">
+50
+</td>
 </tr>
-<tr class="even">
-<td align="left">PR</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">2</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">4</td>
-<td align="right">0</td>
+<tr>
+<td style="text-align:left;">
+PR
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0
+</td>
 </tr>
-<tr class="odd">
-<td align="left">PT</td>
-<td align="right">5</td>
-<td align="right">28</td>
-<td align="right">1042</td>
-<td align="right">64</td>
-<td align="right">23</td>
-<td align="right">0</td>
-<td align="right">52</td>
-<td align="right">443</td>
-<td align="right">346</td>
-<td align="right">1</td>
-<td align="right">3594</td>
-<td align="right">7</td>
-<td align="right">715</td>
-<td align="right">69</td>
-<td align="right">0</td>
-<td align="right">6389</td>
-<td align="right">56</td>
+<tr>
+<td style="text-align:left;">
+PT
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+28
+</td>
+<td style="text-align:right;">
+1042
+</td>
+<td style="text-align:right;">
+64
+</td>
+<td style="text-align:right;">
+23
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+52
+</td>
+<td style="text-align:right;">
+443
+</td>
+<td style="text-align:right;">
+346
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3594
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+715
+</td>
+<td style="text-align:right;">
+69
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+6389
+</td>
+<td style="text-align:right;">
+56
+</td>
 </tr>
-<tr class="even">
-<td align="left">PW</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">2</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">5</td>
-<td align="right">40</td>
+<tr>
+<td style="text-align:left;">
+PW
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+40
+</td>
 </tr>
-<tr class="odd">
-<td align="left">SB</td>
-<td align="right">6</td>
-<td align="right">393</td>
-<td align="right">1815</td>
-<td align="right">1316</td>
-<td align="right">759</td>
-<td align="right">1</td>
-<td align="right">19</td>
-<td align="right">1155</td>
-<td align="right">277</td>
-<td align="right">2</td>
-<td align="right">1106</td>
-<td align="right">14</td>
-<td align="right">21259</td>
-<td align="right">506</td>
-<td align="right">1</td>
-<td align="right">28629</td>
-<td align="right">74</td>
+<tr>
+<td style="text-align:left;">
+SB
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+393
+</td>
+<td style="text-align:right;">
+1815
+</td>
+<td style="text-align:right;">
+1316
+</td>
+<td style="text-align:right;">
+759
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+19
+</td>
+<td style="text-align:right;">
+1155
+</td>
+<td style="text-align:right;">
+277
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+1106
+</td>
+<td style="text-align:right;">
+14
+</td>
+<td style="text-align:right;">
+21259
+</td>
+<td style="text-align:right;">
+506
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+28629
+</td>
+<td style="text-align:right;">
+74
+</td>
 </tr>
-<tr class="even">
-<td align="left">SW</td>
-<td align="right">0</td>
-<td align="right">10</td>
-<td align="right">50</td>
-<td align="right">3</td>
-<td align="right">4</td>
-<td align="right">0</td>
-<td align="right">3</td>
-<td align="right">22</td>
-<td align="right">10</td>
-<td align="right">0</td>
-<td align="right">33</td>
-<td align="right">2</td>
-<td align="right">96</td>
-<td align="right">56</td>
-<td align="right">0</td>
-<td align="right">289</td>
-<td align="right">19</td>
+<tr>
+<td style="text-align:left;">
+SW
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+22
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+33
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+96
+</td>
+<td style="text-align:right;">
+56
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+289
+</td>
+<td style="text-align:right;">
+19
+</td>
 </tr>
-<tr class="odd">
-<td align="left">SX</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">NaN</td>
+<tr>
+<td style="text-align:left;">
+SX
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+NaN
+</td>
 </tr>
-<tr class="even">
-<td align="left">Sum</td>
-<td align="right">34</td>
-<td align="right">601</td>
-<td align="right">7816</td>
-<td align="right">2196</td>
-<td align="right">984</td>
-<td align="right">1</td>
-<td align="right">98</td>
-<td align="right">5083</td>
-<td align="right">2047</td>
-<td align="right">12</td>
-<td align="right">6713</td>
-<td align="right">56</td>
-<td align="right">24900</td>
-<td align="right">894</td>
-<td align="right">2</td>
-<td align="right">51437</td>
-<td align="right">NA</td>
+<tr>
+<td style="text-align:left;">
+Sum
+</td>
+<td style="text-align:right;">
+34
+</td>
+<td style="text-align:right;">
+601
+</td>
+<td style="text-align:right;">
+7816
+</td>
+<td style="text-align:right;">
+2196
+</td>
+<td style="text-align:right;">
+984
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+98
+</td>
+<td style="text-align:right;">
+5083
+</td>
+<td style="text-align:right;">
+2047
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+6713
+</td>
+<td style="text-align:right;">
+56
+</td>
+<td style="text-align:right;">
+24900
+</td>
+<td style="text-align:right;">
+894
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+51437
+</td>
+<td style="text-align:right;">
+NA
+</td>
 </tr>
-<tr class="odd">
-<td align="left">Producers</td>
-<td align="right">18</td>
-<td align="right">5</td>
-<td align="right">54</td>
-<td align="right">19</td>
-<td align="right">6</td>
-<td align="right">0</td>
-<td align="right">4</td>
-<td align="right">61</td>
-<td align="right">43</td>
-<td align="right">0</td>
-<td align="right">54</td>
-<td align="right">4</td>
-<td align="right">85</td>
-<td align="right">6</td>
-<td align="right">0</td>
-<td align="right">NA</td>
-<td align="right">65</td>
+<tr>
+<td style="text-align:left;">
+Producers
+</td>
+<td style="text-align:right;">
+18
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+54
+</td>
+<td style="text-align:right;">
+19
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+61
+</td>
+<td style="text-align:right;">
+43
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+54
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+85
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+65
+</td>
 </tr>
 </tbody>
 </table>
@@ -1913,7 +2843,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="imputation511" class="section level2 unnumbered hasAnchor">
 <h2><strong>5.11</strong> Results: Imputation X-Variable Performance<a href="imputation.html#imputation511" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Now having run the imputation and added the imputed attributes to the GRM polygon data, we can explore the results. We start by looking at the relative root mean squared difference and relative mean bias error of the X-variables used in the algorithm.</p>
+<p>Now having run the imputation and added the imputed attributes to the GRM polygon data, we can explore the results. We start by looking at the relative root mean squared difference (RRMSD) and relative mean bias error (RMBE) of the X-variables used in the algorithm.</p>
 <div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="imputation.html#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate performance across imputation x-variables</span></span>
 <span id="cb27-2"><a href="imputation.html#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="fu">seq_along</span>(vars)){</span>
 <span id="cb27-3"><a href="imputation.html#cb27-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(i <span class="sc">==</span> <span class="dv">1</span>){</span>
@@ -1949,39 +2879,77 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb27-33"><a href="imputation.html#cb27-33" aria-hidden="true" tabindex="-1"></a><span class="co"># display results of imputation rmsd</span></span>
 <span id="cb27-34"><a href="imputation.html#cb27-34" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(perf_cast, <span class="at">caption =</span> <span class="st">&quot;Imputation X-Variable Performance between FRI and GRM Forest Stand Polygons&quot;</span>, <span class="at">label =</span> <span class="cn">NA</span>)</span></code></pre></div>
 <table>
-<caption>Imputation X-Variable Performance between FRI and GRM Forest Stand Polygons</caption>
+<caption>
+Imputation X-Variable Performance between FRI and GRM Forest Stand Polygons
+</caption>
 <thead>
-<tr class="header">
-<th align="left">variable</th>
-<th align="right">rrmsd (%)</th>
-<th align="right">rmbe (%)</th>
+<tr>
+<th style="text-align:left;">
+variable
+</th>
+<th style="text-align:right;">
+rrmsd (%)
+</th>
+<th style="text-align:right;">
+rmbe (%)
+</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td align="left">avg</td>
-<td align="right">3.82</td>
-<td align="right">-0.04</td>
+<tr>
+<td style="text-align:left;">
+avg
+</td>
+<td style="text-align:right;">
+3.82
+</td>
+<td style="text-align:right;">
+-0.04
+</td>
 </tr>
-<tr class="even">
-<td align="left">rumple</td>
-<td align="right">2.71</td>
-<td align="right">0.09</td>
+<tr>
+<td style="text-align:left;">
+rumple
+</td>
+<td style="text-align:right;">
+2.71
+</td>
+<td style="text-align:right;">
+0.09
+</td>
 </tr>
-<tr class="odd">
-<td align="left">pcum8</td>
-<td align="right">0.88</td>
-<td align="right">0.12</td>
+<tr>
+<td style="text-align:left;">
+pcum8
+</td>
+<td style="text-align:right;">
+0.88
+</td>
+<td style="text-align:right;">
+0.12
+</td>
 </tr>
-<tr class="even">
-<td align="left">sd</td>
-<td align="right">4.16</td>
-<td align="right">-0.40</td>
+<tr>
+<td style="text-align:left;">
+sd
+</td>
+<td style="text-align:right;">
+4.16
+</td>
+<td style="text-align:right;">
+-0.40
+</td>
 </tr>
-<tr class="odd">
-<td align="left">b6</td>
-<td align="right">2.08</td>
-<td align="right">-0.16</td>
+<tr>
+<td style="text-align:left;">
+b6
+</td>
+<td style="text-align:right;">
+2.08
+</td>
+<td style="text-align:right;">
+-0.16
+</td>
 </tr>
 </tbody>
 </table>
@@ -2045,7 +3013,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb28-52"><a href="imputation.html#cb28-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span>
 <span id="cb28-53"><a href="imputation.html#cb28-53" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb28-54"><a href="imputation.html#cb28-54" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(p1, p2, <span class="at">ncol =</span> <span class="dv">1</span>)</span></code></pre></div>
-<p><img src="05-imputation_files/figure-html/imputationp5121-1.png" width="1728" /></p>
+<p><img src="05-imputation_files/figure-html/imputationp5121-1.png" width="1152" /></p>
 <p>Imputed age values show a similar spatial distribution to observed age values at a broad scale. Of course, the values should be scrutinized on a fine scale in specific areas. This task is much easier to do in a GIS software using the output shapefiles.</p>
 <p>We next generate density plots of stand age.</p>
 <div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="imputation.html#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># density plots of age</span></span>
@@ -2104,12 +3072,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb30-18"><a href="imputation.html#cb30-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span>
 <span id="cb30-19"><a href="imputation.html#cb30-19" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb30-20"><a href="imputation.html#cb30-20" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(p1, p2, <span class="at">ncol =</span> <span class="dv">1</span>)</span></code></pre></div>
-<p><img src="05-imputation_files/figure-html/imputationp5131-1.png" width="1728" /></p>
+<p><img src="05-imputation_files/figure-html/imputationp5131-1.png" width="1152" /></p>
 <p>We can observe a similar distribution of species classes.</p>
 <p>Five functional group classification:</p>
 <div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="imputation.html#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># plot five func group classification</span></span>
 <span id="cb31-2"><a href="imputation.html#cb31-2" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(grm_sf) <span class="sc">+</span></span>
-<span id="cb31-3"><a href="imputation.html#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">fill =</span> class5), <span class="at">linewidth =</span> <span class="fl">0.05</span>) <span class="sc">+</span></span>
+<span id="cb31-3"><a href="imputation.html#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">fill =</span> class5), <span class="at">linewidth =</span> <span class="fl">0.01</span>) <span class="sc">+</span></span>
 <span id="cb31-4"><a href="imputation.html#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_sf</span>() <span class="sc">+</span></span>
 <span id="cb31-5"><a href="imputation.html#cb31-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">&#39;#ccbb44&#39;</span>, <span class="st">&#39;#228833&#39;</span>, <span class="st">&#39;#4477aa&#39;</span>,</span>
 <span id="cb31-6"><a href="imputation.html#cb31-6" aria-hidden="true" tabindex="-1"></a>                      <span class="st">&#39;#ee6677&#39;</span>, <span class="st">&#39;#aa3377&#39;</span>), </span>
@@ -2119,7 +3087,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb31-10"><a href="imputation.html#cb31-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span>
 <span id="cb31-11"><a href="imputation.html#cb31-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb31-12"><a href="imputation.html#cb31-12" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(fri_sf) <span class="sc">+</span></span>
-<span id="cb31-13"><a href="imputation.html#cb31-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">fill =</span> class5), <span class="at">linewidth =</span> <span class="fl">0.05</span>) <span class="sc">+</span></span>
+<span id="cb31-13"><a href="imputation.html#cb31-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">fill =</span> class5), <span class="at">linewidth =</span> <span class="fl">0.01</span>) <span class="sc">+</span></span>
 <span id="cb31-14"><a href="imputation.html#cb31-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_sf</span>() <span class="sc">+</span></span>
 <span id="cb31-15"><a href="imputation.html#cb31-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">&#39;#ccbb44&#39;</span>, <span class="st">&#39;#228833&#39;</span>, <span class="st">&#39;#4477aa&#39;</span>,</span>
 <span id="cb31-16"><a href="imputation.html#cb31-16" aria-hidden="true" tabindex="-1"></a>                      <span class="st">&#39;#ee6677&#39;</span>, <span class="st">&#39;#aa3377&#39;</span>), </span>
@@ -2129,7 +3097,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb31-20"><a href="imputation.html#cb31-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span>
 <span id="cb31-21"><a href="imputation.html#cb31-21" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb31-22"><a href="imputation.html#cb31-22" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(p1, p2, <span class="at">ncol =</span> <span class="dv">1</span>)</span></code></pre></div>
-<p><img src="05-imputation_files/figure-html/imputationp5132-1.png" width="1728" /></p>
+<p><img src="05-imputation_files/figure-html/imputationp5132-1.png" width="1152" /></p>
 <p>Overall distribution of three functional group classification:</p>
 <div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="imputation.html#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create data frame for GRM 3 classes</span></span>
 <span id="cb32-2"><a href="imputation.html#cb32-2" aria-hidden="true" tabindex="-1"></a>dat_grm_c3 <span class="ot">&lt;-</span> dat_grm <span class="sc">%&gt;%</span> </span>
@@ -2235,7 +3203,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="imputation516" class="section level2 unnumbered hasAnchor">
 <h2><strong>5.16</strong> Caveats<a href="imputation.html#imputation516" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>We only used ALS variables derived directly from the point cloud, as in our performance analysis these variables performed slightly better than EFI attributes modelled using an area-based approach. That being said, the performance difference was minimal, as many variables are highly correlated and thus interchangable. In terms of number of X-variables used in imputation, our performance analysis showed a small difference between n = 5 and n = 7. We stuck with n = 7 that performed slightly better. N = 3 performed much poorer. We used k = 5 as it performed better than k = 3 and k = 1 yet still resulted in an adequate distribution of variables (higher values of k lead to less variability in the imputed attributes).</p>
-<p>Although we compared imputed and observed values across the FRI data, we were limited in our ability to quantify error in relation to ground truth. Little work has investigated the accuracy of FRI species and age attributes. Accuracy depends on the complexity of the forest ecosystem and interpretation procedures (Tompalski et al., 2021). Thus Implications will vary across areas, and also based on harvesting and management priorities.</p>
+<p>Although we compared imputed and observed values across the FRI data, we were limited in our ability to quantify error in relation to ground truth. Little work has investigated the accuracy of FRI species and age attributes. Accuracy depends on the complexity of the forest ecosystem and interpretation procedures (Tompalski et al., 2021). Thus implications will vary across areas, and also based on harvesting and management priorities.</p>
 <p>Across the RMF we found similar distributions of age and species between imputed and observed values, even with the GRM data containing ~70% more polygons. Overall distributions are important for forest planning and can even out across the landscape even if individual forest stands do not match imputed and observed values (Thompson et al., 2007).</p>
 </div>
 <div id="imputation517" class="section level2 unnumbered hasAnchor">

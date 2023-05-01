@@ -19,7 +19,8 @@ Now that we have walked through the segmentation and imputation processes, we ca
 #                    'berryFunctions',
 #                    'lwgeom',
 #                    'magrittr',
-#                    'gridExtra'))
+#                    'gridExtra',
+#                    'knitr'))
 
 # make sure to have OTB installed from here:
 # https://www.orfeo-toolbox.org/
@@ -38,6 +39,7 @@ library(berryFunctions)
 library(lwgeom)
 library(magrittr)
 library(gridExtra)
+library(knitr)
 
 ####################################
 ### SET CODE AND FILE PARAMETERS ###
@@ -768,6 +770,8 @@ names(t1) <- c('Dataset', "Min Ha", 'Max Ha', "Mean Ha",
 knitr::kable(t1, caption = "Table 1: Polygon Size Stats", label = NA)
 ```
 
+The FSF is much larger than the RMF, with over twice as many polygons. The mean polygon size is around ~5 Ha for both the GRM polygons and the FRI, but the median polygon size is much smaller in the FRI. This tells us that in the FSF FRI there are more small polygons, but also a number of polygons with a large size, compared to GRM segmentation.
+
 Area and perimeter:
 
 ```{r, fsf6122, results='asis', message=FALSE, warning=FALSE, fig.width=18, fig.height=12}
@@ -782,6 +786,8 @@ names(t2) <- c("Dataset", "Mean Area (Ha)", "SE Area", "SD Area",
 knitr::kable(t2, caption = "Table 2: Polygon Area and Perimeter Stats", label = NA)
 ```
 
+GRM mean area and perimeter are smaller than the FRI, with less variability.
+
 Shape index:
 
 ```{r, fsf6123, results='asis', message=FALSE, warning=FALSE, fig.width=18, fig.height=12}
@@ -790,6 +796,8 @@ t3 <- as_tibble(df[, c(1, 16:18)])
 names(t3) <- c("Dataset", "Mean Shape Index", "SE Shape Index", "SD Shape Index")
 knitr::kable(t3, caption = "Table 3: Polygon Shape Index Stats", label = NA)
 ```
+
+GRM polygons are more compact.
 
 R2:
 
@@ -804,6 +812,8 @@ names(t4) <- c('Dataset', 'R2 P95', 'R2 Can Cov', 'R2 Coeff Var', 'R2 Overall')
 knitr::kable(t4, caption = "Table 4: Polygon R2 Stats", label = NA)
 ```
 
+GRM polygons have an overall R2 value of 0.88 compared to 0.80 from the FRI.
+
 ### **6.1.3** Results: Distribution Plots {-#fsf613}
 
 Polygon size:
@@ -813,7 +823,7 @@ Polygon size:
 g1 <- ggplot(data.frame(nbPixels = p2$nbPixels / 25), aes(x = nbPixels)) +
   geom_density(fill = 'grey') +
   xlim(c(0, 500/25)) +
-  ylim(c(0, 0.20)) +
+  ylim(c(0, 0.60)) +
   geom_vline(aes(xintercept = median(nbPixels)),
              linetype = "dashed",
              linewidth = 0.6) +
@@ -827,7 +837,7 @@ g1 <- ggplot(data.frame(nbPixels = p2$nbPixels / 25), aes(x = nbPixels)) +
 g2 <- ggplot(data.frame(nbPixels = p2fri$nbPixels / 25), aes(x = nbPixels)) +
   geom_density(fill = 'grey') +
   xlim(c(0, 500/25)) +
-  ylim(c(0, 0.20)) +
+  ylim(c(0, 0.60)) +
   geom_vline(aes(xintercept = median(nbPixels)),
              linetype = "dashed",
              linewidth = 0.6) +
@@ -840,6 +850,8 @@ g2 <- ggplot(data.frame(nbPixels = p2fri$nbPixels / 25), aes(x = nbPixels)) +
 # plot together
 grid.arrange(g1, g2)
 ```
+
+The density plots of polygon size give us a good indication of how the datasets differ. GRM polygons have a much larger density of polygons in the ~2-6 Ha range, whereas the FRI has a large number of small polygons, and also a fatter tail of ~10-20 Ha polygons.
 
 Shape index:
 
@@ -876,6 +888,8 @@ g2 <- ggplot(data.frame(msi = as.numeric(p2fri$msi)), aes(x = msi)) +
 grid.arrange(g1, g2)
 ```
 
+We can see the distribution of polygon shape is more compact among GRM polygons. Remember that we are using the same GRM algorithm parameters as were used in segmenting the RMF. These parameters can be manipulated to meet the needs of various forested areas with different forest characteristics.
+
 ## **6.2** Imputation Over FRI {-#fsf62}
 
 ### **6.2.1** Run Algorithm {-#fsf621}
@@ -896,7 +910,8 @@ grid.arrange(g1, g2)
 #                    'viridis',
 #                    'scales',
 #                    'janitor',
-#                    'kableExtra'))
+#                    'kableExtra',
+#                    'knitr'))
 
 # make sure to have OTB installed from here:
 # https://www.orfeo-toolbox.org/
@@ -918,6 +933,7 @@ library(viridis)
 library(scales)
 library(janitor)
 library(kableExtra)
+library(knitr)
 
 ####################################
 ### SET CODE AND FILE PARAMETERS ###
@@ -926,10 +942,10 @@ library(kableExtra)
 # set file names for ALS input variables
 
 # first set the imputation X-variables
-lidar_imp <- c('avg' = 'D:/ontario_inventory/FSF/ALS/zmean.img',
-               'rumple' = 'D:/ontario_inventory/FSF/ALS/rumpleIndex.img',
+lidar_imp <- c('agb' = 'D:/ontario_inventory/FSF/EFI/Biomass.img',
+               'gmvwl' = 'D:/ontario_inventory/FSF/EFI/GMV_WL.img',
                'pcum8' = 'D:/ontario_inventory/FSF/ALS/zpcum8.img',
-               'sd' = 'D:/ontario_inventory/FSF/ALS/zsd.img',
+               'ba' = 'D:/ontario_inventory/FSF/EFI/BasalArea.img',
                'b6' = 'D:/ontario_inventory/FSF/sentinel/boa/b6_fsf_2018.tif')
 
 # next set the data screening variables
@@ -1172,7 +1188,7 @@ poly_dom_sp_group <- poly_dom_sp_group %>%
          SpeciesGroup3 = ifelse(per_conif >= 70, "Softwood", 
                                 ifelse(per_decid >= 70, "Hardwood", "Mixedwood"))) %>%
   mutate(across(.cols = starts_with("SpeciesGroup"), .fns = as.factor)) %>%
-  select(POLYID, SpeciesGroup2, SpeciesGroup3) %>%
+  select(OPI_ID, SpeciesGroup2, SpeciesGroup3) %>%
   rename(class5 = SpeciesGroup2, class3 = SpeciesGroup3)
 
 # calculate leading and second species only
@@ -1187,7 +1203,7 @@ poly_fri_sp <- poly_fri %>%
          new_SP2 = as.character(new_SP2)) %>%
   separate(new_SP, into = c("SP", "PROP")) %>%
   separate(new_SP2, into = c("SP2", "PROP2")) %>%
-  select(POLYID, SP, SP2)
+  select(OPI_ID, SP, SP2)
 
 # join functional groups with leading and second species
 poly_dom_sp_group <- left_join(poly_dom_sp_group,
@@ -1606,20 +1622,20 @@ run_knn_fri_table <- function(dat, vars, k) {
 load(str_c(out_dir, '/temp/dat_fri_scr.RData'))
 
 # subset only the attributes we need from the screened FRI polygons
-dat_fri_scr %<>% select(OPI_ID, AGE2018, avg,
-                        rumple, pcum8, sd,
+dat_fri_scr %<>% select(OPI_ID, AGE2018, agb,
+                        gmvwl, pcum8, ba,
                         b6, x, y, SP1, SP2, class3, class5)
 
 # remove any polygons with missing values
 # in imputation X-variables
-dat_fri_scr <- left_join(dat_fri_scr %>% select(OPI_ID, AGE2018, avg,
-                        rumple, pcum8, sd,
+dat_fri_scr <- left_join(dat_fri_scr %>% select(OPI_ID, AGE2018, agb,
+                        gmvwl, pcum8, ba,
                         b6, x, y) %>% na.omit,
                         dat_fri_scr)
 
 # create vector of X-variables for imputation
-vars <- c('avg', 'rumple',
-          'pcum8', 'sd',
+vars <- c('agb', 'gmvwl',
+          'pcum8', 'ba',
           'b6', 'x', 'y')
 
 # run_knn_fri function to get performance results
@@ -1655,6 +1671,18 @@ perf_cast[is.na(perf_cast)] <- ''
 # display results
 knitr::kable(perf_cast, caption = "Imputation Performance of FRI Forest Stand Polygons", label = NA)
 ```
+
+The mean bias error (MBE) of age is 0.17 years, indicating the imputed estimates of age are not skewed toward younger or older values. The mean absolute error (MAE) of age is 14.75 years, which is the average difference between the observed and imputed value.
+
+Accuracy of leading species classification is 64.47%, and a much lower 31.75% for second leading species. Three and five functional group classification have respective accuracies of 78.61% and 80.78%. Functional group classification accuracies are higher than in the RMF.
+
+Relative root mean squared difference (RRMSD) of the imputation attributes (avg, sd, rumple, zpcum8, and red_edge_2) is below 4% for all attributes. These are low values, which demonstrate that the imputation algorithm is finding optimal matches within the database of available FRI polygons.
+
+Relative mean bias error (RMBE) of the imputation attributes is less than 1%, meaning that the nearest neighbor selections are not skewed toward positive or negative values of these attributes.
+
+RRMSD/RMBE are not calculated for x and y because the coordinates do not represent a value scale.
+
+We can also generate detailed confusion matrices of the imputed vs. observed species composition.
 
 Confusion matrices:
 
@@ -1756,11 +1784,11 @@ knitr::kable(accmat_ext %>% round, caption = "Confusion matrix of imputed vs. ob
 load(str_c(out_dir, '/temp/dat_grm_scr.RData'))
 
 # create data frame for grm and fri metrics used in imputation
-dat_grm_imp <- dat_grm_scr %>% select(id, avg,
-                                      rumple, pcum8, sd,
+dat_grm_imp <- dat_grm_scr %>% select(id, agb,
+                                      gmvwl, pcum8, ba,
                                       b6, x, y) %>% na.omit
-dat_fri_imp <- dat_fri_scr %>% select(avg,
-                                      rumple, pcum8, sd,
+dat_fri_imp <- dat_fri_scr %>% select(agb,
+                                      gmvwl, pcum8, ba,
                                       b6, x, y) %>% na.omit
 
 # need to combine and scale all values together then separate again
@@ -1860,6 +1888,8 @@ perf_cast %<>% filter(!(variable %in% c('x', 'y')))
 knitr::kable(perf_cast, caption = "Imputation X-Variable Performance between FRI and GRM Forest Stand Polygons", label = NA)
 ```
 
+The RRMSD results are all below 5% and RMBE does not show bias toward negative of positive difference. These results are comparable to those found when conducting imputation over FRI polygons only.
+
 ### **6.3.3** Results: Distribution of Age  {-#fsf633}
 
 Spatial comparison:
@@ -1920,6 +1950,7 @@ p2 <- ggplot(fri_sf) +
 
 grid.arrange(p1, p2, ncol = 1)
 ```
+Imputed age values show a similar spatial distribution to observed age values at a broad scale.
 
 Density plots:
 
@@ -1931,7 +1962,7 @@ p1 <- ggplot(dat_grm, aes(x = age)) +
              linetype = "dashed",
              size = 0.6) +
   xlim(c(0,200)) +
-  ylim(c(0, 0.02)) +
+  ylim(c(0, 0.025)) +
   theme_bw() +
   xlab('Age') +
   ylab('Density') +
@@ -1945,7 +1976,7 @@ p2 <- ggplot(as.data.frame(poly_fri), aes(x = AGE2018)) +
              linetype = "dashed",
              size = 0.6) +
   xlim(c(0, 200)) +
-  ylim(c(0, 0.02)) +
+  ylim(c(0, 0.025)) +
   theme_bw() +
   xlab('Age') +
   ylab('Density') +
@@ -1955,6 +1986,7 @@ p2 <- ggplot(as.data.frame(poly_fri), aes(x = AGE2018)) +
 
 grid.arrange(p1, p2, ncol = 1)
 ```
+The distribution of imputed age in GRM polygons closely matches that of observed age in FRI polygons. The median age values (dotted lines) are similar.
 
 ### **6.3.4** Results: Distribution of Species  {-#fsf634}
 
@@ -1982,6 +2014,8 @@ p2 <- ggplot(fri_sf) +
 
 grid.arrange(p1, p2, ncol = 1)
 ```
+
+We can observe a similar distribution of species classes.
 
 Spatial patterns of five functional group classification:
 
@@ -2061,6 +2095,8 @@ p2 <- ggplot(dat_fri_c3, aes(x = "", y = prop, fill = class3)) +
 grid.arrange(p1, p2, ncol = 2)
 ```
 
+The distribution of hardwood is the same. The GRM data have slightly more softwood and slightly less mixedwood.
+
 Overall distribution of five functional group classification:
 
 ```{r, fsf6344, results='asis', message=FALSE, warning=FALSE, fig.width=18, fig.height=12}
@@ -2116,3 +2152,4 @@ grid.arrange(p1, p2, ncol = 2)
 
 ```
 
+The distributions are again very similar. The RMF five species classification does not apply to the FSF in general, due to the negligible amounts of black spruce and jack pine.

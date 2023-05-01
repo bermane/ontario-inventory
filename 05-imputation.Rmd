@@ -6,11 +6,11 @@ After automatically delineating forest stands from ALS data, the second step of 
 
 k-nearest neighbor (kNN) imputation is a widely used technique to derive spatially contiguous forest attributes for inventory and monitoring purposes (Chirici et al., 2016; McRoberts et al., 2010). kNN is applicable when desired forest attributes (Y-variables) exist in a subset of all observations (reference observations), and are imputed into observations that are missing Y-variable values (target observations). The algorithm works by minimizing a distance function between variables without missing values across the dataset (X-variables), finding k-reference observations closest to a single target observation, and imputing Y-variable values from k-reference observations into the target observation. In this case X-variables are derived from ALS and optical spaceborne remote sensing due to the contiguous nature of the data. This technique is distribution-free, multivariate, and non-parametric (Eskelson et al., 2009). It is based on the premise that observations with similar X-variable values should also have similar desired forest attribute values (Y-variable values). Thus, X-variable selection can be more important than imputation method (Brosofske et al., 2014) and therefore an iterative performance analysis is used to aid in optimal variable selection. Since all attributes are imputed together from k-nearest neighbors, kNN imputation maintains the relationship between interpreter derived attributes (Coops et al., 2021).
 
-In this example we will walk through the imputation of FRI age and species attributes into the forest stand polygons we generated using the GRM algorithm. As explained in a forthcoming journal article, we undertook an iterative performance analysis to select the optimal X-variables to use to drive the imputation algorithm. We will not test different combinations of X-variables in this example, rather just use the optimal selection found for the RMF study area, focusing on the process of imputing age and species attributes into new polygons and assessing the distribution of attributes in relation to the conventional FRI.
+In this example we will walk through the imputation of FRI age and species attributes into the forest stand polygons we generated using the GRM algorithm. As explained in Part 7 below (as well as in a forthcoming journal article), we undertook an iterative performance analysis to select the optimal X-variables to use to drive the imputation algorithm. We will not test different combinations of X-variables in this example, rather just use the optimal selection found for the RMF study area, focusing on the process of imputing age and species attributes into new polygons and assessing the distribution of attributes in relation to the conventional FRI.
 
 ## **5.2** Imputation Parameters {-#imputation52}
 
-The kNN algorithm functions by minimizing the Euclidean distance, without weights, between n X-variables in a target observation (in this case a forested polygon) and k-reference observations. We tested combinations of n = 3/5/7 and use n = 7 in this example. In our testing, n = 7 performed slightly better than n = 5 and much better than n = 3.
+The kNN algorithm functions by minimizing the Euclidean distance, without weights, between n X-variables in a target observation (in this case a forested polygon) and k-reference observations. We tested combinations of n = 3/5/7 and use n = 7 in this example.
 
 When k = 1, values from the nearest reference observation (X and Y-variables) are directly joined to the target observation. When k > 1, values from the nearest reference observations are averaged using either the mean (for numeric variables) or mode (for categorical values). All Y-variables are imputed together, maintaining the relationship between variables in the reference observations. We tested combinations of k = 1/3/5 and use k = 5 in this example as it produced optimal results. In general, larger values of k lead to higher performance but more averaging of estimated attributes, which decreases variability.
 
@@ -28,7 +28,7 @@ Imputation X-variables:
 * sd: Standard deviation of returns height > 1.3 m classified as vegetation
 * b6: Cloud-free composite of Sentinel-2 red-edge 2 (band 6; 740 nm) surface reflectance
 
-These five attributes comprise the optimal imputation X-variables from our performance analysis. The additional two variables used are the x and y coordinates of each polygon centroid, and are calculated automatically in the code. In our analysis, we found that these attributes derived directly from the ALS point cloud performed slightly better than modeled attributes from the EFI. Many of the ALS/EFI attributes are highly correlated and thus yield similar imputation results.
+These five attributes comprise the optimal imputation X-variables from our performance analysis. The additional two variables used are the x and y coordinates of each polygon centroid, and are calculated automatically in the code. In the RMF, we found that these attributes derived directly from the ALS point cloud performed slightly better than modeled attributes from the EFI. Many of the ALS/EFI attributes are highly correlated and thus yield similar imputation results.
 
 Variables for polygon data screening:
 
@@ -75,7 +75,8 @@ knitr::opts_chunk$set(fig.width=18, fig.height=12)
 #                    'viridis',
 #                    'scales',
 #                    'janitor',
-#                    'kableExtra'))
+#                    'kableExtra',
+#                    'knitr'))
 
 # make sure to have OTB installed from here:
 # https://www.orfeo-toolbox.org/
@@ -97,6 +98,7 @@ library(viridis)
 library(scales)
 library(janitor)
 library(kableExtra)
+library(knitr)
 
 ####################################
 ### SET CODE AND FILE PARAMETERS ###
@@ -1412,7 +1414,7 @@ The distribution of imputed five classes of species is also very similar to the 
 
 ## **5.16** Caveats {-#imputation516}
 
-We only used ALS variables derived directly from the point cloud, as in our performance analysis these variables performed slightly better than EFI attributes modelled using an area-based approach. That being said, the performance difference was minimal, as many variables are highly correlated and thus interchangable. In terms of number of X-variables used in imputation, our performance analysis showed a small difference between n = 5 and n = 7. We stuck with n = 7 that performed slightly better. N = 3 performed much poorer. We used k = 5 as it performed better than k = 3 and k = 1 yet still resulted in an adequate distribution of variables (higher values of k lead to less variability in the imputed attributes).
+We only used ALS variables derived directly from the point cloud, as in our performance analysis these variables performed slightly better than EFI attributes modelled using an area-based approach. That being said, the performance difference was minimal, as many variables are highly correlated and thus interchangable. In the FSF (Part 6 below), EFI attributes are used for imputation as they performed better. Details of the performance analysis are in Part 7 below. In terms of number of X-variables used in imputation in RMF, our performance analysis showed a small difference between n = 5 and n = 7. We stuck with n = 7 that performed slightly better. N = 3 performed much poorer. We used k = 5 as it performed better than k = 3 and k = 1 yet still resulted in an adequate distribution of variables (higher values of k lead to less variability in the imputed attributes).
 
 Although we compared imputed and observed values across the FRI data, we were limited in our ability to quantify error in relation to ground truth. Little work has investigated the accuracy of FRI species and age attributes. Accuracy depends on the complexity of the forest ecosystem and interpretation procedures (Tompalski et al., 2021). Thus implications will vary across areas, and also based on harvesting and management priorities.
 

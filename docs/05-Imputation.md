@@ -12,13 +12,13 @@ In this example we will walk through the imputation of FRI age and species attri
 
 The kNN algorithm functions by minimizing the Euclidean distance, without weights, between n X-variables in a target observation (in this case a forested polygon) and k-reference observations. We tested combinations of n = 3/5/7 and use n = 7 in this example. In our testing, n = 7 performed slightly better than n = 5 and much better than n = 3.
 
-When k = 1, values from reference observations (X and Y-variables) are directly joined to the target observation. When k > 1, reference values are averaged using either the mean (for numeric variables) or mode (for categorical values). All Y-variables are imputed together, maintaining the relationship between variables in the reference observations. We tested combinations of k = 1/3/5 and use k = 5 in this example as it produced optimal results. In general, larger values of k lead to higher performance but more averaging of estimated attributes, which decreases variability.
+When k = 1, values from the nearest reference observation (X and Y-variables) are directly joined to the target observation. When k > 1, values from the nearest reference observations are averaged using either the mean (for numeric variables) or mode (for categorical values). All Y-variables are imputed together, maintaining the relationship between variables in the reference observations. We tested combinations of k = 1/3/5 and use k = 5 in this example as it produced optimal results. In general, larger values of k lead to higher performance but more averaging of estimated attributes, which decreases variability.
 
 ## **5.3** Data Requirements {-#imputation53}
 
 The GRM segmentation workflow requires the following data layers, which are input into the algorithm at the beginning of the code:
 
-1. Gridded raster layers of the following ALS metrics and Sentinel 2 imagery, which are used as imputation X-variables as well as for polygon data screening:
+1. Gridded raster layers of the following ALS metrics and Sentinel-2 imagery, which are used as imputation X-variables as well as for polygon data screening:
 
 Imputation X-variables:
 
@@ -26,7 +26,7 @@ Imputation X-variables:
 * rumple: Ratio of canopy outer surface area to ground surface area
 * pcum8: Cumulative percentage of returns found in 80th percentile of returns height
 * sd: Standard deviation of returns height > 1.3 m classified as vegetation
-* b6: Cloud-free composite of Sentinel 2 band 6 (740 nm) surface reflectance
+* b6: Cloud-free composite of Sentinel-2 red-edge 2 (band 6; 740 nm) surface reflectance
 
 These five attributes comprise the optimal imputation X-variables from our performance analysis. The additional two variables used are the x and y coordinates of each polygon centroid, and are calculated automatically in the code. In our analysis, we found that these attributes derived directly from the ALS point cloud performed slightly better than modeled attributes from the EFI. Many of the ALS/EFI attributes are highly correlated and thus yield similar imputation results.
 
@@ -73,7 +73,8 @@ Now working in R, we will showcase a demo workflow, imputing age and species com
 #                    'reshape2',
 #                    'viridis',
 #                    'scales',
-#                    'janitor'))
+#                    'janitor',
+#                    'kableExtra'))
 
 # make sure to have OTB installed from here:
 # https://www.orfeo-toolbox.org/
@@ -94,6 +95,7 @@ library(reshape2)
 library(viridis)
 library(scales)
 library(janitor)
+library(kableExtra)
 
 ####################################
 ### SET CODE AND FILE PARAMETERS ###
@@ -912,22 +914,112 @@ perf_cast[is.na(perf_cast)] <- ''
 knitr::kable(perf_cast, caption = "Imputation Performance of FRI Forest Stand Polygons", label = NA)
 ```
 
-
-
-Table: Imputation Performance of FRI Forest Stand Polygons
-
-|variable               |rmsd (yrs) |mbe (yrs) |mae (yrs) |accuracy (%) |rrmsd (%) |rmbe (%) |
-|:----------------------|:----------|:---------|:---------|:------------|:---------|:--------|
-|age                    |23.31      |-0.14     |16.06     |             |          |         |
-|leading species        |           |          |          |65.46        |          |         |
-|second species         |           |          |          |37.62        |          |         |
-|three func group class |           |          |          |72.34        |          |         |
-|five func group class  |           |          |          |60.73        |          |         |
-|avg                    |           |          |          |             |3.6       |0        |
-|rumple                 |           |          |          |             |2.54      |0.01     |
-|pcum8                  |           |          |          |             |0.9       |0.13     |
-|sd                     |           |          |          |             |3.88      |-0.33    |
-|b6                     |           |          |          |             |2.15      |-0.1     |
+<table>
+<caption>Imputation Performance of FRI Forest Stand Polygons</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> variable </th>
+   <th style="text-align:left;"> rmsd (yrs) </th>
+   <th style="text-align:left;"> mbe (yrs) </th>
+   <th style="text-align:left;"> mae (yrs) </th>
+   <th style="text-align:left;"> accuracy (%) </th>
+   <th style="text-align:left;"> rrmsd (%) </th>
+   <th style="text-align:left;"> rmbe (%) </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> age </td>
+   <td style="text-align:left;"> 23.31 </td>
+   <td style="text-align:left;"> -0.14 </td>
+   <td style="text-align:left;"> 16.06 </td>
+   <td style="text-align:left;">  </td>
+   <td style="text-align:left;">  </td>
+   <td style="text-align:left;">  </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> leading species </td>
+   <td style="text-align:left;">  </td>
+   <td style="text-align:left;">  </td>
+   <td style="text-align:left;">  </td>
+   <td style="text-align:left;"> 65.46 </td>
+   <td style="text-align:left;">  </td>
+   <td style="text-align:left;">  </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> second species </td>
+   <td style="text-align:left;">  </td>
+   <td style="text-align:left;">  </td>
+   <td style="text-align:left;">  </td>
+   <td style="text-align:left;"> 37.62 </td>
+   <td style="text-align:left;">  </td>
+   <td style="text-align:left;">  </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> three func group class </td>
+   <td style="text-align:left;">  </td>
+   <td style="text-align:left;">  </td>
+   <td style="text-align:left;">  </td>
+   <td style="text-align:left;"> 72.34 </td>
+   <td style="text-align:left;">  </td>
+   <td style="text-align:left;">  </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> five func group class </td>
+   <td style="text-align:left;">  </td>
+   <td style="text-align:left;">  </td>
+   <td style="text-align:left;">  </td>
+   <td style="text-align:left;"> 60.73 </td>
+   <td style="text-align:left;">  </td>
+   <td style="text-align:left;">  </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> avg </td>
+   <td style="text-align:left;">  </td>
+   <td style="text-align:left;">  </td>
+   <td style="text-align:left;">  </td>
+   <td style="text-align:left;">  </td>
+   <td style="text-align:left;"> 3.6 </td>
+   <td style="text-align:left;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> rumple </td>
+   <td style="text-align:left;">  </td>
+   <td style="text-align:left;">  </td>
+   <td style="text-align:left;">  </td>
+   <td style="text-align:left;">  </td>
+   <td style="text-align:left;"> 2.54 </td>
+   <td style="text-align:left;"> 0.01 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> pcum8 </td>
+   <td style="text-align:left;">  </td>
+   <td style="text-align:left;">  </td>
+   <td style="text-align:left;">  </td>
+   <td style="text-align:left;">  </td>
+   <td style="text-align:left;"> 0.9 </td>
+   <td style="text-align:left;"> 0.13 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> sd </td>
+   <td style="text-align:left;">  </td>
+   <td style="text-align:left;">  </td>
+   <td style="text-align:left;">  </td>
+   <td style="text-align:left;">  </td>
+   <td style="text-align:left;"> 3.88 </td>
+   <td style="text-align:left;"> -0.33 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> b6 </td>
+   <td style="text-align:left;">  </td>
+   <td style="text-align:left;">  </td>
+   <td style="text-align:left;">  </td>
+   <td style="text-align:left;">  </td>
+   <td style="text-align:left;"> 2.15 </td>
+   <td style="text-align:left;"> -0.1 </td>
+  </tr>
+</tbody>
+</table>
 
 The mean bias error (MBE) of age is -0.14 years, indicating the imputed estimates of age are not skewed toward younger or older values. The mean absolute error (MAE) of age is 16.06 years, which is the average difference between the observed and imputed value.
 
@@ -971,17 +1063,61 @@ class(accmat_ext) <- "table"
 knitr::kable(accmat_ext %>% round, caption = "Confusion matrix of imputed vs. observed three functional group classification over FRI polygons. Rows are imputed values and columns are observed values.", label = NA)
 ```
 
-
-
-Table: Confusion matrix of imputed vs. observed three functional group classification over FRI polygons. Rows are imputed values and columns are observed values.
-
-|          | Hardwood| Mixedwood| Softwood|   Sum| Users|
-|:---------|--------:|---------:|--------:|-----:|-----:|
-|Hardwood  |     6651|      2448|     1044| 10143|    66|
-|Mixedwood |     2277|      4426|     2697|  9400|    47|
-|Softwood  |     1397|      4363|    26134| 31894|    82|
-|Sum       |    10325|     11237|    29875| 51437|    NA|
-|Producers |       64|        39|       87|    NA|    72|
+<table>
+<caption>Confusion matrix of imputed vs. observed three functional group classification over FRI polygons. Rows are imputed values and columns are observed values.</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:right;"> Hardwood </th>
+   <th style="text-align:right;"> Mixedwood </th>
+   <th style="text-align:right;"> Softwood </th>
+   <th style="text-align:right;"> Sum </th>
+   <th style="text-align:right;"> Users </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Hardwood </td>
+   <td style="text-align:right;"> 6651 </td>
+   <td style="text-align:right;"> 2448 </td>
+   <td style="text-align:right;"> 1044 </td>
+   <td style="text-align:right;"> 10143 </td>
+   <td style="text-align:right;"> 66 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Mixedwood </td>
+   <td style="text-align:right;"> 2277 </td>
+   <td style="text-align:right;"> 4426 </td>
+   <td style="text-align:right;"> 2697 </td>
+   <td style="text-align:right;"> 9400 </td>
+   <td style="text-align:right;"> 47 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Softwood </td>
+   <td style="text-align:right;"> 1397 </td>
+   <td style="text-align:right;"> 4363 </td>
+   <td style="text-align:right;"> 26134 </td>
+   <td style="text-align:right;"> 31894 </td>
+   <td style="text-align:right;"> 82 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Sum </td>
+   <td style="text-align:right;"> 10325 </td>
+   <td style="text-align:right;"> 11237 </td>
+   <td style="text-align:right;"> 29875 </td>
+   <td style="text-align:right;"> 51437 </td>
+   <td style="text-align:right;"> NA </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Producers </td>
+   <td style="text-align:right;"> 64 </td>
+   <td style="text-align:right;"> 39 </td>
+   <td style="text-align:right;"> 87 </td>
+   <td style="text-align:right;"> NA </td>
+   <td style="text-align:right;"> 72 </td>
+  </tr>
+</tbody>
+</table>
 
 Five functional group classification:
 
@@ -1013,19 +1149,93 @@ class(accmat_ext) <- "table"
 knitr::kable(accmat_ext %>% round, caption = "Confusion matrix of imputed vs. observed five functional group classification over FRI polygons. Rows are imputed values and columns are observed values.", label = NA)
 ```
 
-
-
-Table: Confusion matrix of imputed vs. observed five functional group classification over FRI polygons. Rows are imputed values and columns are observed values.
-
-|                       | Black Spruce Dominated| Hardwood| Jack Pine Dominated| Mixed Conifers| Mixedwood|   Sum| Users|
-|:----------------------|----------------------:|--------:|-------------------:|--------------:|---------:|-----:|-----:|
-|Black Spruce Dominated |                  14832|      575|                 618|           2623|      2664| 21312|    70|
-|Hardwood               |                    480|     6744|                 323|            283|      2618| 10448|    65|
-|Jack Pine Dominated    |                    366|      218|                2481|            178|       492|  3735|    66|
-|Mixed Conifers         |                   1325|      186|                 112|           1326|       765|  3714|    36|
-|Mixedwood              |                   2064|     2602|                 539|           1169|      5854| 12228|    48|
-|Sum                    |                  19067|    10325|                4073|           5579|     12393| 51437|    NA|
-|Producers              |                     78|       65|                  61|             24|        47|    NA|    61|
+<table>
+<caption>Confusion matrix of imputed vs. observed five functional group classification over FRI polygons. Rows are imputed values and columns are observed values.</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:right;"> Black Spruce Dominated </th>
+   <th style="text-align:right;"> Hardwood </th>
+   <th style="text-align:right;"> Jack Pine Dominated </th>
+   <th style="text-align:right;"> Mixed Conifers </th>
+   <th style="text-align:right;"> Mixedwood </th>
+   <th style="text-align:right;"> Sum </th>
+   <th style="text-align:right;"> Users </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Black Spruce Dominated </td>
+   <td style="text-align:right;"> 14832 </td>
+   <td style="text-align:right;"> 575 </td>
+   <td style="text-align:right;"> 618 </td>
+   <td style="text-align:right;"> 2623 </td>
+   <td style="text-align:right;"> 2664 </td>
+   <td style="text-align:right;"> 21312 </td>
+   <td style="text-align:right;"> 70 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Hardwood </td>
+   <td style="text-align:right;"> 480 </td>
+   <td style="text-align:right;"> 6744 </td>
+   <td style="text-align:right;"> 323 </td>
+   <td style="text-align:right;"> 283 </td>
+   <td style="text-align:right;"> 2618 </td>
+   <td style="text-align:right;"> 10448 </td>
+   <td style="text-align:right;"> 65 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Jack Pine Dominated </td>
+   <td style="text-align:right;"> 366 </td>
+   <td style="text-align:right;"> 218 </td>
+   <td style="text-align:right;"> 2481 </td>
+   <td style="text-align:right;"> 178 </td>
+   <td style="text-align:right;"> 492 </td>
+   <td style="text-align:right;"> 3735 </td>
+   <td style="text-align:right;"> 66 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Mixed Conifers </td>
+   <td style="text-align:right;"> 1325 </td>
+   <td style="text-align:right;"> 186 </td>
+   <td style="text-align:right;"> 112 </td>
+   <td style="text-align:right;"> 1326 </td>
+   <td style="text-align:right;"> 765 </td>
+   <td style="text-align:right;"> 3714 </td>
+   <td style="text-align:right;"> 36 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Mixedwood </td>
+   <td style="text-align:right;"> 2064 </td>
+   <td style="text-align:right;"> 2602 </td>
+   <td style="text-align:right;"> 539 </td>
+   <td style="text-align:right;"> 1169 </td>
+   <td style="text-align:right;"> 5854 </td>
+   <td style="text-align:right;"> 12228 </td>
+   <td style="text-align:right;"> 48 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Sum </td>
+   <td style="text-align:right;"> 19067 </td>
+   <td style="text-align:right;"> 10325 </td>
+   <td style="text-align:right;"> 4073 </td>
+   <td style="text-align:right;"> 5579 </td>
+   <td style="text-align:right;"> 12393 </td>
+   <td style="text-align:right;"> 51437 </td>
+   <td style="text-align:right;"> NA </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Producers </td>
+   <td style="text-align:right;"> 78 </td>
+   <td style="text-align:right;"> 65 </td>
+   <td style="text-align:right;"> 61 </td>
+   <td style="text-align:right;"> 24 </td>
+   <td style="text-align:right;"> 47 </td>
+   <td style="text-align:right;"> NA </td>
+   <td style="text-align:right;"> 61 </td>
+  </tr>
+</tbody>
+</table>
 
 Leading species:
 
@@ -1065,32 +1275,377 @@ dimnames(accmat_ext) <- list("Imputed" = colnames(accmat_ext),
 class(accmat_ext) <- "table"
 
 # display results
-knitr::kable(accmat_ext %>% round, caption = "Confusion matrix of imputed vs. observed leading species over FRI polygons. Rows are imputed values and columns are observed values.", label = NA)
+knitr::kable(accmat_ext %>% round, caption = "Confusion matrix of imputed vs. observed leading species over FRI polygons. Rows are imputed values and columns are observed values.", label = NA) %>% 
+  kable_styling(latex_options="scale_down")
 ```
 
-
-
-Table: Confusion matrix of imputed vs. observed leading species over FRI polygons. Rows are imputed values and columns are observed values.
-
-|          | AB|  BF|   BW|   CE|  LA| MR| PB|   PJ|   PO| PR|   PT| PW|    SB|  SW| SX|   Sum| Users|
-|:---------|--:|---:|----:|----:|---:|--:|--:|----:|----:|--:|----:|--:|-----:|---:|--:|-----:|-----:|
-|AB        |  6|   0|    4|    0|   0|  0|  0|    0|    0|  0|    0|  0|     2|   0|  0|    12|    50|
-|BF        |  0|  31|   35|   11|   6|  0|  0|    7|   15|  1|    7|  0|    67|  12|  0|   192|    16|
-|BW        | 10|  86| 4248|  320|  33|  0| 15|  228|  401|  1| 1165| 26|  1333| 166|  0|  8032|    53|
-|CE        |  0|  21|  166|  428|  43|  0|  0|   18|   18|  0|   45|  0|   471|  10|  1|  1221|    35|
-|LA        |  0|   2|   16|   19|  57|  0|  0|   11|    9|  0|   15|  0|   165|   5|  0|   299|    19|
-|MR        |  0|   0|    0|    0|   0|  0|  0|    0|    0|  0|    0|  0|     0|   0|  0|     0|   NaN|
-|PB        |  0|   1|    5|    0|   0|  0|  4|    0|    2|  0|    9|  0|     4|   2|  0|    27|    15|
-|PJ        |  2|   8|  185|   18|  43|  0|  0| 3111|   92|  6|  449|  1|   630|  46|  0|  4591|    68|
-|PO        |  5|  21|  248|   17|  16|  0|  5|   88|  876|  1|  290|  4|   155|  21|  0|  1747|    50|
-|PR        |  0|   0|    1|    0|   0|  0|  0|    0|    1|  0|    0|  0|     2|   0|  0|     4|     0|
-|PT        |  5|  28| 1042|   64|  23|  0| 52|  443|  346|  1| 3594|  7|   715|  69|  0|  6389|    56|
-|PW        |  0|   0|    1|    0|   0|  0|  0|    0|    0|  0|    0|  2|     1|   1|  0|     5|    40|
-|SB        |  6| 393| 1815| 1316| 759|  1| 19| 1155|  277|  2| 1106| 14| 21259| 506|  1| 28629|    74|
-|SW        |  0|  10|   50|    3|   4|  0|  3|   22|   10|  0|   33|  2|    96|  56|  0|   289|    19|
-|SX        |  0|   0|    0|    0|   0|  0|  0|    0|    0|  0|    0|  0|     0|   0|  0|     0|   NaN|
-|Sum       | 34| 601| 7816| 2196| 984|  1| 98| 5083| 2047| 12| 6713| 56| 24900| 894|  2| 51437|    NA|
-|Producers | 18|   5|   54|   19|   6|  0|  4|   61|   43|  0|   54|  4|    85|   6|  0|    NA|    65|
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>Confusion matrix of imputed vs. observed leading species over FRI polygons. Rows are imputed values and columns are observed values.</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:right;"> AB </th>
+   <th style="text-align:right;"> BF </th>
+   <th style="text-align:right;"> BW </th>
+   <th style="text-align:right;"> CE </th>
+   <th style="text-align:right;"> LA </th>
+   <th style="text-align:right;"> MR </th>
+   <th style="text-align:right;"> PB </th>
+   <th style="text-align:right;"> PJ </th>
+   <th style="text-align:right;"> PO </th>
+   <th style="text-align:right;"> PR </th>
+   <th style="text-align:right;"> PT </th>
+   <th style="text-align:right;"> PW </th>
+   <th style="text-align:right;"> SB </th>
+   <th style="text-align:right;"> SW </th>
+   <th style="text-align:right;"> SX </th>
+   <th style="text-align:right;"> Sum </th>
+   <th style="text-align:right;"> Users </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> AB </td>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 12 </td>
+   <td style="text-align:right;"> 50 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> BF </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 31 </td>
+   <td style="text-align:right;"> 35 </td>
+   <td style="text-align:right;"> 11 </td>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 7 </td>
+   <td style="text-align:right;"> 15 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 7 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 67 </td>
+   <td style="text-align:right;"> 12 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 192 </td>
+   <td style="text-align:right;"> 16 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> BW </td>
+   <td style="text-align:right;"> 10 </td>
+   <td style="text-align:right;"> 86 </td>
+   <td style="text-align:right;"> 4248 </td>
+   <td style="text-align:right;"> 320 </td>
+   <td style="text-align:right;"> 33 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 15 </td>
+   <td style="text-align:right;"> 228 </td>
+   <td style="text-align:right;"> 401 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 1165 </td>
+   <td style="text-align:right;"> 26 </td>
+   <td style="text-align:right;"> 1333 </td>
+   <td style="text-align:right;"> 166 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 8032 </td>
+   <td style="text-align:right;"> 53 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> CE </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 21 </td>
+   <td style="text-align:right;"> 166 </td>
+   <td style="text-align:right;"> 428 </td>
+   <td style="text-align:right;"> 43 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 18 </td>
+   <td style="text-align:right;"> 18 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 45 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 471 </td>
+   <td style="text-align:right;"> 10 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 1221 </td>
+   <td style="text-align:right;"> 35 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> LA </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 16 </td>
+   <td style="text-align:right;"> 19 </td>
+   <td style="text-align:right;"> 57 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 11 </td>
+   <td style="text-align:right;"> 9 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 15 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 165 </td>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 299 </td>
+   <td style="text-align:right;"> 19 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> MR </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> NaN </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> PB </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 9 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 27 </td>
+   <td style="text-align:right;"> 15 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> PJ </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 8 </td>
+   <td style="text-align:right;"> 185 </td>
+   <td style="text-align:right;"> 18 </td>
+   <td style="text-align:right;"> 43 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 3111 </td>
+   <td style="text-align:right;"> 92 </td>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 449 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 630 </td>
+   <td style="text-align:right;"> 46 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 4591 </td>
+   <td style="text-align:right;"> 68 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> PO </td>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> 21 </td>
+   <td style="text-align:right;"> 248 </td>
+   <td style="text-align:right;"> 17 </td>
+   <td style="text-align:right;"> 16 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> 88 </td>
+   <td style="text-align:right;"> 876 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 290 </td>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 155 </td>
+   <td style="text-align:right;"> 21 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 1747 </td>
+   <td style="text-align:right;"> 50 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> PR </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> PT </td>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> 28 </td>
+   <td style="text-align:right;"> 1042 </td>
+   <td style="text-align:right;"> 64 </td>
+   <td style="text-align:right;"> 23 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 52 </td>
+   <td style="text-align:right;"> 443 </td>
+   <td style="text-align:right;"> 346 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 3594 </td>
+   <td style="text-align:right;"> 7 </td>
+   <td style="text-align:right;"> 715 </td>
+   <td style="text-align:right;"> 69 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 6389 </td>
+   <td style="text-align:right;"> 56 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> PW </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> 40 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SB </td>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 393 </td>
+   <td style="text-align:right;"> 1815 </td>
+   <td style="text-align:right;"> 1316 </td>
+   <td style="text-align:right;"> 759 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 19 </td>
+   <td style="text-align:right;"> 1155 </td>
+   <td style="text-align:right;"> 277 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 1106 </td>
+   <td style="text-align:right;"> 14 </td>
+   <td style="text-align:right;"> 21259 </td>
+   <td style="text-align:right;"> 506 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 28629 </td>
+   <td style="text-align:right;"> 74 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SW </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 10 </td>
+   <td style="text-align:right;"> 50 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 22 </td>
+   <td style="text-align:right;"> 10 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 33 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 96 </td>
+   <td style="text-align:right;"> 56 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 289 </td>
+   <td style="text-align:right;"> 19 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SX </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> NaN </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Sum </td>
+   <td style="text-align:right;"> 34 </td>
+   <td style="text-align:right;"> 601 </td>
+   <td style="text-align:right;"> 7816 </td>
+   <td style="text-align:right;"> 2196 </td>
+   <td style="text-align:right;"> 984 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 98 </td>
+   <td style="text-align:right;"> 5083 </td>
+   <td style="text-align:right;"> 2047 </td>
+   <td style="text-align:right;"> 12 </td>
+   <td style="text-align:right;"> 6713 </td>
+   <td style="text-align:right;"> 56 </td>
+   <td style="text-align:right;"> 24900 </td>
+   <td style="text-align:right;"> 894 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 51437 </td>
+   <td style="text-align:right;"> NA </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Producers </td>
+   <td style="text-align:right;"> 18 </td>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> 54 </td>
+   <td style="text-align:right;"> 19 </td>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 61 </td>
+   <td style="text-align:right;"> 43 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 54 </td>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 85 </td>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> NA </td>
+   <td style="text-align:right;"> 65 </td>
+  </tr>
+</tbody>
+</table>
 
 ## **5.10** Execute Imputation Algorithm From FRI to GRM Polygons {-#imputation510}
 
@@ -1175,7 +1730,7 @@ dat_grm <- left_join(dat_grm, dat_grm_imp)
 
 ## **5.11** Results: Imputation X-Variable Performance {-#imputation511}
 
-Now having run the imputation and added the imputed attributes to the GRM polygon data, we can explore the results. We start by looking at the relative root mean squared difference and relative mean bias error of the X-variables used in the algorithm.
+Now having run the imputation and added the imputed attributes to the GRM polygon data, we can explore the results. We start by looking at the relative root mean squared difference (RRMSD) and relative mean bias error (RMBE) of the X-variables used in the algorithm.
 
 
 ```r
@@ -1215,17 +1770,43 @@ perf_cast %<>% filter(!(variable %in% c('x', 'y')))
 knitr::kable(perf_cast, caption = "Imputation X-Variable Performance between FRI and GRM Forest Stand Polygons", label = NA)
 ```
 
-
-
-Table: Imputation X-Variable Performance between FRI and GRM Forest Stand Polygons
-
-|variable | rrmsd (%)| rmbe (%)|
-|:--------|---------:|--------:|
-|avg      |      3.82|    -0.04|
-|rumple   |      2.71|     0.09|
-|pcum8    |      0.88|     0.12|
-|sd       |      4.16|    -0.40|
-|b6       |      2.08|    -0.16|
+<table>
+<caption>Imputation X-Variable Performance between FRI and GRM Forest Stand Polygons</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> variable </th>
+   <th style="text-align:right;"> rrmsd (%) </th>
+   <th style="text-align:right;"> rmbe (%) </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> avg </td>
+   <td style="text-align:right;"> 3.82 </td>
+   <td style="text-align:right;"> -0.04 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> rumple </td>
+   <td style="text-align:right;"> 2.71 </td>
+   <td style="text-align:right;"> 0.09 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> pcum8 </td>
+   <td style="text-align:right;"> 0.88 </td>
+   <td style="text-align:right;"> 0.12 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> sd </td>
+   <td style="text-align:right;"> 4.16 </td>
+   <td style="text-align:right;"> -0.40 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> b6 </td>
+   <td style="text-align:right;"> 2.08 </td>
+   <td style="text-align:right;"> -0.16 </td>
+  </tr>
+</tbody>
+</table>
 
 The RRMSD results are all below 5% and RMBE does not show bias toward negative of positive difference. These results are comparable to those found when conducting imputation over FRI polygons only.
 
@@ -1293,7 +1874,7 @@ p2 <- ggplot(fri_sf) +
 grid.arrange(p1, p2, ncol = 1)
 ```
 
-<img src="05-imputation_files/figure-html/imputationp5121-1.png" width="1728" />
+<img src="05-imputation_files/figure-html/imputationp5121-1.png" width="1152" />
 
 Imputed age values show a similar spatial distribution to observed age values at a broad scale. Of course, the values should be scrutinized on a fine scale in specific areas. This task is much easier to do in a GIS software using the output shapefiles.
 
@@ -1365,7 +1946,7 @@ p2 <- ggplot(fri_sf) +
 grid.arrange(p1, p2, ncol = 1)
 ```
 
-<img src="05-imputation_files/figure-html/imputationp5131-1.png" width="1728" />
+<img src="05-imputation_files/figure-html/imputationp5131-1.png" width="1152" />
 
 We can observe a similar distribution of species classes.
 
@@ -1375,7 +1956,7 @@ Five functional group classification:
 ```r
 # plot five func group classification
 p1 <- ggplot(grm_sf) +
-  geom_sf(mapping = aes(fill = class5), linewidth = 0.05) +
+  geom_sf(mapping = aes(fill = class5), linewidth = 0.01) +
   coord_sf() +
   scale_fill_manual(values = c('#ccbb44', '#228833', '#4477aa',
                       '#ee6677', '#aa3377'), 
@@ -1385,7 +1966,7 @@ p1 <- ggplot(grm_sf) +
   theme(plot.title = element_text(hjust = 0.5))
 
 p2 <- ggplot(fri_sf) +
-  geom_sf(mapping = aes(fill = class5), linewidth = 0.05) +
+  geom_sf(mapping = aes(fill = class5), linewidth = 0.01) +
   coord_sf() +
   scale_fill_manual(values = c('#ccbb44', '#228833', '#4477aa',
                       '#ee6677', '#aa3377'), 
@@ -1397,7 +1978,7 @@ p2 <- ggplot(fri_sf) +
 grid.arrange(p1, p2, ncol = 1)
 ```
 
-<img src="05-imputation_files/figure-html/imputationp5132-1.png" width="1728" />
+<img src="05-imputation_files/figure-html/imputationp5132-1.png" width="1152" />
 
 Overall distribution of three functional group classification:
 
@@ -1518,7 +2099,7 @@ The distribution of imputed five classes of species is also very similar to the 
 
 We only used ALS variables derived directly from the point cloud, as in our performance analysis these variables performed slightly better than EFI attributes modelled using an area-based approach. That being said, the performance difference was minimal, as many variables are highly correlated and thus interchangable. In terms of number of X-variables used in imputation, our performance analysis showed a small difference between n = 5 and n = 7. We stuck with n = 7 that performed slightly better. N = 3 performed much poorer. We used k = 5 as it performed better than k = 3 and k = 1 yet still resulted in an adequate distribution of variables (higher values of k lead to less variability in the imputed attributes).
 
-Although we compared imputed and observed values across the FRI data, we were limited in our ability to quantify error in relation to ground truth. Little work has investigated the accuracy of FRI species and age attributes. Accuracy depends on the complexity of the forest ecosystem and interpretation procedures (Tompalski et al., 2021). Thus Implications will vary across areas, and also based on harvesting and management priorities.
+Although we compared imputed and observed values across the FRI data, we were limited in our ability to quantify error in relation to ground truth. Little work has investigated the accuracy of FRI species and age attributes. Accuracy depends on the complexity of the forest ecosystem and interpretation procedures (Tompalski et al., 2021). Thus implications will vary across areas, and also based on harvesting and management priorities.
 
 Across the RMF we found similar distributions of age and species between imputed and observed values, even with the GRM data containing ~70% more polygons. Overall distributions are important for forest planning and can even out across the landscape even if individual forest stands do not match imputed and observed values (Thompson et al., 2007).
 

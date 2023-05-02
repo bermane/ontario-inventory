@@ -22,7 +22,7 @@
 
 
 
-<meta name="date" content="2023-04-27" />
+<meta name="date" content="2023-05-01" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -30,7 +30,7 @@
   
   
 <link rel="prev" href="segmentation.html"/>
-<link rel="next" href="references.html"/>
+<link rel="next" href="fsf.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -210,6 +210,34 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputation517"><i class="fa fa-check"></i><strong>5.17</strong> Future Work</a></li>
 <li class="chapter" data-level="" data-path="imputation.html"><a href="imputation.html#imputation518"><i class="fa fa-check"></i><strong>5.18</strong> Summary</a></li>
 </ul></li>
+<li class="chapter" data-level="" data-path="fsf.html"><a href="fsf.html"><i class="fa fa-check"></i><strong>6</strong> Case Study: French-Severn Forest</a>
+<ul>
+<li class="chapter" data-level="" data-path="fsf.html"><a href="fsf.html#fsf61"><i class="fa fa-check"></i><strong>6.1</strong> Segmentation</a>
+<ul>
+<li class="chapter" data-level="" data-path="fsf.html"><a href="fsf.html#fsf611"><i class="fa fa-check"></i><strong>6.1.1</strong> Run Algorithm</a></li>
+<li class="chapter" data-level="" data-path="fsf.html"><a href="fsf.html#fsf612"><i class="fa fa-check"></i><strong>6.1.2</strong> Results: Summary Statistics</a></li>
+<li class="chapter" data-level="" data-path="fsf.html"><a href="fsf.html#fsf613"><i class="fa fa-check"></i><strong>6.1.3</strong> Results: Distribution Plots</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="fsf.html"><a href="fsf.html#fsf62"><i class="fa fa-check"></i><strong>6.2</strong> Imputation Over FRI</a>
+<ul>
+<li class="chapter" data-level="" data-path="fsf.html"><a href="fsf.html#fsf621"><i class="fa fa-check"></i><strong>6.2.1</strong> Run Algorithm</a></li>
+<li class="chapter" data-level="" data-path="fsf.html"><a href="fsf.html#fsf622"><i class="fa fa-check"></i><strong>6.2.2</strong> Results: Imputation Over FRI</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="fsf.html"><a href="fsf.html#fsf63"><i class="fa fa-check"></i><strong>6.3</strong> Imputation from FRI to GRM</a>
+<ul>
+<li class="chapter" data-level="" data-path="fsf.html"><a href="fsf.html#fsf631"><i class="fa fa-check"></i><strong>6.3.1</strong> Run Algorithm</a></li>
+<li class="chapter" data-level="" data-path="fsf.html"><a href="fsf.html#fsf632"><i class="fa fa-check"></i><strong>6.3.2</strong> Results: Imputation X-Variable Performance</a></li>
+<li class="chapter" data-level="" data-path="fsf.html"><a href="fsf.html#fsf633"><i class="fa fa-check"></i><strong>6.3.3</strong> Results: Distribution of Age</a></li>
+<li class="chapter" data-level="" data-path="fsf.html"><a href="fsf.html#fsf634"><i class="fa fa-check"></i><strong>6.3.4</strong> Results: Distribution of Species</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="perf.html"><a href="perf.html"><i class="fa fa-check"></i><strong>7</strong> Imputation Performance Analysis: Comparing RMF and FSF</a>
+<ul>
+<li class="chapter" data-level="" data-path="perf.html"><a href="perf.html#perf71"><i class="fa fa-check"></i><strong>7.1</strong> Introduction</a></li>
+<li class="chapter" data-level="" data-path="perf.html"><a href="perf.html#perf72"><i class="fa fa-check"></i><strong>7.2</strong> Results in RMF</a></li>
+<li class="chapter" data-level="" data-path="perf.html"><a href="perf.html#perf73"><i class="fa fa-check"></i><strong>7.3</strong> Results in FSF</a></li>
+<li class="chapter" data-level="" data-path="perf.html"><a href="perf.html#perf74"><i class="fa fa-check"></i><strong>7.4</strong> Comparing Results</a></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><strong>6</strong> References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -237,11 +265,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><strong>5.1</strong> Introduction<a href="imputation.html#imputation51" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>After automatically delineating forest stands from ALS data, the second step of this project is to integrate the vast database of conventionally derived forest composition attributes with EFI structural attributes from ALS. EFIs contain forest attributes such as Lorey’s height, quadratic mean diameter at breast height, basal area, merchantable volume and above-ground biomass. Yet ALS is limited in its ability to accurately estimate additional important forest composition attributes such as species and forest stand age. Thus, although we can easily average ALS/EFI attributes using zonal statistics, we need a workflow to carry forward important interpreter-derived attributes from the conventional FRI. We achieve this through imputation.</p>
 <p>k-nearest neighbor (kNN) imputation is a widely used technique to derive spatially contiguous forest attributes for inventory and monitoring purposes (Chirici et al., 2016; McRoberts et al., 2010). kNN is applicable when desired forest attributes (Y-variables) exist in a subset of all observations (reference observations), and are imputed into observations that are missing Y-variable values (target observations). The algorithm works by minimizing a distance function between variables without missing values across the dataset (X-variables), finding k-reference observations closest to a single target observation, and imputing Y-variable values from k-reference observations into the target observation. In this case X-variables are derived from ALS and optical spaceborne remote sensing due to the contiguous nature of the data. This technique is distribution-free, multivariate, and non-parametric (Eskelson et al., 2009). It is based on the premise that observations with similar X-variable values should also have similar desired forest attribute values (Y-variable values). Thus, X-variable selection can be more important than imputation method (Brosofske et al., 2014) and therefore an iterative performance analysis is used to aid in optimal variable selection. Since all attributes are imputed together from k-nearest neighbors, kNN imputation maintains the relationship between interpreter derived attributes (Coops et al., 2021).</p>
-<p>In this example we will walk through the imputation of FRI age and species attributes into the forest stand polygons we generated using the GRM algorithm. As explained in a forthcoming journal article, we undertook an iterative performance analysis to select the optimal X-variables to use to drive the imputation algorithm. We will not test different combinations of X-variables in this example, rather just use the optimal selection found for the RMF study area, focusing on the process of imputing age and species attributes into new polygons and assessing the distribution of attributes in relation to the conventional FRI.</p>
+<p>In this example we will walk through the imputation of FRI age and species attributes into the forest stand polygons we generated using the GRM algorithm. As explained in Part 7 below (as well as in a forthcoming journal article), we undertook an iterative performance analysis to select the optimal X-variables to use to drive the imputation algorithm. We will not test different combinations of X-variables in this example, rather just use the optimal selection found for the RMF study area, focusing on the process of imputing age and species attributes into new polygons and assessing the distribution of attributes in relation to the conventional FRI.</p>
 </div>
 <div id="imputation52" class="section level2 unnumbered hasAnchor">
 <h2><strong>5.2</strong> Imputation Parameters<a href="imputation.html#imputation52" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>The kNN algorithm functions by minimizing the Euclidean distance, without weights, between n X-variables in a target observation (in this case a forested polygon) and k-reference observations. We tested combinations of n = 3/5/7 and use n = 7 in this example. In our testing, n = 7 performed slightly better than n = 5 and much better than n = 3.</p>
+<p>The kNN algorithm functions by minimizing the Euclidean distance, without weights, between n X-variables in a target observation (in this case a forested polygon) and k-reference observations. We tested combinations of n = 3/5/7 and use n = 7 in this example.</p>
 <p>When k = 1, values from the nearest reference observation (X and Y-variables) are directly joined to the target observation. When k &gt; 1, values from the nearest reference observations are averaged using either the mean (for numeric variables) or mode (for categorical values). All Y-variables are imputed together, maintaining the relationship between variables in the reference observations. We tested combinations of k = 1/3/5 and use k = 5 in this example as it produced optimal results. In general, larger values of k lead to higher performance but more averaging of estimated attributes, which decreases variability.</p>
 </div>
 <div id="imputation53" class="section level2 unnumbered hasAnchor">
@@ -258,7 +286,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>sd: Standard deviation of returns height &gt; 1.3 m classified as vegetation</li>
 <li>b6: Cloud-free composite of Sentinel-2 red-edge 2 (band 6; 740 nm) surface reflectance</li>
 </ul>
-<p>These five attributes comprise the optimal imputation X-variables from our performance analysis. The additional two variables used are the x and y coordinates of each polygon centroid, and are calculated automatically in the code. In our analysis, we found that these attributes derived directly from the ALS point cloud performed slightly better than modeled attributes from the EFI. Many of the ALS/EFI attributes are highly correlated and thus yield similar imputation results.</p>
+<p>These five attributes comprise the optimal imputation X-variables from our performance analysis. The additional two variables used are the x and y coordinates of each polygon centroid, and are calculated automatically in the code. In the RMF, we found that these attributes derived directly from the ALS point cloud performed slightly better than modeled attributes from the EFI. Many of the ALS/EFI attributes are highly correlated and thus yield similar imputation results.</p>
 <p>Variables for polygon data screening:</p>
 <ul>
 <li>p95: 95th percentile of returns height &gt; 1.3 meters classified as vegetation</li>
@@ -297,63 +325,65 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb14-13"><a href="imputation.html#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="co">#                    &#39;viridis&#39;,</span></span>
 <span id="cb14-14"><a href="imputation.html#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="co">#                    &#39;scales&#39;,</span></span>
 <span id="cb14-15"><a href="imputation.html#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="co">#                    &#39;janitor&#39;,</span></span>
-<span id="cb14-16"><a href="imputation.html#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="co">#                    &#39;kableExtra&#39;))</span></span>
-<span id="cb14-17"><a href="imputation.html#cb14-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-18"><a href="imputation.html#cb14-18" aria-hidden="true" tabindex="-1"></a><span class="co"># make sure to have OTB installed from here:</span></span>
-<span id="cb14-19"><a href="imputation.html#cb14-19" aria-hidden="true" tabindex="-1"></a><span class="co"># https://www.orfeo-toolbox.org/</span></span>
-<span id="cb14-20"><a href="imputation.html#cb14-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-21"><a href="imputation.html#cb14-21" aria-hidden="true" tabindex="-1"></a><span class="do">#####################</span></span>
-<span id="cb14-22"><a href="imputation.html#cb14-22" aria-hidden="true" tabindex="-1"></a><span class="do">### LOAD PACKAGES </span><span class="al">###</span></span>
-<span id="cb14-23"><a href="imputation.html#cb14-23" aria-hidden="true" tabindex="-1"></a><span class="do">#####################</span></span>
-<span id="cb14-24"><a href="imputation.html#cb14-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-25"><a href="imputation.html#cb14-25" aria-hidden="true" tabindex="-1"></a><span class="co"># load packages</span></span>
-<span id="cb14-26"><a href="imputation.html#cb14-26" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra)</span>
-<span id="cb14-27"><a href="imputation.html#cb14-27" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb14-28"><a href="imputation.html#cb14-28" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(exactextractr)</span>
-<span id="cb14-29"><a href="imputation.html#cb14-29" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
-<span id="cb14-30"><a href="imputation.html#cb14-30" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(magrittr)</span>
-<span id="cb14-31"><a href="imputation.html#cb14-31" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gridExtra)</span>
-<span id="cb14-32"><a href="imputation.html#cb14-32" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RANN)</span>
-<span id="cb14-33"><a href="imputation.html#cb14-33" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reshape2)</span>
-<span id="cb14-34"><a href="imputation.html#cb14-34" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(viridis)</span>
-<span id="cb14-35"><a href="imputation.html#cb14-35" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
-<span id="cb14-36"><a href="imputation.html#cb14-36" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
-<span id="cb14-37"><a href="imputation.html#cb14-37" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
-<span id="cb14-38"><a href="imputation.html#cb14-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-39"><a href="imputation.html#cb14-39" aria-hidden="true" tabindex="-1"></a><span class="do">####################################</span></span>
-<span id="cb14-40"><a href="imputation.html#cb14-40" aria-hidden="true" tabindex="-1"></a><span class="do">### SET CODE AND FILE PARAMETERS </span><span class="al">###</span></span>
+<span id="cb14-16"><a href="imputation.html#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="co">#                    &#39;kableExtra&#39;,</span></span>
+<span id="cb14-17"><a href="imputation.html#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="co">#                    &#39;knitr&#39;))</span></span>
+<span id="cb14-18"><a href="imputation.html#cb14-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-19"><a href="imputation.html#cb14-19" aria-hidden="true" tabindex="-1"></a><span class="co"># make sure to have OTB installed from here:</span></span>
+<span id="cb14-20"><a href="imputation.html#cb14-20" aria-hidden="true" tabindex="-1"></a><span class="co"># https://www.orfeo-toolbox.org/</span></span>
+<span id="cb14-21"><a href="imputation.html#cb14-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-22"><a href="imputation.html#cb14-22" aria-hidden="true" tabindex="-1"></a><span class="do">#####################</span></span>
+<span id="cb14-23"><a href="imputation.html#cb14-23" aria-hidden="true" tabindex="-1"></a><span class="do">### LOAD PACKAGES </span><span class="al">###</span></span>
+<span id="cb14-24"><a href="imputation.html#cb14-24" aria-hidden="true" tabindex="-1"></a><span class="do">#####################</span></span>
+<span id="cb14-25"><a href="imputation.html#cb14-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-26"><a href="imputation.html#cb14-26" aria-hidden="true" tabindex="-1"></a><span class="co"># load packages</span></span>
+<span id="cb14-27"><a href="imputation.html#cb14-27" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra)</span>
+<span id="cb14-28"><a href="imputation.html#cb14-28" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb14-29"><a href="imputation.html#cb14-29" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(exactextractr)</span>
+<span id="cb14-30"><a href="imputation.html#cb14-30" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb14-31"><a href="imputation.html#cb14-31" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(magrittr)</span>
+<span id="cb14-32"><a href="imputation.html#cb14-32" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gridExtra)</span>
+<span id="cb14-33"><a href="imputation.html#cb14-33" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RANN)</span>
+<span id="cb14-34"><a href="imputation.html#cb14-34" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reshape2)</span>
+<span id="cb14-35"><a href="imputation.html#cb14-35" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(viridis)</span>
+<span id="cb14-36"><a href="imputation.html#cb14-36" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
+<span id="cb14-37"><a href="imputation.html#cb14-37" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
+<span id="cb14-38"><a href="imputation.html#cb14-38" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
+<span id="cb14-39"><a href="imputation.html#cb14-39" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb14-40"><a href="imputation.html#cb14-40" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-41"><a href="imputation.html#cb14-41" aria-hidden="true" tabindex="-1"></a><span class="do">####################################</span></span>
-<span id="cb14-42"><a href="imputation.html#cb14-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-43"><a href="imputation.html#cb14-43" aria-hidden="true" tabindex="-1"></a><span class="co"># set file names for ALS input variables</span></span>
+<span id="cb14-42"><a href="imputation.html#cb14-42" aria-hidden="true" tabindex="-1"></a><span class="do">### SET CODE AND FILE PARAMETERS </span><span class="al">###</span></span>
+<span id="cb14-43"><a href="imputation.html#cb14-43" aria-hidden="true" tabindex="-1"></a><span class="do">####################################</span></span>
 <span id="cb14-44"><a href="imputation.html#cb14-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-45"><a href="imputation.html#cb14-45" aria-hidden="true" tabindex="-1"></a><span class="co"># first set the imputation X-variables</span></span>
-<span id="cb14-46"><a href="imputation.html#cb14-46" aria-hidden="true" tabindex="-1"></a>lidar_imp <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;avg&#39;</span> <span class="ot">=</span> <span class="st">&#39;D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_avg.tif&#39;</span>,</span>
-<span id="cb14-47"><a href="imputation.html#cb14-47" aria-hidden="true" tabindex="-1"></a>               <span class="st">&#39;rumple&#39;</span> <span class="ot">=</span> <span class="st">&#39;D:/ontario_inventory/romeo/SPL metrics/Z_METRICS_MOSAIC/individual/RMF_RUMPLE_MOSAIC_r_rumple.tif&#39;</span>,</span>
-<span id="cb14-48"><a href="imputation.html#cb14-48" aria-hidden="true" tabindex="-1"></a>               <span class="st">&#39;pcum8&#39;</span> <span class="ot">=</span> <span class="st">&#39;D:/ontario_inventory/romeo/SPL metrics/Z_METRICS_MOSAIC/individual/RMF_Z_METRICS_MOSAIC_zpcum8.tif&#39;</span>,</span>
-<span id="cb14-49"><a href="imputation.html#cb14-49" aria-hidden="true" tabindex="-1"></a>               <span class="st">&#39;sd&#39;</span> <span class="ot">=</span> <span class="st">&#39;D:/ontario_inventory/romeo/SPL metrics/Z_METRICS_MOSAIC/individual/RMF_Z_METRICS_MOSAIC_zsd.tif&#39;</span>,</span>
-<span id="cb14-50"><a href="imputation.html#cb14-50" aria-hidden="true" tabindex="-1"></a>               <span class="st">&#39;b6&#39;</span> <span class="ot">=</span> <span class="st">&#39;D:/ontario_inventory/romeo/Sentinel/red_edge_2.tif&#39;</span>)</span>
-<span id="cb14-51"><a href="imputation.html#cb14-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-52"><a href="imputation.html#cb14-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-53"><a href="imputation.html#cb14-53" aria-hidden="true" tabindex="-1"></a><span class="co"># next set the data screening variables</span></span>
-<span id="cb14-54"><a href="imputation.html#cb14-54" aria-hidden="true" tabindex="-1"></a>lidar_scr <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;p95&#39;</span> <span class="ot">=</span> <span class="st">&#39;D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_p95.tif&#39;</span>,</span>
-<span id="cb14-55"><a href="imputation.html#cb14-55" aria-hidden="true" tabindex="-1"></a>               <span class="st">&#39;cc&#39;</span> <span class="ot">=</span> <span class="st">&#39;D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_2m_cov.tif&#39;</span>)</span>
-<span id="cb14-56"><a href="imputation.html#cb14-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-57"><a href="imputation.html#cb14-57" aria-hidden="true" tabindex="-1"></a><span class="co"># set file location of FRI polygons shape file</span></span>
-<span id="cb14-58"><a href="imputation.html#cb14-58" aria-hidden="true" tabindex="-1"></a>fri <span class="ot">&lt;-</span> <span class="st">&#39;D:/ontario_inventory/romeo/RMF_EFI_layers/Polygons Inventory/RMF_PolygonForest.shp&#39;</span></span>
-<span id="cb14-59"><a href="imputation.html#cb14-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-60"><a href="imputation.html#cb14-60" aria-hidden="true" tabindex="-1"></a><span class="co"># set file location of GRM polygons shape file</span></span>
-<span id="cb14-61"><a href="imputation.html#cb14-61" aria-hidden="true" tabindex="-1"></a>grm <span class="ot">&lt;-</span> <span class="st">&#39;C:/Users/bermane/Desktop/RMF/grm_10_01_05.shp&#39;</span></span>
-<span id="cb14-62"><a href="imputation.html#cb14-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-63"><a href="imputation.html#cb14-63" aria-hidden="true" tabindex="-1"></a><span class="co"># set output folder for files generated</span></span>
-<span id="cb14-64"><a href="imputation.html#cb14-64" aria-hidden="true" tabindex="-1"></a><span class="co"># make sure no &quot;/&quot; at end of folder location!</span></span>
-<span id="cb14-65"><a href="imputation.html#cb14-65" aria-hidden="true" tabindex="-1"></a>out_dir <span class="ot">&lt;-</span> <span class="st">&#39;C:/Users/bermane/Desktop/RMF&#39;</span></span>
-<span id="cb14-66"><a href="imputation.html#cb14-66" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-67"><a href="imputation.html#cb14-67" aria-hidden="true" tabindex="-1"></a><span class="co"># set file location of 2018 VLCE 2.0 landcover data</span></span>
-<span id="cb14-68"><a href="imputation.html#cb14-68" aria-hidden="true" tabindex="-1"></a><span class="co"># using 2018 because it is the year of Romeo ALS acquisition</span></span>
-<span id="cb14-69"><a href="imputation.html#cb14-69" aria-hidden="true" tabindex="-1"></a><span class="co"># can change based on ALS acquisition year</span></span>
-<span id="cb14-70"><a href="imputation.html#cb14-70" aria-hidden="true" tabindex="-1"></a><span class="co"># download here:</span></span>
-<span id="cb14-71"><a href="imputation.html#cb14-71" aria-hidden="true" tabindex="-1"></a><span class="co"># https://opendata.nfis.org/mapserver/nfis-change_eng.html</span></span>
-<span id="cb14-72"><a href="imputation.html#cb14-72" aria-hidden="true" tabindex="-1"></a>lc_f <span class="ot">&lt;-</span> <span class="st">&#39;D:/ontario_inventory/VLCE/CA_forest_VLCE2_2018.tif&#39;</span></span></code></pre></div>
+<span id="cb14-45"><a href="imputation.html#cb14-45" aria-hidden="true" tabindex="-1"></a><span class="co"># set file names for ALS input variables</span></span>
+<span id="cb14-46"><a href="imputation.html#cb14-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-47"><a href="imputation.html#cb14-47" aria-hidden="true" tabindex="-1"></a><span class="co"># first set the imputation X-variables</span></span>
+<span id="cb14-48"><a href="imputation.html#cb14-48" aria-hidden="true" tabindex="-1"></a>lidar_imp <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;avg&#39;</span> <span class="ot">=</span> <span class="st">&#39;D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_avg.tif&#39;</span>,</span>
+<span id="cb14-49"><a href="imputation.html#cb14-49" aria-hidden="true" tabindex="-1"></a>               <span class="st">&#39;rumple&#39;</span> <span class="ot">=</span> <span class="st">&#39;D:/ontario_inventory/romeo/SPL metrics/Z_METRICS_MOSAIC/individual/RMF_RUMPLE_MOSAIC_r_rumple.tif&#39;</span>,</span>
+<span id="cb14-50"><a href="imputation.html#cb14-50" aria-hidden="true" tabindex="-1"></a>               <span class="st">&#39;pcum8&#39;</span> <span class="ot">=</span> <span class="st">&#39;D:/ontario_inventory/romeo/SPL metrics/Z_METRICS_MOSAIC/individual/RMF_Z_METRICS_MOSAIC_zpcum8.tif&#39;</span>,</span>
+<span id="cb14-51"><a href="imputation.html#cb14-51" aria-hidden="true" tabindex="-1"></a>               <span class="st">&#39;sd&#39;</span> <span class="ot">=</span> <span class="st">&#39;D:/ontario_inventory/romeo/SPL metrics/Z_METRICS_MOSAIC/individual/RMF_Z_METRICS_MOSAIC_zsd.tif&#39;</span>,</span>
+<span id="cb14-52"><a href="imputation.html#cb14-52" aria-hidden="true" tabindex="-1"></a>               <span class="st">&#39;b6&#39;</span> <span class="ot">=</span> <span class="st">&#39;D:/ontario_inventory/romeo/Sentinel/red_edge_2.tif&#39;</span>)</span>
+<span id="cb14-53"><a href="imputation.html#cb14-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-54"><a href="imputation.html#cb14-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-55"><a href="imputation.html#cb14-55" aria-hidden="true" tabindex="-1"></a><span class="co"># next set the data screening variables</span></span>
+<span id="cb14-56"><a href="imputation.html#cb14-56" aria-hidden="true" tabindex="-1"></a>lidar_scr <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;p95&#39;</span> <span class="ot">=</span> <span class="st">&#39;D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_p95.tif&#39;</span>,</span>
+<span id="cb14-57"><a href="imputation.html#cb14-57" aria-hidden="true" tabindex="-1"></a>               <span class="st">&#39;cc&#39;</span> <span class="ot">=</span> <span class="st">&#39;D:/ontario_inventory/romeo/RMF_EFI_layers/SPL100 metrics/RMF_20m_T130cm_2m_cov.tif&#39;</span>)</span>
+<span id="cb14-58"><a href="imputation.html#cb14-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-59"><a href="imputation.html#cb14-59" aria-hidden="true" tabindex="-1"></a><span class="co"># set file location of FRI polygons shape file</span></span>
+<span id="cb14-60"><a href="imputation.html#cb14-60" aria-hidden="true" tabindex="-1"></a>fri <span class="ot">&lt;-</span> <span class="st">&#39;D:/ontario_inventory/romeo/RMF_EFI_layers/Polygons Inventory/RMF_PolygonForest.shp&#39;</span></span>
+<span id="cb14-61"><a href="imputation.html#cb14-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-62"><a href="imputation.html#cb14-62" aria-hidden="true" tabindex="-1"></a><span class="co"># set file location of GRM polygons shape file</span></span>
+<span id="cb14-63"><a href="imputation.html#cb14-63" aria-hidden="true" tabindex="-1"></a>grm <span class="ot">&lt;-</span> <span class="st">&#39;C:/Users/bermane/Desktop/RMF/grm_10_01_05.shp&#39;</span></span>
+<span id="cb14-64"><a href="imputation.html#cb14-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-65"><a href="imputation.html#cb14-65" aria-hidden="true" tabindex="-1"></a><span class="co"># set output folder for files generated</span></span>
+<span id="cb14-66"><a href="imputation.html#cb14-66" aria-hidden="true" tabindex="-1"></a><span class="co"># make sure no &quot;/&quot; at end of folder location!</span></span>
+<span id="cb14-67"><a href="imputation.html#cb14-67" aria-hidden="true" tabindex="-1"></a>out_dir <span class="ot">&lt;-</span> <span class="st">&#39;C:/Users/bermane/Desktop/RMF&#39;</span></span>
+<span id="cb14-68"><a href="imputation.html#cb14-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-69"><a href="imputation.html#cb14-69" aria-hidden="true" tabindex="-1"></a><span class="co"># set file location of 2018 VLCE 2.0 landcover data</span></span>
+<span id="cb14-70"><a href="imputation.html#cb14-70" aria-hidden="true" tabindex="-1"></a><span class="co"># using 2018 because it is the year of Romeo ALS acquisition</span></span>
+<span id="cb14-71"><a href="imputation.html#cb14-71" aria-hidden="true" tabindex="-1"></a><span class="co"># can change based on ALS acquisition year</span></span>
+<span id="cb14-72"><a href="imputation.html#cb14-72" aria-hidden="true" tabindex="-1"></a><span class="co"># download here:</span></span>
+<span id="cb14-73"><a href="imputation.html#cb14-73" aria-hidden="true" tabindex="-1"></a><span class="co"># https://opendata.nfis.org/mapserver/nfis-change_eng.html</span></span>
+<span id="cb14-74"><a href="imputation.html#cb14-74" aria-hidden="true" tabindex="-1"></a>lc_f <span class="ot">&lt;-</span> <span class="st">&#39;D:/ontario_inventory/VLCE/CA_forest_VLCE2_2018.tif&#39;</span></span></code></pre></div>
 </div>
 <div id="imputation55" class="section level2 unnumbered hasAnchor">
 <h2><strong>5.5</strong> Pre-processing: Extract Variables into Polygons<a href="imputation.html#imputation55" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -3202,7 +3232,7 @@ b6
 </div>
 <div id="imputation516" class="section level2 unnumbered hasAnchor">
 <h2><strong>5.16</strong> Caveats<a href="imputation.html#imputation516" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>We only used ALS variables derived directly from the point cloud, as in our performance analysis these variables performed slightly better than EFI attributes modelled using an area-based approach. That being said, the performance difference was minimal, as many variables are highly correlated and thus interchangable. In terms of number of X-variables used in imputation, our performance analysis showed a small difference between n = 5 and n = 7. We stuck with n = 7 that performed slightly better. N = 3 performed much poorer. We used k = 5 as it performed better than k = 3 and k = 1 yet still resulted in an adequate distribution of variables (higher values of k lead to less variability in the imputed attributes).</p>
+<p>We only used ALS variables derived directly from the point cloud, as in our performance analysis these variables performed slightly better than EFI attributes modelled using an area-based approach. That being said, the performance difference was minimal, as many variables are highly correlated and thus interchangable. In the FSF (Part 6 below), EFI attributes are used for imputation as they performed better. Details of the performance analysis are in Part 7 below. In terms of number of X-variables used in imputation in RMF, our performance analysis showed a small difference between n = 5 and n = 7. We stuck with n = 7 that performed slightly better. N = 3 performed much poorer. We used k = 5 as it performed better than k = 3 and k = 1 yet still resulted in an adequate distribution of variables (higher values of k lead to less variability in the imputed attributes).</p>
 <p>Although we compared imputed and observed values across the FRI data, we were limited in our ability to quantify error in relation to ground truth. Little work has investigated the accuracy of FRI species and age attributes. Accuracy depends on the complexity of the forest ecosystem and interpretation procedures (Tompalski et al., 2021). Thus implications will vary across areas, and also based on harvesting and management priorities.</p>
 <p>Across the RMF we found similar distributions of age and species between imputed and observed values, even with the GRM data containing ~70% more polygons. Overall distributions are important for forest planning and can even out across the landscape even if individual forest stands do not match imputed and observed values (Thompson et al., 2007).</p>
 </div>
@@ -3222,7 +3252,7 @@ b6
         </div>
       </div>
 <a href="segmentation.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="fsf.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

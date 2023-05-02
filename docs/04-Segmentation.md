@@ -63,7 +63,8 @@ Now working in R, we will showcase a demo workflow, segmenting the Romeo Malette
 #                    'berryFunctions',
 #                    'lwgeom',
 #                    'magrittr',
-#                    'gridExtra'))
+#                    'gridExtra',
+#                    'knitr'))
 
 # make sure to have OTB installed from here:
 # https://www.orfeo-toolbox.org/
@@ -82,6 +83,7 @@ library(berryFunctions)
 library(lwgeom)
 library(magrittr)
 library(gridExtra)
+library(knitr)
 
 ####################################
 ### SET CODE AND FILE PARAMETERS ###

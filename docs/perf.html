@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Integration of Photo Interpreted and LiDAR Attributes into a Polygonal Forest Inventory Framework</title>
+  <title>7 Imputation Performance Analysis: Comparing RMF and FSF | Integration of Photo Interpreted and LiDAR Attributes into a Polygonal Forest Inventory Framework</title>
   <meta name="description" content="A place to find background information and follow updates related to the project." />
   <meta name="generator" content="bookdown 0.27 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Integration of Photo Interpreted and LiDAR Attributes into a Polygonal Forest Inventory Framework" />
+  <meta property="og:title" content="7 Imputation Performance Analysis: Comparing RMF and FSF | Integration of Photo Interpreted and LiDAR Attributes into a Polygonal Forest Inventory Framework" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="A place to find background information and follow updates related to the project." />
   <meta name="github-repo" content="bermane/ontario-inventory" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Integration of Photo Interpreted and LiDAR Attributes into a Polygonal Forest Inventory Framework" />
+  <meta name="twitter:title" content="7 Imputation Performance Analysis: Comparing RMF and FSF | Integration of Photo Interpreted and LiDAR Attributes into a Polygonal Forest Inventory Framework" />
   
   <meta name="twitter:description" content="A place to find background information and follow updates related to the project." />
   
@@ -29,8 +29,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-
-<link rel="next" href="people.html"/>
+<link rel="prev" href="fsf.html"/>
+<link rel="next" href="references.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -259,29 +259,41 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="header">
-<h1 class="title">Integration of Photo Interpreted and LiDAR Attributes into a Polygonal Forest Inventory Framework</h1>
-<p class="author"><em><div class="line-block">Ethan Berman<br />
-Research Scientist<br />
-Integrated Remote Sensing Studio<br />
-University of British Columbia</div></em></p>
-<p class="date"><em>2023-05-01</em></p>
+<div id="perf" class="section level1 unnumbered hasAnchor">
+<h1><strong>7</strong> Imputation Performance Analysis: Comparing RMF and FSF<a href="perf.html#perf" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="perf71" class="section level2 unnumbered hasAnchor">
+<h2><strong>7.1</strong> Introduction<a href="perf.html#perf71" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>As mentioned earlier in the imputation workflow, we conducted a performance analysis to explore the optimal combination of imputation X-variables to use in the imputation algorithm. As we conducted this analysis in both the RMF and FSF (and ran the imputation algorithm in both these areas), it is worth sharing the results of the performance analyses. First, some background on the performance analysis itself.</p>
+<p>We examined imputation performance using combinations of N = 3, N = 5, and N = 7 X-variables, and K = 1, K = 3, and K = 5 nearest neighbors. We filtered the X-variables into three categories: ALS metrics, EFI attributes, and all variables combined. We were interested to understand whether EFI attributes improved performance as opposed to using ALS metrics derived directly from the point cloud. We included Polygon centroid coordinates (x and) as well as Sentinel-2 red-edge 2 surface reflectance in all categories. We determined the optimal outputs by calculating an average error metric using the following logic:</p>
+<ol style="list-style-type: decimal">
+<li>We first derived the error (100 – accuracy) of the four species composition metrics and calculated the mean value.</li>
+<li>We then calculated z-scores by centering and scaling the RMSD of age and mean error of species composition by subtracting the mean from each value and dividing by the standard deviation.</li>
+<li>We then averaged the two z-scores and used the minimum value to dictate optimal models, filtering by category (ALS, EFI, and combined) and combination of n and k.</li>
+</ol>
+<p>Because we calculated the average error z-scores on the full set of model outputs, we compared performance within as well as between categories.</p>
+<p>We used the optimal set of X-variables for imputation in the RMF and FSF based on the performance analysis in each respective study area.</p>
 </div>
-<div id="introduction" class="section level1 unnumbered hasAnchor">
-<h1><strong>1</strong> Introduction<a href="index.html#introduction" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>Welcome! This website serves as the information hub for the <em>Integration of Photo Interpreted and LiDAR Attributes into a Polygonal Forest Inventory Framework</em> project. The project is led by Prof. Nicholas Coops from 2021-2023 and made possible through a <a href="http://www.forestryfutures.ca/">Forestry Futures Trust Ontario</a> grant. Here you will find details about the project partners, project objectives, and analyses completed including coding demos and results. For further inquiries please feel free to <a href="ethan.berman@ubc.ca">email me</a>.</p>
-<div id="summary" class="section level2 unnumbered hasAnchor">
-<h2><strong>1.1</strong> Project Summary<a href="index.html#summary" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>The acquisition of Airborne Laser Scanning (ALS) Single Photon Lidar over the forested area of Ontario is redefining how forest attributes are predicted and monitored throughout the Province. A key question remains however, of how to aggregate these area-based (raster) estimates of forest attributes into traditional strategic or tactical-level inventory polygons. This project is designed to address this need. Outcomes of the project will be open source segmentation and attribute prediction tools to develop a polygon based forest inventory inclusive of both ALS and interpreted forest stand attributes as well as knowledge transfer activities and demonstration at a number of forest management units.</p>
+<div id="perf72" class="section level2 unnumbered hasAnchor">
+<h2><strong>7.2</strong> Results in RMF<a href="perf.html#perf72" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We do not run the entire code for the performance analysis here – only results from optimal model outputs are displayed.</p>
+<div class="figure">
+<img src="imp_perf_rmf.png" alt="" />
+<p class="caption">Imputation X-Variable Performance Results over RMF</p>
 </div>
-<div id="partners" class="section level2 unnumbered hasAnchor">
-<h2><strong>1.2</strong> Project Partners<a href="index.html#partners" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>This project is principally a partnership between the University of British Columbia, GreenFirst Forest Products, the Ontario Ministry of Natural Resources and Forestry, and Forestry Futures Trust Ontario.</p>
-<p>GreenFirst Forest Products (previously RYAM Forest Management) and the University of British Columbia have a history of successful collaboration including the use of LiDAR and aerial photogrammetry for spruce budworm assessment and regeneration mapping. This project will also build upon the very strong links UBC has with the Canadian Wood Fiber Centre (CWFC), which has thus far culminated in more than 20 peer-reviewed publications on CWFC-funded work, including the award winning best practices guide.</p>
-<p>In addition, UBC, GreenFirst Forest Products and the Ontario Ministry of Natural Resources and Forestry are involved in a large NSERC funded project, <a href="mailto:Silv@21" class="email">Silv@21</a>, which is a collaborative research program across Canada focused on developing and applying new silvicultural approaches to forest management under changing forestry demand and markets, climate and diverse public expectations. The questions addressed throughout this project are beyond the scope of <a href="mailto:Silv@21" class="email">Silv@21</a> and therefore an additional effort was needed.</p>
-<p>Working with the province and industry with advanced remote sensing data sources such as ALS ensures that the new forest inventory provides detailed information on forest composition and structure to inform how much wood can be harvested sustainably across the province. By developing tools which allow for integration of raster-based forest inventory attributes from the ALS and utilizing the recognized benefits of the Forest Resources Inventory (FRI) polygonal inventory, Forestry Futures Trust Ontario has the opportunity to advance forest inventory within Ontario in a significant way.</p>
-<p>Issues around data management, modeling and fusion of these datasets together into one integrated accurate and operational inventory is of critical importance. This project provides open access tools and methodologies to allow this to be done.</p>
-<p>The partnerships assembled through private industry, government and universities to address the needs highlighted in this project are critically important and are in direct support of the new Ontario Forest Sector strategy and the Crown Forest Sustainability Act by providing foundational information for economically sustainable forest management planning and spatial planning in the Province.</p>
+<p>We ran the kNN imputation algorithm using every combination of 24 X-variables, n = 3/5/7 and k = 1/3/5. The optimal outputs from each category all had n = 7 and k = 5, and performed similarly with respect to accuracy when estimating age and species composition. Restricting n = 3 reduced age MAE and 5 functional group classification accuracy. N = 7 and N = 5 performed similarly. Restricting k = 3 reduced performance slightly. The rule k = 1 further reduced performance. The combined results are identical to the ALS only results, meaning EFI attributes did not increase performance in the RMF. Many ALS and EFI variables are highly correlated and therefore certain variables are interchangeable with similar performance.</p>
+</div>
+<div id="perf73" class="section level2 unnumbered hasAnchor">
+<h2><strong>7.3</strong> Results in FSF<a href="perf.html#perf73" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="figure">
+<img src="imp_perf_fsf.png" alt="" />
+<p class="caption">Imputation X-Variable Performance Results over RMF</p>
+</div>
+<p>In FSF, we had slightly different EFI attributes and ran the kNN imputation algorithm using every combination of 22 X-variables, n = 3/5/7 and k = 1/3/5. The optimal outputs varied substantially in characteristics when compared to the FRI. The optimal combined model had N = 7, K = 5, and a combination of mostly EFI attributes and one ALS metric (zpcum8). The optimal model in the ALS only category did not actually include any ALS metrics, only the three auxiliary variables: b6, x, and y. The optimal model from the EFI only category had N = 5. All optimal models had K = 5.</p>
+</div>
+<div id="perf74" class="section level2 unnumbered hasAnchor">
+<h2><strong>7.4</strong> Comparing Results<a href="perf.html#perf74" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The performance results from the RMF and FSF show different trends. ALS metrics were important drivers of imputation performance in the RMF, whereas in the FSF EFI attributes were much more important. In the FSF, an imputation model driven by the three auxiliary variables actually performed more optimally than when ALS metrics were included (ALS only category). The optimal combined model in the FSF included three EFI attributes: biomass (agb), basal area (ba), and gmvwl (gross merchantable volume whole log). MAE of age and leading/second species classification accuracy did not vary substantially between RMF and FSF. Three species classification accuracy was higher in FSF.</p>
+<p>Why the varying results between the RMF and FSF? One idea is that The RMF and FSF comprise different ecosystems, with the FSF being more complex (based on number of different species included in photo-interpreted species composition). EFI attributes are calibrated with ground plots and thus may be more important to correct discrepancies in complex ecosystems.</p>
 
 </div>
 </div>
@@ -290,8 +302,8 @@ University of British Columbia</div></em></p>
           </div>
         </div>
       </div>
-
-<a href="people.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="fsf.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

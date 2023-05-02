@@ -2,6 +2,6 @@ book_filename: "ontario-inventory"
 chapter_name: "Part "
 repo: https://github.com/bermane/ontario-inventory
 output_dir: docs
-rmd_files: ["index.Rmd", "02-people.Rmd", "03-project-details.Rmd", "04-segmentation.Rmd", "05-imputation.Rmd", "06-case-study.Rmd", "07-imp-perf-analysis.Rmd", "08-references.Rmd"]
+rmd_files: ["index.Rmd", "02-people.Rmd", "03-project-details.Rmd", "04-segmentation.Rmd", "05-imputation.Rmd", "06-case-study.Rmd", "07-imp-perf-analysis.Rmd", "08-contact.Rmd", "09-references.Rmd"]
 clean: [packages.bib, bookdown.bbl]
 new_session: yes

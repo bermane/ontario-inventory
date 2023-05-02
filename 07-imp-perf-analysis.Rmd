@@ -24,7 +24,7 @@ We ran the kNN imputation algorithm using every combination of 24 X-variables, n
 
 ## **7.3** Results in FSF {-#perf73}
 
-![Imputation X-Variable Performance Results over RMF](imp_perf_fsf.png)
+![Imputation X-Variable Performance Results over FSF](imp_perf_fsf.png)
 
 In FSF, we had slightly different EFI attributes and ran the kNN imputation algorithm using every combination of 22 X-variables, n = 3/5/7 and k = 1/3/5. The optimal outputs varied substantially in characteristics when compared to the FRI. The optimal combined model had N = 7, K = 5, and a combination of mostly EFI attributes and one ALS metric (zpcum8). The optimal model in the ALS only category did not actually include any ALS metrics, only the three auxiliary variables: b6, x, and y. The optimal model from the EFI only category had N = 5. All optimal models had K = 5. 
 

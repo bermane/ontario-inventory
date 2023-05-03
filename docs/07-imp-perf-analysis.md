@@ -4,7 +4,7 @@
 
 As mentioned earlier in the imputation workflow, we conducted a performance analysis to explore the optimal combination of imputation X-variables to use in the imputation algorithm. As we conducted this analysis in both the RMF and FSF (and ran the imputation algorithm in both these areas), it is worth sharing the results of the performance analyses. First, some background on the performance analysis itself.
 
-We examined imputation performance using combinations of N = 3, N = 5, and N = 7 X-variables, and K = 1, K = 3, and K = 5 nearest neighbors. We filtered the X-variables into three categories: ALS metrics, EFI attributes, and all variables combined. We were interested to understand whether EFI attributes improved performance as opposed to using ALS metrics derived directly from the point cloud. We included Polygon centroid coordinates (x and) as well as Sentinel-2 red-edge 2 surface reflectance in all categories. We determined the optimal outputs by calculating an average error metric using the following logic:
+We examined imputation performance using combinations of N = 3, N = 5, and N = 7 X-variables, and K = 1, K = 3, and K = 5 nearest neighbors. We filtered the X-variables into three categories: ALS metrics, EFI attributes, and all variables combined. We were interested to understand whether EFI attributes improved performance as opposed to using ALS metrics derived directly from the point cloud. We included polygon centroid coordinates (x and y) as well as Sentinel-2 red-edge 2 surface reflectance in all categories. We determined the optimal outputs by calculating an average error metric using the following logic:
 
 1. We first derived the error (100 – accuracy) of the four species composition metrics and calculated the mean value. 
 2. We then calculated z-scores by centering and scaling the RMSD of age and mean error of species composition by subtracting the mean from each value and dividing by the standard deviation.
@@ -24,7 +24,7 @@ We ran the kNN imputation algorithm using every combination of 24 X-variables, n
 
 ## **7.3** Results in FSF {-#perf73}
 
-![Imputation X-Variable Performance Results over RMF](imp_perf_fsf.png)
+![Imputation X-Variable Performance Results over FSF](imp_perf_fsf.png)
 
 In FSF, we had slightly different EFI attributes and ran the kNN imputation algorithm using every combination of 22 X-variables, n = 3/5/7 and k = 1/3/5. The optimal outputs varied substantially in characteristics when compared to the FRI. The optimal combined model had N = 7, K = 5, and a combination of mostly EFI attributes and one ALS metric (zpcum8). The optimal model in the ALS only category did not actually include any ALS metrics, only the three auxiliary variables: b6, x, and y. The optimal model from the EFI only category had N = 5. All optimal models had K = 5. 
 

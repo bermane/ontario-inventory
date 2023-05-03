@@ -1,4 +1,4 @@
-# **5** Imputation {-#imputation}
+# **5** Imputation: Romeo Malette Forest {-#imputation}
 
 ## **5.1** Introduction {-#imputation51}
 
@@ -1858,7 +1858,7 @@ fri_sf %<>% mutate(age_cut = cut(AGE2018, breaks = c(seq(0, 130, 10), 250)))
 
 # plot age
 p1 <- ggplot(grm_sf) +
-  geom_sf(mapping = aes(fill = age_cut), linewidth = 0.01) +
+  geom_sf(mapping = aes(fill = age_cut), linewidth = 0.001) +
   coord_sf() +
   scale_fill_manual(values = viridis(14), name = 'Age', na.translate = F) +
   theme_void(base_size = 30) +
@@ -1866,7 +1866,7 @@ p1 <- ggplot(grm_sf) +
   theme(plot.title = element_text(hjust = 0.5))
 
 p2 <- ggplot(fri_sf) +
-  geom_sf(mapping = aes(fill = age_cut), linewidth = 0.01) +
+  geom_sf(mapping = aes(fill = age_cut), linewidth = 0.001) +
   coord_sf() +
   scale_fill_manual(values = viridis(14), name = 'Age', na.translate = F) +
   theme_void(base_size = 30) +
@@ -1928,7 +1928,7 @@ Finally we explore the distribution of species, starting with spatial patterns o
 ```r
 # plot three func group classification
 p1 <- ggplot(grm_sf) +
-  geom_sf(mapping = aes(fill = class3), linewidth = 0.01) +
+  geom_sf(mapping = aes(fill = class3), linewidth = 0.001) +
   coord_sf() +
   scale_fill_manual(values = c('#228833', '#aa3377', '#ccbb44'), 
                     name = 'Species Class', na.translate = F) +
@@ -1937,7 +1937,7 @@ p1 <- ggplot(grm_sf) +
   theme(plot.title = element_text(hjust = 0.5))
 
 p2 <- ggplot(fri_sf) +
-  geom_sf(mapping = aes(fill = class3), linewidth = 0.01) +
+  geom_sf(mapping = aes(fill = class3), linewidth = 0.001) +
   coord_sf() +
   scale_fill_manual(values = c('#228833', '#aa3377', '#ccbb44'), 
                     name = 'Species Class', na.translate = F) +
@@ -1958,7 +1958,7 @@ Five functional group classification:
 ```r
 # plot five func group classification
 p1 <- ggplot(grm_sf) +
-  geom_sf(mapping = aes(fill = class5), linewidth = 0.01) +
+  geom_sf(mapping = aes(fill = class5), linewidth = 0.001) +
   coord_sf() +
   scale_fill_manual(values = c('#ccbb44', '#228833', '#4477aa',
                       '#ee6677', '#aa3377'), 
@@ -1968,7 +1968,7 @@ p1 <- ggplot(grm_sf) +
   theme(plot.title = element_text(hjust = 0.5))
 
 p2 <- ggplot(fri_sf) +
-  geom_sf(mapping = aes(fill = class5), linewidth = 0.01) +
+  geom_sf(mapping = aes(fill = class5), linewidth = 0.001) +
   coord_sf() +
   scale_fill_manual(values = c('#ccbb44', '#228833', '#4477aa',
                       '#ee6677', '#aa3377'), 

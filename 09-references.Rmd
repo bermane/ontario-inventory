@@ -1,4 +1,4 @@
-# **6** References {-#references}
+# **9** References {-#references}
 
 Baatz, M., Schäpe, A., 2000. Multiresolution Segmentation: an optimization approach for high quality multi-scale image segmentation.
 

@@ -16,7 +16,7 @@ As the principal investigator, Coops will manage the budget and supervise Ethan 
 
 ### Ethan Berman, *research scientist* {-#eb}
 
-[Ethan Berman](linkedin.com/in/ethan-berman) is a research scientist in the Integrated Remote Sensing Studio (IRSS) at UBC. He has a background in mathematics and remote sensing, and has worked extensively with large spatial datasets, developing novel approaches and building models to answer questions relating to forests, snow, vegetation, and climate change. Ethan received his MSc in 2019 under the supervision of Prof. Coops and before starting work on this project was a consultant for the United States Geological Survey, constructing, curating, and managing spatial datasets for a team of ecologists. 
+[Ethan Berman](https://linkedin.com/in/ethan-berman) is a research scientist in the Integrated Remote Sensing Studio (IRSS) at UBC. He has a background in mathematics and remote sensing, and has worked extensively with large spatial datasets, developing novel approaches and building models to answer questions relating to forests, snow, vegetation, and climate change. Ethan received his MSc in 2019 under the supervision of Prof. Coops and before starting work on this project was a consultant for the United States Geological Survey, constructing, curating, and managing spatial datasets for a team of ecologists. 
 
 #### Responsibilities {-#responsibilities-eb}
 
@@ -26,7 +26,7 @@ Berman will be responsible for data management, algorithm development and testin
 
 ### Chris McDonell, *partner* {-#cm}
 
-[Chris McDonell](linkedin.com/in/chris-mcdonell-45759113) is the Chief Forester for Ontario at GreenFirst Forest Products. He is accountable for relations between GreenFirst and First Nation and Metis communities in Ontario and Quebec. He is also the coordinator of forest certification standard implementation (FSC) and liaison with various public, private and community organizations.
+[Chris McDonell](https://linkedin.com/in/chris-mcdonell-45759113) is the Chief Forester for Ontario at GreenFirst Forest Products. He is accountable for relations between GreenFirst and First Nation and Metis communities in Ontario and Quebec. He is also the coordinator of forest certification standard implementation (FSC) and liaison with various public, private and community organizations.
 
 ### Grant McCartney, *partner* {-#gm}
 
@@ -40,11 +40,11 @@ We will work with GreenFirst Forest Products at a number of their forest managem
 
 ### Ian Sinclair, *partner* {-#is}
 
-[Ian Sinclair](linkedin.com/in/ian-sinclair-984929a4) is a terrestrial landscape analyst with the Ontario Ministry of Natural Resources and Forestry, where he is responsible for the development of remotely sensed inventory and landscape level monitoring and reporting programs. His focus includes the development of LiDAR attributes and remotely sensed applications to support a continuous forest inventory program. Ian also coordinates acquisition of the Ministry’s SPL program and supports the operational aspects of the Vegetation Sampling Network Protocol for development of LiDAR based forest inventories.
+[Ian Sinclair](https://linkedin.com/in/ian-sinclair-984929a4) is a terrestrial landscape analyst with the Ontario Ministry of Natural Resources and Forestry, where he is responsible for the development of remotely sensed inventory and landscape level monitoring and reporting programs. His focus includes the development of LiDAR attributes and remotely sensed applications to support a continuous forest inventory program. Ian also coordinates acquisition of the Ministry’s SPL program and supports the operational aspects of the Vegetation Sampling Network Protocol for development of LiDAR based forest inventories.
 
 ### Geordie Robere-McGugan, *partner* {-#grm}
 
-[Geordie Robere-McGugan](linkedin.com/in/geordie-robere-mcgugan-b5b6aa3) is the Inventory Development Specialist at the Ontario Ministry of Natural Resources and Forestry and the lead on the modernization of the Forest Resources Inventory ensuring the inventory products meet the Provincial Policy Framework. 
+[Geordie Robere-McGugan](https://linkedin.com/in/geordie-robere-mcgugan-b5b6aa3) is the Inventory Development Specialist at the Ontario Ministry of Natural Resources and Forestry and the lead on the modernization of the Forest Resources Inventory ensuring the inventory products meet the Provincial Policy Framework. 
 
 #### Responsibilities {-#responsibilities-ministry}
 

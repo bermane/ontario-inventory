@@ -1771,8 +1771,9 @@ dimnames(accmat_ext) <- list("Imputed" = colnames(accmat_ext),
 class(accmat_ext) <- "table"
 
 # display results
-knitr::kable(accmat_ext %>% round, caption = "Confusion matrix of imputed vs. observed leading species over FRI polygons. Rows are imputed values and columns are observed values.", label = NA) %>% 
-  kable_styling(latex_options="scale_down")
+kbl(accmat_ext %>% round, caption = "Confusion matrix of imputed vs. observed leading species over FRI polygons. Rows are imputed values and columns are observed values.", label = NA) %>%
+  kable_paper() %>%
+  scroll_box(width = "500px")
 ```
 
 ## **6.3** Imputation from FRI to GRM {-#fsf63}

@@ -22,7 +22,7 @@
 
 
 
-<meta name="date" content="2023-05-02" />
+<meta name="date" content="2023-05-03" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -1779,9 +1779,11 @@ NA
 <span id="cb25-32"><a href="imputation.html#cb25-32" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(accmat_ext) <span class="ot">&lt;-</span> <span class="st">&quot;table&quot;</span></span>
 <span id="cb25-33"><a href="imputation.html#cb25-33" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb25-34"><a href="imputation.html#cb25-34" aria-hidden="true" tabindex="-1"></a><span class="co"># display results</span></span>
-<span id="cb25-35"><a href="imputation.html#cb25-35" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(accmat_ext <span class="sc">%&gt;%</span> round, <span class="at">caption =</span> <span class="st">&quot;Confusion matrix of imputed vs. observed leading species over FRI polygons. Rows are imputed values and columns are observed values.&quot;</span>, <span class="at">label =</span> <span class="cn">NA</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb25-36"><a href="imputation.html#cb25-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options=</span><span class="st">&quot;scale_down&quot;</span>)</span></code></pre></div>
-<table class="table" style="margin-left: auto; margin-right: auto;">
+<span id="cb25-35"><a href="imputation.html#cb25-35" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span>(accmat_ext <span class="sc">%&gt;%</span> round, <span class="at">caption =</span> <span class="st">&quot;Confusion matrix of imputed vs. observed leading species over FRI polygons. Rows are imputed values and columns are observed values.&quot;</span>, <span class="at">label =</span> <span class="cn">NA</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb25-36"><a href="imputation.html#cb25-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_paper</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb25-37"><a href="imputation.html#cb25-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scroll_box</span>(<span class="at">width =</span> <span class="st">&quot;500px&quot;</span>)</span></code></pre></div>
+<div style="border: 1px solid #ddd; padding: 5px; overflow-x: scroll; width:500px; ">
+<table class=" lightable-paper" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; margin-left: auto; margin-right: auto;">
 <caption>
 Confusion matrix of imputed vs. observed leading species over FRI polygons. Rows are imputed values and columns are observed values.
 </caption>
@@ -2797,6 +2799,7 @@ NA
 </tr>
 </tbody>
 </table>
+</div>
 </div>
 <div id="imputation510" class="section level2 unnumbered hasAnchor">
 <h2><strong>5.10</strong> Execute Imputation Algorithm From FRI to GRM Polygons<a href="imputation.html#imputation510" class="anchor-section" aria-label="Anchor link to header"></a></h2>
